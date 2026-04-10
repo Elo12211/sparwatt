@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SparWatt — Din strømanalyse</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f4ef;
+  --ink:#18181b;
+  --ink2:rgba(24,24,27,.5);
+  --ink3:rgba(24,24,27,.1);
+  --cream:#fff;
+  --accent:#e8500a;
+  --accent2:#fef0e8;
+  --radius:12px;
+  --serif:'Playfair Display',serif;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;overflow-x:hidden}
+
+/* PROGRESS */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--ink3);z-index:100}
+.progress-fill{height:100%;background:var(--accent);transition:width .45s cubic-bezier(.4,0,.2,1)}
+
+/* NAV */
+nav{position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(247,244,239,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--ink3)}
+.logo{font-family:var(--serif);font-size:1.2rem;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+.logo b{color:var(--accent);font-weight:400}
+.step-counter{font-size:12px;color:var(--ink2)}
+
+/* CONTAINER */
+.container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 3rem}
+
+/* SCREENS */
+.screen{width:100%;max-width:540px;display:none;animation:up .4s cubic-bezier(.4,0,.2,1) forwards}
+.screen.active{display:block}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.step-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;font-weight:400}
+h2{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400;letter-spacing:-.025em;line-height:1.2;margin-bottom:.6rem}
+.screen-sub{font-size:.95rem;color:var(--ink2);line-height:1.7;margin-bottom:1.75rem}
+
+/* OPTIONS */
+.options{display:flex;flex-direction:column;gap:9px;margin-bottom:1.5rem}
+.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid var(--ink3);border-radius:var(--radius);cursor:pointer;background:var(--cream);font-size:.9rem;color:var(--ink);text-align:left;width:100%;transition:border-color .18s,background .18s,transform .12s;font-family:var(--sans);font-weight:300}
+.opt:hover{border-color:rgba(232,80,10,.35);background:var(--accent2);transform:translateX(3px)}
+.opt.selected,.opt.multi-on{border-color:var(--accent);background:var(--accent2)}
+.opt-k{width:24px;height:24px;border-radius:6px;border:1px solid var(--ink3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink2);flex-shrink:0;transition:all .18s;font-family:var(--sans)}
+.opt.selected .opt-k,.opt.multi-on .opt-k{border-color:var(--accent);color:var(--accent);background:rgba(232,80,10,.08)}
+
+/* TEXTAREA & INPUT */
+textarea,input[type="email"]{width:100%;background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);color:var(--ink);font-family:var(--sans);font-size:.9rem;font-weight:300;padding:14px 16px;outline:none;transition:border-color .18s;margin-bottom:1.25rem}
+textarea{resize:none;min-height:110px;line-height:1.7}
+textarea:focus,input[type="email"]:focus{border-color:rgba(232,80,10,.45)}
+textarea::placeholder,input[type="email"]::placeholder{color:var(--ink2)}
+
+/* BUTTONS */
+.btn-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.btn-main{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;background:var(--ink);color:var(--bg);border-radius:99px;font-family:var(--sans);font-size:13.5px;font-weight:400;border:none;cursor:pointer;transition:background .2s,transform .15s}
+.btn-main:hover{background:var(--accent);transform:translateY(-1px)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;padding:13px 20px;background:transparent;color:var(--ink2);border:1px solid var(--ink3);border-radius:99px;font-family:var(--sans);font-size:13px;font-weight:300;cursor:pointer;transition:all .18s}
+.btn-back:hover{background:var(--cream);color:var(--ink)}
+.err{font-size:12.5px;color:var(--accent);margin-top:.5rem;display:none}
+.hint{font-size:12px;color:var(--ink2);margin-top:.85rem}
+
+/* WELCOME ICON */
+.w-ico{width:48px;height:48px;background:var(--accent2);border:1px solid rgba(232,80,10,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.w-ico svg{width:22px;height:22px}
+
+/* RESULT */
+.result-intro{font-size:.95rem;color:var(--ink2);margin-bottom:1.25rem;line-height:1.65}
+.r-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.1rem}
+.r-metric{background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);padding:11px 13px}
+.r-ml{font-size:10.5px;color:var(--ink2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.r-mv{font-family:var(--serif);font-size:1.3rem;color:var(--ink);line-height:1}
+.r-tips{display:flex;flex-direction:column;gap:9px;margin-bottom:1rem}
+.r-tip{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--ink3);border-radius:var(--radius);background:var(--cream)}
+.r-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.r-tt{font-size:13.5px;font-weight:400;color:var(--ink);margin-bottom:2px}
+.r-td{font-size:12.5px;color:var(--ink2);line-height:1.55}
+.r-ts{font-size:12px;color:var(--accent);margin-top:4px;font-weight:400}
+.r-locked{background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);padding:1.4rem;text-align:center;margin-top:.5rem}
+.r-locked p{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:1.1rem}
+
+/* FINAL */
+.final-ico{width:48px;height:48px;background:var(--accent2);border:1px solid rgba(232,80,10,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.final-ico svg{width:22px;height:22px}
+h1.done{font-family:var(--serif);font-size:2.5rem;font-weight:400;letter-spacing:-.03em;margin-bottom:.85rem}
+.done-email{font-size:13px;color:var(--accent);margin-top:.85rem}
+
+@media(max-width:480px){
+  nav{padding:.85rem 1.25rem}
+  .r-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+
+<nav>
+  <a href="index.html" class="logo">Spar<b>Watt</b></a>
+  <div class="step-counter" id="counter"></div>
+</nav>
+
+<div class="container">
+
+  <!-- 0: Welcome -->
+  <div class="screen active" id="s0">
+    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#e8500a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 13h8l-1 7 9-11h-8l1-7z"/></svg></div>
+    <h2>Spar opptil 800 kr i måneden på strøm</h2>
+    <p class="screen-sub">Svar på 6 korte spørsmål om boligen din og få en gratis personlig analyse — med konkrete tiltak og estimert sparing i kroner.</p>
+    <div class="btn-row">
+      <button class="btn-main" onclick="go(1)">Se hva du kan spare <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <p class="hint">Under 2 minutter · Ingen registrering · 100% gratis</p>
+  </div>
+
+  <!-- 1: Boligtype -->
+  <div class="screen" id="s1">
+    <div class="step-tag">Spørsmål 1 av 6</div>
+    <h2>Hva slags bolig bor du i?</h2>
+    <p class="screen-sub">Velg det som passer best.</p>
+    <div class="options" id="q1">
+      <button class="opt" data-v="Leilighet" onclick="pick(this,'q1',2)"><span class="opt-k">A</span>Leilighet</button>
+      <button class="opt" data-v="Rekkehus / tomannsbolig" onclick="pick(this,'q1',2)"><span class="opt-k">B</span>Rekkehus / tomannsbolig</button>
+      <button class="opt" data-v="Enebolig" onclick="pick(this,'q1',2)"><span class="opt-k">C</span>Enebolig</button>
+      <button class="opt" data-v="Hytte / fritidsbolig" onclick="pick(this,'q1',2)"><span class="opt-k">D</span>Hytte / fritidsbolig</button>
+    </div>
+    <div class="btn-row"><button class="btn-main" onclick="req('q1',2)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(0)">Tilbake</button></div>
+    <p class="err" id="e1">Velg ett alternativ for å gå videre.</p>
+  </div>
+
+  <!-- 2: Størrelse -->
+  <div class="screen" id="s2">
+    <div class="step-tag">Spørsmål 2 av 6</div>
+    <h2>Hvor stor er boligen?</h2>
+    <p class="screen-sub">Omtrentlig er bra nok.</p>
+    <div class="options" id="q2">
+      <button class="opt" data-v="Under 50 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">A</span>Under 50 kvm</button>
+      <button class="opt" data-v="50–100 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">B</span>50–100 kvm</button>
+      <button class="opt" data-v="100–150 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">C</span>100–150 kvm</button>
+      <button class="opt" data-v="Over 150 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">D</span>Over 150 kvm</button>
+    </div>
+    <div class="btn-row"><button class="btn-main" onclick="req('q2',3)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(1)">Tilbake</button></div>
+    <p class="err" id="e2">Velg ett alternativ for å gå videre.</p>
+  </div>
+
+  <!-- 3: Personer -->
+  <div class="screen" id="s3">
+    <div class="step-tag">Spørsmål 3 av 6</div>
+    <h2>Hvor mange bor i husstanden?</h2>
+    <p class="screen-sub">Inkluder alle som bor der fast.</p>
+    <div class="options" id="q3">
+      <button class="opt" data-v="1 person" onclick="pick(this,'q3',4)"><span class="opt-k">A</span>1 person</button>
+      <button class="opt" data-v="2 personer" onclick="pick(this,'q3',4)"><span class="opt-k">B</span>2 personer</button>
+      <button class="opt" data-v="3–4 personer" onclick="pick(this,'q3',4)"><span class="opt-k">C</span>3–4 personer</button>
+      <button class="opt" data-v="5 eller flere" onclick="pick(this,'q3',4)"><span class="opt-k">D</span>5 eller flere</button>
+    </div>
+    <div class="btn-row"><button class="btn-main" onclick="req('q3',4)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(2)">Tilbake</button></div>
+    <p class="err" id="e3">Velg ett alternativ for å gå videre.</p>
+  </div>
+
+  <!-- 4: Oppvarming -->
+  <div class="screen" id="s4">
+    <div class="step-tag">Spørsmål 4 av 6</div>
+    <h2>Hva bruker dere til oppvarming?</h2>
+    <p class="screen-sub">Du kan velge flere.</p>
+    <div class="options" id="q4">
+      <button class="opt" data-v="Elektriske panelovner" onclick="multi(this)"><span class="opt-k">A</span>Elektriske panelovner</button>
+      <button class="opt" data-v="Varmepumpe" onclick="multi(this)"><span class="opt-k">B</span>Varmepumpe</button>
+      <button class="opt" data-v="Gulvvarme" onclick="multi(this)"><span class="opt-k">C</span>Gulvvarme</button>
+      <button class="opt" data-v="Vedovn / biovn" onclick="multi(this)"><span class="opt-k">D</span>Vedovn / biovn</button>
+      <button class="opt" data-v="Fjernvarme" onclick="multi(this)"><span class="opt-k">E</span>Fjernvarme</button>
+    </div>
+    <div class="btn-row"><button class="btn-main" onclick="reqMulti(5)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(3)">Tilbake</button></div>
+    <p class="err" id="e4">Velg minst ett alternativ.</p>
+  </div>
+
+  <!-- 5: Forbruk -->
+  <div class="screen" id="s5">
+    <div class="step-tag">Spørsmål 5 av 6</div>
+    <h2>Omtrent hvor mye strøm bruker dere per måned?</h2>
+    <p class="screen-sub">Står på strømregningen som kWh. Vet du ikke er det helt greit.</p>
+    <div class="options" id="q5">
+      <button class="opt" data-v="Vet ikke" onclick="pick(this,'q5',6)"><span class="opt-k">A</span>Vet ikke</button>
+      <button class="opt" data-v="Under 500 kWh" onclick="pick(this,'q5',6)"><span class="opt-k">B</span>Under 500 kWh</button>
+      <button class="opt" data-v="500–1000 kWh" onclick="pick(this,'q5',6)"><span class="opt-k">C</span>500–1000 kWh</button>
+      <button class="opt" data-v="1000–2000 kWh" onclick="pick(this,'q5',6)"><span class="opt-k">D</span>1000–2000 kWh</button>
+      <button class="opt" data-v="Over 2000 kWh" onclick="pick(this,'q5',6)"><span class="opt-k">E</span>Over 2000 kWh</button>
+    </div>
+    <div class="btn-row"><button class="btn-main" onclick="req('q5',6)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(4)">Tilbake</button></div>
+    <p class="err" id="e5">Velg ett alternativ for å gå videre.</p>
+  </div>
+
+  <!-- 6: Frustrasjon -->
+  <div class="screen" id="s6">
+    <div class="step-tag">Spørsmål 6 av 6</div>
+    <h2>Noe spesielt du lurer på?</h2>
+    <p class="screen-sub">Beskriv gjerne hva som er utfordringen din med strøm — jo mer du forteller, jo mer presis blir analysen.</p>
+    <textarea id="q6txt" placeholder="F.eks: Skjønner ikke hva nettleien er, regningen er mye høyere om vinteren, vet ikke om jeg burde bytte leverandør..."></textarea>
+    <div class="btn-row"><button class="btn-main" onclick="go(7)">Få analysen min <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(5)">Tilbake</button></div>
+    <p class="hint">Valgfritt, men anbefalt.</p>
+  </div>
+
+  <!-- 7: Resultat -->
+  <div class="screen" id="s7">
+    <div class="step-tag">Din personlige analyse</div>
+    <div id="r-saving-banner" style="background:var(--accent2);border:1px solid rgba(232,80,10,.2);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+      <div>
+        <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Estimert sparing</div>
+        <div id="r-total" style="font-family:var(--serif);font-size:1.8rem;color:var(--ink);line-height:1"></div>
+      </div>
+      <div style="font-size:12px;color:var(--ink2);text-align:right">per måned<br>med full rapport</div>
+    </div>
+    <p class="result-intro" id="r-intro"></p>
+    <div class="r-grid" id="r-grid"></div>
+    <div class="r-tips" id="r-tips"></div>
+    <div class="r-locked">
+      <div style="font-size:13px;font-weight:400;color:var(--ink);margin-bottom:.4rem">2 tiltak til er låst</div>
+      <p>Full rapport inkluderer alle sparetiltak rangert etter effekt, forklaring av strømregningen din, og månedlig oppdatering.</p>
+      <div class="btn-row" style="justify-content:center"><button class="btn-main" onclick="goFullReport()">Lås opp full rapport — 49 kr/mnd <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+  </div>
+
+  <!-- 8: E-post -->
+  <div class="screen" id="s8">
+    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#e8500a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 9l9 5 9-5"/></svg></div>
+    <h2>Nesten der!</h2>
+    <p class="screen-sub">Legg igjen e-posten din så sender vi deg den fulle rapporten — med alle sparetiltak og forklaring av strømregningen din.</p>
+    <input type="email" id="emailVal" placeholder="din@epost.no"/>
+    <p class="err" id="e8">Skriv inn en gyldig e-postadresse.</p>
+    <div class="btn-row"><button class="btn-main" onclick="submit()">Send meg rapporten <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(7)">Tilbake</button></div>
+    <p class="hint">Ingen spam · Avslutt når som helst · Vi selger ikke e-posten din</p>
+  </div>
+
+  <!-- 9: Takk -->
+  <div class="screen" id="s9">
+    <div class="final-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#e8500a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5V11a9 9 0 11-5.34-8.23"/><polyline points="20 4 11 13 8 10"/></svg></div>
+    <h1 class="done">Du er i gang!</h1>
+    <p class="screen-sub">Vi har mottatt svarene dine og sender deg den fulle rapporten innen 24 timer. Sjekk innboksen — og spam-mappen om du ikke ser den. Mange SparWatt-brukere sparer over 300 kr allerede første måned.</p>
+    <p class="done-email" id="done-email"></p>
+  </div>
+
+</div>
+
+<script>
+const a={q1:'',q2:'',q3:'',q4:[],q5:'',q6:''};
+const TOTAL=6;
+
+function go(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  const pct=n===0?0:Math.round((Math.min(n,TOTAL)/TOTAL)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('counter').textContent=(n>0&&n<=TOTAL)?n+' / '+TOTAL:'';
+  if(n===7)buildResult();
+  window.scrollTo(0,0);
+}
+
+function pick(el,g,next){
+  document.querySelectorAll('#'+g+' .opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  a[g]=el.dataset.v;
+  const e=document.getElementById('e'+g.replace('q',''));
+  if(e)e.style.display='none';
+  if(next!==undefined){setTimeout(()=>go(next),260);}
+}
+
+function multi(el){
+  el.classList.toggle('multi-on');
+  const v=el.dataset.v;
+  if(el.classList.contains('multi-on')){if(!a.q4.includes(v))a.q4.push(v);}
+  else{a.q4=a.q4.filter(x=>x!==v);}
+}
+
+function req(g,next){
+  if(!a[g]){document.getElementById('e'+g.replace('q','')).style.display='block';return;}
+  go(next);
+}
+
+function reqMulti(next){
+  if(!a.q4.length){document.getElementById('e4').style.display='block';return;}
+  go(next);
+}
+
+function getTip(a){
+  const panel=a.q4.includes('Elektriske panelovner');
+  const pump=a.q4.includes('Varmepumpe');
+  const big=a.q2==='Over 150 kvm'||a.q2==='100–150 kvm';
+  const many=a.q3==='3–4 personer'||a.q3==='5 eller flere';
+  const high=a.q5==='Over 2000 kWh'||a.q5==='1000–2000 kWh';
+  if(panel&&!pump)return{t:'Bytt panelovner til varmepumpe',d:'Elektriske panelovner er den dyreste måten å varme opp et hjem. En varmepumpe bruker 3× mindre strøm for samme varme.',s:'Estimert sparing: 400–800 kr/mnd',c:'#e8500a',total:'opptil 800 kr/mnd'};
+  if(high&&many)return{t:'Tidsstyring på varmtvannsberederen',d:'Med '+a.q3.toLowerCase()+' i husstanden er varmtvannsbereder trolig en stor utgiftspost. Skru ned 23:00–05:00.',s:'Estimert sparing: 150–280 kr/mnd',c:'#f0a06a',total:'opptil 640 kr/mnd'};
+  if(a.q1==='Hytte / fritidsbolig')return{t:'Installer smartplugg på varmesystemet',d:'Hytta bruker mest strøm på oppvarming når du ikke er der. En smartplugg lar deg skru på varmen rett før du ankommer.',s:'Estimert sparing: 200–450 kr/mnd',c:'#e8500a',total:'opptil 450 kr/mnd'};
+  return{t:'Unngå strøm i høypristimene',d:'Strømprisene topper seg 17:00–21:00. Flytt oppvask, vaskemaskin og tørketrommel til etter kl. 22.',s:'Estimert sparing: 60–120 kr/mnd',c:'#f0a06a',total:'opptil 380 kr/mnd'};
+}
+
+function buildResult(){
+  a.q6=document.getElementById('q6txt').value;
+  const tip=getTip(a);
+  // Show total saving in banner
+  document.getElementById('r-total').textContent=tip.total;
+  document.getElementById('r-intro').textContent='Basert på svarene dine har vi analysert din '+(a.q1||'bolig').toLowerCase()+' ('+(a.q2||'ukjent størrelse').toLowerCase()+', '+(a.q3||'ukjent antall').toLowerCase()+').';
+  document.getElementById('r-grid').innerHTML=`
+    <div class="r-metric"><div class="r-ml">Boligtype</div><div class="r-mv">${a.q1||'—'}</div></div>
+    <div class="r-metric"><div class="r-ml">Husstand</div><div class="r-mv">${a.q3||'—'}</div></div>`;
+  document.getElementById('r-tips').innerHTML=`
+    <div class="r-tip">
+      <div class="r-dot" style="background:${tip.c}"></div>
+      <div><div class="r-tt">${tip.t}</div><div class="r-td">${tip.d}</div><div class="r-ts">${tip.s}</div></div>
+    </div>`;
+}
+
+function goFullReport(){
+  // Save answers to sessionStorage so full-rapport.html can read them
+  sessionStorage.setItem('sw_q1', a.q1);
+  sessionStorage.setItem('sw_q2', a.q2);
+  sessionStorage.setItem('sw_q3', a.q3);
+  sessionStorage.setItem('sw_q4', a.q4.join(','));
+  sessionStorage.setItem('sw_q5', a.q5);
+  sessionStorage.setItem('sw_q6', a.q6);
+  // For now go directly to full report (later: add Stripe payment here)
+  window.location.href = 'full-rapport.html';
+}
+
+function submit(){
+  const v=document.getElementById('emailVal').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){document.getElementById('e8').style.display='block';return;}
+  document.getElementById('e8').style.display='none';
+  document.getElementById('done-email').textContent='Sendt til: '+v;
+  go(9);
+}
+</script>
+</body>
+</html>
