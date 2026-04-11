@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SparWatt — Din personlige AI-rådgiver for strøm</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--ink:#1c1c1a;--ink2:rgba(28,28,26,.45);--ink3:rgba(28,28,26,.08);
+  --cream:#fff;--accent:#2d6a4f;--accent2:#e8f5ee;--accent3:#1b4332;
+  --warm:#c17f24;--radius:10px;
+  --serif:'Cormorant Garamond',serif;--sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2.5rem;background:rgba(250,250,248,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--ink3)}
+.logo{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:var(--ink);text-decoration:none}
+.logo sup{font-size:.55rem;color:var(--accent);vertical-align:super;font-family:var(--sans);font-weight:500;letter-spacing:.08em}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-size:13px;color:var(--ink2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{padding:9px 22px;background:var(--accent3);color:#fff!important;border-radius:6px;font-size:13px;transition:background .2s!important}
+.nav-cta:hover{background:var(--accent)!important}
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:72px}
+.hero-left{padding:5rem 3rem 5rem 2.5rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--ink3)}
+.hero-right{padding:5rem 2.5rem 5rem 3rem;display:flex;flex-direction:column;justify-content:center;background:var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;font-weight:500;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+h1{font-family:var(--serif);font-size:clamp(2.8rem,4.5vw,4.2rem);font-weight:300;line-height:1.08;letter-spacing:-.02em;margin-bottom:1.75rem}
+h1 em{font-style:italic;color:var(--accent)}
+.hero-desc{font-size:1rem;color:var(--ink2);line-height:1.75;max-width:420px;margin-bottom:2.5rem}
+.btn-primary{display:inline-flex;align-items:center;gap:9px;padding:14px 28px;background:var(--accent3);color:#fff;border-radius:6px;font-family:var(--sans);font-size:14px;font-weight:400;text-decoration:none;transition:background .2s,transform .15s}
+.btn-primary:hover{background:var(--accent);transform:translateY(-1px)}
+.btn-note{font-size:12px;color:var(--ink2);margin-top:.5rem}
+.btn-note span{color:var(--accent);font-weight:500}
+.rp-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1.25rem}
+.rp-bolig{font-family:var(--serif);font-size:1.75rem;font-weight:300;color:rgba(255,255,255,.9);margin-bottom:.35rem;font-style:italic}
+.rp-meta{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:2rem}
+.rp-items{display:flex;flex-direction:column;gap:.85rem}
+.rp-item{padding:1rem 1.25rem;border-radius:var(--radius)}
+.rp-item.high{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.rp-item.med{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+.rp-item.low{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);filter:blur(2px);opacity:.5;user-select:none}
+.rp-priority{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;display:inline-block;margin-bottom:4px}
+.rp-priority.high{background:rgba(45,106,79,.3);color:#6ecb9a}
+.rp-priority.med{background:rgba(193,127,36,.2);color:#e8b96a}
+.rp-item-title{font-size:13.5px;font-weight:400;color:rgba(255,255,255,.85)}
+.rp-item-saving{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+.rp-locked-note{text-align:center;font-size:12px;color:rgba(255,255,255,.2);margin-top:1rem;font-style:italic}
+section.divider{border:none;border-top:1px solid var(--ink3)}
+.wrap{max-width:1100px;margin:0 auto;padding:6rem 2.5rem}
+h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:300;letter-spacing:-.02em;line-height:1.15;margin-bottom:.75rem}
+.how-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3.5rem;gap:2rem;flex-wrap:wrap}
+.how-header p{font-size:.95rem;color:var(--ink2);max-width:320px;line-height:1.7}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--ink3);border-radius:var(--radius);overflow:hidden}
+.how-step{padding:2rem 1.75rem;border-right:1px solid var(--ink3);transition:background .2s}
+.how-step:last-child{border-right:none}
+.how-step:hover{background:var(--accent2)}
+.step-num{font-family:var(--serif);font-size:3rem;font-weight:300;color:var(--ink3);line-height:1;margin-bottom:1rem}
+.step-title{font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:.5rem}
+.step-desc{font-size:13px;color:var(--ink2);line-height:1.65}
+.dark-sec{background:var(--ink);padding:6rem 2.5rem}
+.dark-inner{max-width:1100px;margin:0 auto}
+.dark-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.dark-eyebrow::before{content:'';display:block;width:24px;height:1px;background:rgba(255,255,255,.2)}
+.dark-h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:300;color:#fff;letter-spacing:-.02em;line-height:1.15;margin-bottom:2.5rem}
+.wyg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden}
+.wyg-item{background:var(--ink);padding:2rem 1.75rem;transition:background .2s}
+.wyg-item:hover{background:#242422}
+.wyg-icon{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
+.wyg-icon svg{width:15px;height:15px}
+.wyg-title{font-size:.9rem;font-weight:500;color:rgba(255,255,255,.8);margin-bottom:.4rem}
+.wyg-desc{font-size:13px;color:rgba(255,255,255,.35);line-height:1.65}
+.honest{max-width:720px;margin:0 auto;padding:6rem 2.5rem;text-align:center}
+.honest h2{margin-bottom:1.25rem}
+.honest p{font-size:1rem;color:var(--ink2);line-height:1.8;margin-bottom:1rem}
+.honest p strong{color:var(--ink);font-weight:500}
+.reviews-sec{border-top:1px solid var(--ink3);padding:6rem 2.5rem}
+.reviews-inner{max-width:1100px;margin:0 auto}
+.reviews-header{margin-bottom:2.5rem}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.review-card{background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);padding:1.5rem}
+.review-stars{color:var(--warm);font-size:13px;margin-bottom:.85rem}
+.review-text{font-family:var(--serif);font-size:1.05rem;font-weight:300;font-style:italic;color:var(--ink);line-height:1.65;margin-bottom:1rem}
+.review-author{font-size:12px;color:var(--ink2);border-top:1px solid var(--ink3);padding-top:.85rem}
+.pricing-sec{max-width:1100px;margin:0 auto;padding:6rem 2.5rem}
+.pricing-header{margin-bottom:3rem}
+.pricing-header p{font-size:.95rem;color:var(--ink2);max-width:440px;line-height:1.7;margin-top:.5rem}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:660px}
+.pcard{border:1px solid var(--ink3);border-radius:var(--radius);padding:2rem;background:var(--cream)}
+.pcard.feat{background:var(--accent3);border-color:var(--accent3)}
+.pbadge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:99px;background:var(--accent2);color:var(--accent3);margin-bottom:1rem;font-weight:500}
+.pamt{font-family:var(--serif);font-size:2.8rem;font-weight:300;color:var(--ink);line-height:1;margin-bottom:2px}
+.pcard.feat .pamt{color:#fff}
+.pper{font-size:13px;color:var(--ink2);margin-bottom:1.25rem}
+.pcard.feat .pper{color:rgba(255,255,255,.4)}
+.pname{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:1rem}
+.pcard.feat .pname{color:#fff}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:1.75rem}
+.pfeats li{font-size:13px;color:var(--ink2);display:flex;align-items:flex-start;gap:9px;line-height:1.5}
+.pcard.feat .pfeats li{color:rgba(255,255,255,.55)}
+.pfeats li::before{content:'';width:14px;height:14px;border-radius:3px;flex-shrink:0;margin-top:1px;background:var(--accent2) url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M2 5l2 2 4-4' stroke='%232d6a4f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/10px}
+.pcard.feat .pfeats li::before{background-color:rgba(255,255,255,.1);background-image:url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M2 5l2 2 4-4' stroke='%236ecb9a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.pbtn{display:block;text-align:center;padding:12px;border-radius:6px;font-family:var(--sans);font-size:13.5px;font-weight:400;text-decoration:none;transition:all .2s;border:1px solid var(--ink3);color:var(--ink);background:transparent}
+.pbtn:hover{background:var(--bg)}
+.pcard.feat .pbtn{background:#fff;border-color:#fff;color:var(--accent3)}
+.pcard.feat .pbtn:hover{background:var(--accent2)}
+.faq-sec{background:var(--ink);padding:6rem 2.5rem}
+.faq-inner{max-width:680px;margin:0 auto}
+.faq-inner h2{color:#fff;margin-bottom:2.5rem}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.08)}
+.faq-q{width:100%;background:none;border:none;padding:1.1rem 0;font-family:var(--sans);font-size:.9rem;font-weight:400;color:rgba(255,255,255,.6);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;text-align:left;transition:color .2s}
+.faq-q:hover,.faq-q.open{color:#fff}
+.faq-arrow{font-size:16px;color:rgba(255,255,255,.2);transition:transform .25s;flex-shrink:0}
+.faq-q.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{font-size:13.5px;color:rgba(255,255,255,.4);line-height:1.75;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
+.faq-a.open{max-height:200px;padding-bottom:1.1rem}
+.faq-a a{color:#6ecb9a;text-decoration:none}
+.final{padding:8rem 2.5rem;text-align:center}
+.final h2{margin-bottom:1rem;max-width:560px;margin-left:auto;margin-right:auto}
+.final p{font-size:.95rem;color:var(--ink2);max-width:380px;margin:0 auto 2.5rem;line-height:1.75}
+footer{background:var(--cream);border-top:1px solid var(--ink3);padding:2rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.foot-logo{font-family:var(--serif);font-size:1.2rem;color:var(--ink);text-decoration:none}
+.foot-logo sup{font-size:.5rem;color:var(--accent);vertical-align:super;font-family:var(--sans);font-weight:500}
+footer span,footer a{font-size:12px;color:var(--ink2);text-decoration:none}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.hero-left>*{opacity:0;animation:up .6s ease forwards}
+.hero-left>*:nth-child(1){animation-delay:.05s}.hero-left>*:nth-child(2){animation-delay:.15s}.hero-left>*:nth-child(3){animation-delay:.25s}.hero-left>*:nth-child(4){animation-delay:.35s}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}.hero-right{display:none}
+  .how-steps{grid-template-columns:1fr 1fr}
+  .how-step{border-bottom:1px solid var(--ink3)}
+  .how-step:nth-child(odd){border-right:1px solid var(--ink3)}.how-step:nth-child(even){border-right:none}
+  .wyg-grid,.reviews-grid,.pricing-grid{grid-template-columns:1fr}
+  nav{padding:1rem 1.5rem}.nav-links a:not(.nav-cta){display:none}
+  footer{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">SparWatt<sup>NO</sup></a>
+  <div class="nav-links">
+    <a href="#hvordan">Slik fungerer det</a>
+    <a href="#pris">Pris</a>
+    <a href="sparwatt-analyse.html" class="nav-cta">Start analysen →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">AI-drevet strømrådgiver · Norsk</div>
+    <h1>Din personlige<br>AI-rådgiver<br>for <em>strøm</em></h1>
+    <p class="hero-desc">Få en skreddersydd analyse av boligen din — og en AI som kjenner situasjonen din, henter live strømpriser og svarer på spørsmålene dine. Alltid tilgjengelig, alltid oppdatert.</p>
+    <div>
+      <a href="sparwatt-analyse.html" class="btn-primary">Start gratis analyse <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <p class="btn-note">Gratis å prøve · <span>12 spørsmål · under 3 min</span></p>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="rp-label">Eksempel på analyse</div>
+    <div class="rp-bolig">Enebolig, 120 kvm</div>
+    <div class="rp-meta">Oslo · 3 personer · Spotprisavtale</div>
+    <div class="rp-items">
+      <div class="rp-item high"><span class="rp-priority high">Høy prioritet</span><div class="rp-item-title">Bytt panelovner til varmepumpe</div><div class="rp-item-saving">Potensiell besparelse: 400–700 kr/mnd</div></div>
+      <div class="rp-item med"><span class="rp-priority med">Middels prioritet</span><div class="rp-item-title">Tidsstyring på varmtvannsberederen</div><div class="rp-item-saving">Potensiell besparelse: 120–200 kr/mnd</div></div>
+      <div class="rp-item low"><span class="rp-priority med">Lav prioritet</span><div class="rp-item-title">Unngå strøm i høypristimene</div><div class="rp-item-saving">Potensiell besparelse: 50–100 kr/mnd</div></div>
+    </div>
+    <div class="rp-locked-note">+ strømregningsforklaring og AI-rådgiver i full rapport</div>
+  </div>
+</section>
+
+<hr style="border:none;border-top:1px solid var(--ink3)">
+
+<div id="hvordan">
+  <div class="wrap">
+    <div class="how-header">
+      <h2>Kom i gang<br>på 3 minutter</h2>
+      <p>Svar på 12 spørsmål om boligen din — og få umiddelbar tilgang til din personlige AI-rådgiver.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step"><div class="step-num">01</div><div class="step-title">Svar på 12 spørsmål</div><p class="step-desc">Boligtype, størrelse, postnummer, oppvarming, strømavtale og forbruksmønster.</p></div>
+      <div class="how-step"><div class="step-num">02</div><div class="step-title">Vi analyserer situasjonen</div><p class="step-desc">Tar hensyn til ditt prisområde, din avtale og hva du allerede gjør.</p></div>
+      <div class="how-step"><div class="step-num">03</div><div class="step-title">Du får din rapport</div><p class="step-desc">Tiltak rangert etter potensiell effekt med konkrete neste steg.</p></div>
+      <div class="how-step"><div class="step-num">04</div><div class="step-title">Fortsett å spare</div><p class="step-desc">AI-rådgiver med live priser — alltid tilgjengelig, alltid oppdatert.</p></div>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--accent2);border-top:1px solid rgba(45,106,79,.15);border-bottom:1px solid rgba(45,106,79,.15);padding:3.5rem 2.5rem">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+    <div>
+      <div class="eyebrow">Det som skiller oss ut</div>
+      <h2 style="margin-bottom:1rem">En AI som faktisk<br>kjenner boligen din</h2>
+      <p style="font-size:.95rem;color:var(--ink2);line-height:1.75;margin-bottom:1.5rem">De fleste strømtjenester gir deg en rapport og sender deg videre. Vi gir deg en AI-rådgiver som husker hvem du er — og henter live strømpriser for å gi deg svar som faktisk er relevante akkurat nå.</p>
+      <a href="sparwatt-analyse.html" class="btn-primary">Prøv det gratis <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.75rem">
+      <div style="background:#fff;border:1px solid rgba(45,106,79,.2);border-radius:var(--radius);padding:1rem 1.25rem">
+        <div style="font-size:12px;color:var(--ink2);margin-bottom:4px">Du spør:</div>
+        <div style="font-size:14px;color:var(--ink);font-weight:400">"Når er det billigst å vaske klær i dag?"</div>
+      </div>
+      <div style="background:var(--accent3);border-radius:var(--radius);padding:1rem 1.25rem">
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px">SparWatt AI svarer:</div>
+        <div style="font-size:13.5px;color:rgba(255,255,255,.9);line-height:1.6">"I Oslo er strømmen billigst mellom 01:00 og 05:00 natt til i morgen — rundt 28 øre/kWh. Med din enebolig og spotprisavtale sparer du ca. 4–6 kr per vask ved å vente til da."</div>
+      </div>
+      <div style="background:#fff;border:1px solid rgba(45,106,79,.2);border-radius:var(--radius);padding:1rem 1.25rem">
+        <div style="font-size:12px;color:var(--ink2);margin-bottom:4px">Du spør:</div>
+        <div style="font-size:14px;color:var(--ink);font-weight:400">"Er det verdt å installere varmepumpe for meg?"</div>
+      </div>
+      <div style="background:var(--accent3);border-radius:var(--radius);padding:1rem 1.25rem">
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px">SparWatt AI svarer:</div>
+        <div style="font-size:13.5px;color:rgba(255,255,255,.9);line-height:1.6">"Med 120 kvm enebolig og panelovner som primæroppvarming — ja, absolutt. Basert på ditt forbruk er tilbakebetalingstiden typisk 2–3 år."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dark-sec">
+  <div class="dark-inner">
+    <div class="dark-eyebrow">Hva du får</div>
+    <h2 class="dark-h2">Ikke bare en rapport.<br>En AI som kjenner<br><em style="font-style:italic;color:#6ecb9a">din</em> bolig.</h2>
+    <div class="wyg-grid">
+      <div class="wyg-item"><div class="wyg-icon"><svg viewBox="0 0 15 15" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="5.5"/><path d="M7.5 5v2.5l1.5 1.5"/></svg></div><div class="wyg-title">Skreddersydd til deg</div><p class="wyg-desc">Analysen tar hensyn til din bolig, ditt prisområde og hva du allerede gjør.</p></div>
+      <div class="wyg-item"><div class="wyg-icon"><svg viewBox="0 0 15 15" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round"><path d="M2 11l3.5-3.5 2.5 2.5 4.5-6"/></svg></div><div class="wyg-title">Realistiske estimater</div><p class="wyg-desc">Potensiell besparelse per tiltak — ikke garantier, men konkrete utgangspunkt.</p></div>
+      <div class="wyg-item"><div class="wyg-icon"><svg viewBox="0 0 15 15" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="3" width="11" height="9" rx="2"/><path d="M5 7h5M5 9.5h3"/></svg></div><div class="wyg-title">Regningen forklart</div><p class="wyg-desc">Nettleie, spotpris og påslag forklart på norsk uten fagsjargong.</p></div>
+      <div class="wyg-item"><div class="wyg-icon"><svg viewBox="0 0 15 15" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round"><path d="M7.5 2l1.4 2.8 3.1.45-2.25 2.2.53 3.1L7.5 9l-2.78 1.55.53-3.1L3 5.25l3.1-.45z"/></svg></div><div class="wyg-title">AI-rådgiver live</div><p class="wyg-desc">Kjenner boligen din og henter live strømpriser — svar basert på din situasjon.</p></div>
+      <div class="wyg-item"><div class="wyg-icon"><svg viewBox="0 0 15 15" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="5.5"/><path d="M7.5 4v3.5l2 1"/></svg></div><div class="wyg-title">Månedlig oppdatering</div><p class="wyg-desc">Nye priser og sesongbaserte råd hver måned.</p></div>
+      <div class="wyg-item"><div class="wyg-icon"><svg viewBox="0 0 15 15" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round"><path d="M13 7A5.5 5.5 0 112.5 9"/><path d="M13 3v4h-4"/></svg></div><div class="wyg-title">Ingen binding</div><p class="wyg-desc">Avslutt abonnementet med ett klikk, når du vil.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="honest">
+  <div class="eyebrow" style="justify-content:center">Hvorfor SparWatt?</div>
+  <h2>Ingen andre gjør<br>dette for deg</h2>
+  <p>Tibber og Fjordkraft gir deg grafer og generiske tips. Nyttig nok — men de kjenner ikke deg. De vet ikke at du har panelovner, at du bor i Trøndelag, eller at du allerede vasker klær om natta.</p>
+  <p>SparWatt er den eneste tjenesten som <strong>kombinerer en personlig analyse med en AI som faktisk husker hvem du er</strong>. Still spørsmål om akkurat din situasjon, få svar basert på din bolig og dagens live priser. Og hvis leverandøren din er for dyr — sier vi det rett ut, med tall.</p>
+</div>
+
+<div style="background:var(--ink);padding:5rem 2.5rem">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:2.5rem">
+      <div class="dark-eyebrow" style="justify-content:center">SparWatt vs resten</div>
+      <h2 style="font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.4rem);font-weight:300;color:#fff;letter-spacing:-.02em">Hva som faktisk er annerledes</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden">
+      <div style="background:var(--ink);padding:1.5rem">
+        <div style="font-size:11px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem">Vanlige strømapper</div>
+        <div style="display:flex;flex-direction:column;gap:.65rem">
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Generiske tips alle får</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Krever smartmåler eller hardware</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Fungerer kun med deres leverandør</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Ingen forklaring på regningen</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Kan ikke stille spørsmål</div>
+        </div>
+      </div>
+      <div style="background:#242422;padding:1.5rem;border-left:2px solid #2d6a4f;border-right:2px solid #2d6a4f;position:relative">
+        <div style="font-size:11px;color:#6ecb9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem;font-weight:500">SparWatt</div>
+        <div style="display:flex;flex-direction:column;gap:.65rem">
+          <div style="font-size:13px;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:flex-start"><span style="color:#6ecb9a;flex-shrink:0">✓</span>Skreddersydd til din bolig og situasjon</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:flex-start"><span style="color:#6ecb9a;flex-shrink:0">✓</span>Kun 12 spørsmål — ingen hardware</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:flex-start"><span style="color:#6ecb9a;flex-shrink:0">✓</span>Fungerer uansett hvilken leverandør du har</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:flex-start"><span style="color:#6ecb9a;flex-shrink:0">✓</span>Strømregningen forklart på norsk</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:flex-start"><span style="color:#6ecb9a;flex-shrink:0">✓</span>AI-rådgiver med live priser — spør når du vil</div>
+        </div>
+      </div>
+      <div style="background:var(--ink);padding:1.5rem">
+        <div style="font-size:11px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem">Å google det selv</div>
+        <div style="display:flex;flex-direction:column;gap:.65rem">
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Tar timer å finne riktig info</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Ingen personlige anbefalinger</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Motstridende informasjon overalt</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Ingen oppdatering når prisene endrer seg</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);display:flex;gap:8px;align-items:flex-start"><span style="color:rgba(255,255,255,.2);flex-shrink:0">✗</span>Gidder du egentlig?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="reviews-sec">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <div class="eyebrow">Hva testbrukere sier</div>
+      <h2>Tidlige tilbakemeldinger</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Hadde Fortum med 4,9 øre påslag i årevis uten å tenke på det. SparWatt sa jeg burde bytte — byttet til Tibber og sparer rundt 180 kr i måneden. Tok fem minutter."</p><div class="review-author">Kjetil R. · Enebolig i Akershus · byttet leverandør</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Visste ikke hva nettleie egentlig var før jeg brukte dette. Nå skjønner jeg endelig hva jeg betaler for — og jeg har satt vaskemaskin og oppvaskmaskinen til å kjøre om natta. Merker det på regningen."</p><div class="review-author">Marianne S. · Leilighet i Oslo · 2 i husstanden</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Hytta vår sto og dro strøm hele vinteren selv om vi ikke var der. Etter analysen installerte vi smartplugg. Første måned kutte vi regningen med over 400 kr."</p><div class="review-author">Tor-Erik B. · Hytte i Numedal · pensjonist</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="pris">
+  <div class="pricing-sec">
+    <div class="pricing-header">
+      <div class="eyebrow">Priser</div>
+      <h2>Start gratis.<br>Betal kun for verdi.</h2>
+      <p>Prøv gratis uten kredittkort. Hvis du ser verdi i det — oppgrader til full tilgang for prisen av en kopp kaffe i måneden.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pcard"><div class="pamt">0</div><div class="pper">kr — alltid gratis</div><div class="pname">Gratis analyse</div><ul class="pfeats"><li>Ditt viktigste sparetiltak</li><li>Potensiell besparelse estimert</li><li>Tar under 3 minutter</li><li>Ingen registrering nødvendig</li></ul><a href="sparwatt-analyse.html" class="pbtn">Start analysen →</a></div>
+      <div class="pcard feat"><div class="pbadge">Full tilgang</div><div class="pamt">49</div><div class="pper">kr/mnd · ingen bindingstid</div><div class="pname">Full tilgang + AI-rådgiver</div><ul class="pfeats"><li>Alle tiltak rangert etter effekt</li><li>Strømregningen forklart på norsk</li><li>AI som kjenner boligen din — still spørsmål når du vil</li><li>Live strømpriser i alle svar</li><li>Månedlig oppdatert analyse</li><li>Avslutt når du vil</li></ul><a href="sparwatt-analyse.html" class="pbtn">Start gratis →</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="faq-sec">
+  <div class="faq-inner">
+    <h2>Vanlige spørsmål</h2>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Trenger jeg strømregningen for hånden? <span class="faq-arrow">↓</span></button><div class="faq-a">Nei. Vi spør kun om omtrentlig forbruk i kWh — og det er valgfritt. Du kan svare "vet ikke" og fortsatt få en nyttig analyse.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hva menes med "potensiell besparelse"? <span class="faq-arrow">↓</span></button><div class="faq-a">Det er et estimat basert på din boligsituasjon og typiske besparelser for tilsvarende husstander — ikke en garanti. Din faktiske sparing avhenger av mange faktorer.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hva gjør dere med informasjonen min? <span class="faq-arrow">↓</span></button><div class="faq-a">Vi bruker svarene dine utelukkende til å generere analysen. Vi selger ikke data til tredjeparter.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Fungerer dette for hytte? <span class="faq-arrow">↓</span></button><div class="faq-a">Ja. Velg "Hytte / fritidsbolig" i analysen — tiltakene tilpasses hyttebruk og periodisk forbruksmønster.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Har du spørsmål? <span class="faq-arrow">↓</span></button><div class="faq-a">Send oss en e-post på <a href="/cdn-cgi/l/email-protection#442b28216a252a20362125376a372a21283032212030042329252d286a272b29"><span class="__cf_email__" data-cfemail="422d2e276c232c26302723316c312c272e363427263602252f232b2e6c212d2f">[email&#160;protected]</span></a> — vi svarer innen 24 timer.</div></div>
+  </div>
+</div>
+
+<div class="final">
+  <div class="eyebrow" style="justify-content:center">Klar til å starte?</div>
+  <h2>Du betaler sannsynligvis<br>for mye for strøm</h2>
+  <p>De fleste norske husstander gjør det. Finn ut hvor mye du kan spare — gratis, på 3 minutter, ingen kredittkort.</p>
+  <a href="sparwatt-analyse.html" class="btn-primary" style="margin:0 auto">Start gratis analyse <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</div>
+
+<footer>
+  <a href="#" class="foot-logo">SparWatt<sup>NO</sup></a>
+  <span>© 2025 SparWatt · Norsk strømanalyse</span>
+  <a href="/cdn-cgi/l/email-protection#036c6f662d626d67716662702d706d666f777566677743646e626a6f2d606c6e"><span class="__cf_email__" data-cfemail="d0bfbcb5feb1beb4a2b5b1a3fea3beb5bca4a6b5b4a490b7bdb1b9bcfeb3bfbd">[email&#160;protected]</span></a>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudf
