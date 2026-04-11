@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -9,8 +9,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing messages or profile' });
   }
 
-  // Fetch live Nordpool prices for NO1 (Oslo)
-  let priceInfo = 'Kunne ikke hente live priser akkurat nå.';
+  let priceInfo = 'Live priser utilgjengelig akkurat nå.';
   try {
     const today = new Date();
     const year = today.getFullYear();
@@ -22,54 +21,33 @@ export default async function handler(req, res) {
     if (priceRes.ok) {
       const prices = await priceRes.json();
       const now = today.getHours();
-      const currentPrice = prices[now]?.NOK_per_kWh;
-      const minPrice = Math.min(...prices.map(p => p.NOK_per_kWh));
-      const maxPrice = Math.max(...prices.map(p => p.NOK_per_kWh));
+      const currentPrice = prices[now] && prices[now].NOK_per_kWh;
+      const minPrice = Math.min(...prices.map(function(p){ return p.NOK_per_kWh; }));
+      const maxPrice = Math.max(...prices.map(function(p){ return p.NOK_per_kWh; }));
       const cheapHours = prices
-        .filter(p => p.NOK_per_kWh <= minPrice * 1.2)
-        .map(p => new Date(p.time_start).getHours() + ':00')
+        .filter(function(p){ return p.NOK_per_kWh <= minPrice * 1.2; })
+        .map(function(p){ return new Date(p.time_start).getHours() + ':00'; })
         .join(', ');
-      priceInfo = `Live strømpris akkurat nå (NO1/Oslo): ${(currentPrice * 100).toFixed(1)} øre/kWh. Dagens billigste timer: ${cheapHours}. Dagens dyreste pris: ${(maxPrice * 100).toFixed(1)} øre/kWh.`;
+      priceInfo = 'Live strompris akkurat na: ' + (currentPrice * 100).toFixed(1) + ' ore/kWh. Billigste timer i dag: ' + cheapHours + '. Dyreste pris: ' + (maxPrice * 100).toFixed(1) + ' ore/kWh.';
     }
   } catch (e) {
-    priceInfo = 'Live priser utilgjengelig akkurat nå.';
+    priceInfo = 'Live priser utilgjengelig akkurat na.';
   }
 
-  const systemPrompt = `Du er SparWatt-assistenten — en vennlig og kunnskapsrik norsk strømrådgiver. Du hjelper denne spesifikke brukeren med å spare penger på strøm basert på deres bolig og situasjon.
+  const place = profile.placeName || profile.q3 || 'Norge';
 
-BRUKERPROFIL:
-- Boligtype: ${profile.q1}
-- Størrelse: ${profile.q2}
-- Antall i husstanden: ${profile.q3}
-- Oppvarming: ${profile.q4}
-- Månedlig forbruk: ${profile.q5}
-- Ekstra info fra brukeren: ${profile.q6 || 'Ingen'}
-
-LIVE STRØMPRISINFORMASJON I DAG:
-${priceInfo}
-
-INSTRUKSJONER:
-- Svar alltid på norsk, kort og konkret
-- Bruk brukerens profil aktivt i svarene — ikke gi generiske råd
-- Referer til live-priser når det er relevant
-- Gi konkrete kronebeløp og estimater når mulig
-- Vær vennlig men direkte — ingen unødvendig fluff
-- Hvis noen spør om noe utenfor strøm/energi, si at du kun hjelper med strømsparing
-- Maks 3-4 setninger per svar med mindre brukeren ber om mer detalj`;
+  const systemPrompt = 'Du er SparWatt-assistenten — en vennlig og kunnskapsrik norsk stromradgiver. Du hjelper denne spesifikke brukeren med a spare penger pa strom basert pa deres bolig og situasjon.\n\nBRUKERPROFIL:\n- Boligtype: ' + (profile.q1||'') + '\n- Storrelse: ' + (profile.q2||'') + '\n- Antall i husstanden: ' + (profile.q4||profile.q3||'') + '\n- Oppvarming: ' + (profile.q5||profile.q4||'') + '\n- Manedlig forbruk: ' + (profile.q6||profile.q5||'') + '\n- Stromavtale: ' + (profile.q7||'') + '\n- Leverandor: ' + (profile.q11provider||'ukjent') + '\n- Paslag: ' + (profile.q11markup ? profile.q11markup + ' ore/kWh' : 'ukjent') + '\n- Sted: ' + place + '\n- Ekstra info: ' + (profile.q10||profile.q6extra||profile.q6||'Ingen') + '\n\nLIVE STROMPRISINFORMASJON:\n' + priceInfo + '\n\nINSTRUKSJONER:\n- Svar alltid pa norsk, kort og konkret\n- Bruk brukerens profil aktivt — ikke gi generiske rad\n- Referer til live-priser og stedet nar relevant\n- Gi konkrete kronebel\u00f8p og estimater nar mulig\n- Vennlig men direkte — ingen unodvendig fluff\n- Maks 3-4 setninger per svar med mindre brukeren ber om mer';
 
   try {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'llama3-8b-8192',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages
-        ],
+        messages: [{ role: 'system', content: systemPrompt }].concat(messages),
         max_tokens: 400,
         temperature: 0.7
       })
@@ -77,14 +55,14 @@ INSTRUKSJONER:
 
     if (!groqRes.ok) {
       const err = await groqRes.text();
-      return res.status(500).json({ error: 'Groq API error', details: err });
+      return res.status(500).json({ error: 'Groq error', details: err });
     }
 
     const data = await groqRes.json();
     const reply = data.choices[0].message.content;
-    return res.status(200).json({ reply });
+    return res.status(200).json({ reply: reply });
 
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
-}
+};
