@@ -420,25 +420,97 @@ tips.forEach(function(tip,i){
 });
 
 // ── LEVERANDOR ──
-(function(){
+function buildLeverandor(){
   var el = document.getElementById("leverandor-content");
-  var alts = [{n:"Tibber",m:0,f:39,note:"Ingen påslag, smart app med live priser"},{n:"Vibb",m:0,f:49,note:"Ingen påslag, sanntidsmåling"},{n:"Jærkraft Kun Strøm",m:0,f:19,note:"Billigste faste kostnad på markedet"}];
+  var alts = [
+    {n:"Tibber",m:0,f:39,note:"Ingen påslag, smart app med live priser"},
+    {n:"Vibb",m:0,f:49,note:"Ingen påslag, sanntidsmåling"},
+    {n:"Jærkraft Kun Strøm",m:0,f:19,note:"Billigste faste kostnad på markedet"}
+  ];
+
+  var currentMarkup = pr.q11markup || 0;
+  var currentFee = pr.q11fee || 0;
+  var currentProvider = pr.q11provider || "";
+  var hasInfo = currentMarkup > 0 || currentProvider !== "";
+
+  // Calculate saving vs cheapest
+  var cheapestTotal = 19; // Jærkraft 0 påslag + 19 kr
+  var currentTotal = ((currentMarkup/100)*monthlyKwh*100) + currentFee;
+  var saving = hasInfo && currentMarkup > 0 ? Math.max(0, Math.round(currentTotal - cheapestTotal)) : 0;
+
   var html = "";
-  if(leverandorSaving>30){
-    html += "<div class='info-badge'><svg width='14' height='14' viewBox='0 0 14 14' fill='none' style='flex-shrink:0;margin-top:1px'><path d='M7 1.5l1.3 2.6 2.9.4-2.1 2.1.5 2.9L7 8l-2.6 1.5.5-2.9L2.8 4.5l2.9-.4z' stroke='#1b4332' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/></svg><span>Du kan potensielt spare ca. <strong>"+leverandorSaving+" kr/mnd</strong> ved å bytte fra "+(pr.q11provider||"nåværende leverandør")+" ("+pr.q11markup+" øre/kWh påslag) til en billigere avtale.</span></div>";
-  } else if(pr.q11markup<=1&&pr.q11fee<=49&&pr.q11provider){
-    html += "<div class='info-badge'>Du har allerede en god avtale — lavt påslag og rimelig gebyr.</div>";
-  } else {
-    html += "<div class='info-badge'>Her er de billigste strømalternativene akkurat nå. Oppgi påslag og gebyr i skjemaet for personlig sammenligning.</div>";
-  }
+
+  // Input form — always visible
+  html += "<div class='card' style='margin-bottom:1rem'>";
+  html += "<div class='card-top'>Oppgi din nåværende avtale</div>";
+  html += "<div class='card-body'>";
+  html += "<p style='font-size:13px;color:rgba(28,28,26,.55);margin-bottom:1rem;line-height:1.6'>Legg inn info fra strømregningen din — vi beregner hva du kan spare ved å bytte.</p>";
+  html += "<div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem'>";
+  html += "<div><label style='font-size:11.5px;color:rgba(28,28,26,.5);display:block;margin-bottom:4px'>Leverandør</label><input id='inp-provider' type='text' value='"+currentProvider+"' placeholder='F.eks. Fortum' style='width:100%;background:#fafaf8;border:1px solid rgba(28,28,26,.12);border-radius:6px;padding:8px 10px;font-size:13px;font-family:DM Sans,sans-serif;color:#1c1c1a;outline:none'/></div>";
+  html += "<div><label style='font-size:11.5px;color:rgba(28,28,26,.5);display:block;margin-bottom:4px'>Påslag (øre/kWh)</label><input id='inp-markup' type='number' value='"+(currentMarkup||"")+"' placeholder='F.eks. 3.9' style='width:100%;background:#fafaf8;border:1px solid rgba(28,28,26,.12);border-radius:6px;padding:8px 10px;font-size:13px;font-family:DM Sans,sans-serif;color:#1c1c1a;outline:none'/></div>";
+  html += "<div><label style='font-size:11.5px;color:rgba(28,28,26,.5);display:block;margin-bottom:4px'>Gebyr (kr/mnd)</label><input id='inp-fee' type='number' value='"+(currentFee||"")+"' placeholder='F.eks. 49' style='width:100%;background:#fafaf8;border:1px solid rgba(28,28,26,.12);border-radius:6px;padding:8px 10px;font-size:13px;font-family:DM Sans,sans-serif;color:#1c1c1a;outline:none'/></div>";
+  html += "</div>";
+  html += "<button onclick='updateLeverandor()' style='padding:9px 20px;background:#1b4332;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:DM Sans,sans-serif;transition:background .2s'>Beregn →</button>";
+  html += "</div></div>";
+
+  // Result
+  html += "<div id='leverandor-result'></div>";
+
+  // Alternatives table
   html += "<div class='card'><div class='card-top'>Billigste alternativer akkurat nå</div><div class='card-body' style='display:flex;flex-direction:column;gap:.65rem'>";
   alts.forEach(function(a){
     var est = Math.round((a.m/100)*monthlyKwh*100+a.f);
-    html += "<div style='display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#fafaf8;border-radius:8px;gap:.5rem;flex-wrap:wrap'><div><div style='font-size:13.5px;font-weight:400;color:#1c1c1a'>"+a.n+"</div><div style='font-size:12px;color:rgba(28,28,26,.5);margin-top:2px'>"+a.note+"</div></div><div style='text-align:right;flex-shrink:0'><div style='font-size:13px;font-weight:400;color:#1b4332'>~"+est+" kr/mnd</div><div style='font-size:11px;color:rgba(28,28,26,.4)'>"+a.f+" kr gebyr/mnd</div></div></div>";
+    var isCurrent = currentProvider && currentProvider.toLowerCase().includes(a.n.toLowerCase().split(" ")[0]);
+    html += "<div style='display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:"+(isCurrent?"#e8f5ee":"#fafaf8")+";border-radius:8px;border:1px solid "+(isCurrent?"rgba(27,67,50,.2)":"transparent")+";gap:.5rem;flex-wrap:wrap'>";
+    html += "<div><div style='font-size:13.5px;font-weight:400;color:#1c1c1a'>"+a.n+(isCurrent?" <span style='font-size:11px;color:#1b4332'>(din nåværende)</span>":"")+"</div><div style='font-size:12px;color:rgba(28,28,26,.5);margin-top:2px'>"+a.note+"</div></div>";
+    html += "<div style='text-align:right;flex-shrink:0'><div style='font-size:13px;font-weight:400;color:#1b4332'>~"+est+" kr/mnd</div><div style='font-size:11px;color:rgba(28,28,26,.4)'>"+a.f+" kr gebyr/mnd</div></div></div>";
   });
-  html += "</div></div><a href='https://www.strompris.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1b4332;color:#fff;border-radius:6px;font-size:13px;text-decoration:none'>Se alle leverandører på strompris.no <svg width='11' height='11' viewBox='0 0 11 11' fill='none'><path d='M2 9L9 2M5.5 2h3.5v3.5' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg></a>";
+  html += "</div></div>";
+  html += "<a href='https://www.strompris.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1b4332;color:#fff;border-radius:6px;font-size:13px;text-decoration:none;margin-top:.5rem'>Se alle leverandører på strompris.no <svg width='11' height='11' viewBox='0 0 11 11' fill='none'><path d='M2 9L9 2M5.5 2h3.5v3.5' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg></a>";
+
   el.innerHTML = html;
-})();
+
+  // Show result if we already have data
+  if(hasInfo && currentMarkup > 0) showLeverandorResult(saving, currentProvider, currentMarkup, currentFee);
+}
+
+function updateLeverandor(){
+  var provider = document.getElementById("inp-provider").value.trim();
+  var markup = parseFloat(document.getElementById("inp-markup").value) || 0;
+  var fee = parseFloat(document.getElementById("inp-fee").value) || 0;
+
+  // Update profile
+  pr.q11provider = provider;
+  pr.q11markup = markup;
+  pr.q11fee = fee;
+
+  // Recalculate saving
+  var currentTotal = ((markup/100)*monthlyKwh*100) + fee;
+  var saving = markup > 0 ? Math.max(0, Math.round(currentTotal - 19)) : 0;
+
+  showLeverandorResult(saving, provider, markup, fee);
+
+  // Save to localStorage
+  try {
+    var saved = JSON.parse(localStorage.getItem("sw_profile")||"{}");
+    saved.q11p = provider; saved.q11m = markup; saved.q11f = fee;
+    localStorage.setItem("sw_profile", JSON.stringify(saved));
+  } catch(e){}
+}
+
+function showLeverandorResult(saving, provider, markup, fee){
+  var el = document.getElementById("leverandor-result");
+  if(!el) return;
+  if(saving > 30){
+    el.innerHTML = "<div class='info-badge' style='margin-bottom:1rem'><svg width='14' height='14' viewBox='0 0 14 14' fill='none' style='flex-shrink:0;margin-top:1px'><path d='M7 1.5l1.3 2.6 2.9.4-2.1 2.1.5 2.9L7 8l-2.6 1.5.5-2.9L2.8 4.5l2.9-.4z' stroke='#1b4332' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/></svg><span>Du kan potensielt spare ca. <strong>"+saving+" kr/mnd</strong> ved å bytte fra "+(provider||"nåværende leverandør")+" ("+markup+" øre/kWh + "+fee+" kr/mnd) til Jærkraft eller Tibber.</span></div>";
+  } else if(markup > 0){
+    el.innerHTML = "<div class='info-badge' style='margin-bottom:1rem'>Du har allerede en god avtale! Påslaget på "+markup+" øre/kWh er lavt.</div>";
+  } else {
+    el.innerHTML = "";
+  }
+}
+
+buildLeverandor();
 
 // ── INNSIKT ──
 (function(){
