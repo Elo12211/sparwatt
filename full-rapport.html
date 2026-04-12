@@ -4,142 +4,152 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SparWatt — Din personlige strømrapport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#fafaf8;--ink:#1c1c1a;--ink2:rgba(28,28,26,.45);--ink3:rgba(28,28,26,.08);
-  --cream:#fff;--accent:#2d6a4f;--accent2:#e8f5ee;--accent3:#1b4332;
-  --amber:#a05c00;--amber2:#fef3e2;--radius:10px;
-  --serif:"Cormorant Garamond",serif;--sans:"DM Sans",sans-serif;
-}
-html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;overflow-x:hidden}
-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:var(--cream);border-bottom:1px solid var(--ink3);position:sticky;top:0;z-index:50}
-.logo{font-family:var(--serif);font-size:1.3rem;color:var(--ink);text-decoration:none}
-.logo sup{font-size:.5rem;color:var(--accent);vertical-align:super;font-family:var(--sans);font-weight:500;letter-spacing:.08em}
-.nav-tag{font-size:11px;padding:4px 12px;border-radius:99px;background:var(--accent2);color:var(--accent3);font-weight:400}
+html,body{min-height:100vh;background:#fafaf8;color:#1c1c1a;font-family:"DM Sans",system-ui,sans-serif;font-weight:300;overflow-x:hidden}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:#fff;border-bottom:1px solid rgba(28,28,26,.08);position:sticky;top:0;z-index:50}
+.logo{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.3rem;color:#1c1c1a;text-decoration:none}
+.logo sup{font-size:.5rem;color:#1b4332;vertical-align:super;font-family:"DM Sans",system-ui,sans-serif;font-weight:500;letter-spacing:.08em}
+.nav-tag{font-size:11px;padding:4px 12px;border-radius:99px;background:#e8f5ee;color:#1b4332;font-weight:400}
 .wrap{max-width:700px;margin:0 auto;padding:2rem 1.5rem 5rem}
 
 /* BANNER */
-.banner{background:var(--accent3);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1rem}
+.banner{background:#1b4332;border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1.25rem}
 .banner-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
-.banner-title{font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:300;color:#fff;font-style:italic;margin-bottom:.2rem}
+.banner-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(1.3rem,3vw,1.7rem);font-weight:300;color:#fff;font-style:italic;line-height:1.2;margin-bottom:.2rem}
 .banner-sub{font-size:12px;color:rgba(255,255,255,.4)}
-.banner-place{font-family:var(--serif);font-size:1.3rem;color:#6ecb9a;font-weight:300;text-align:right}
+.banner-place{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.3rem;color:#6ecb9a;font-weight:300;text-align:right}
 .banner-zone{font-size:11px;color:rgba(255,255,255,.35);text-align:right;margin-bottom:2px}
-
-/* SAVINGS GRID */
-.savings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sv-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:.75rem 1rem}
 .sv-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.sv-val{font-family:var(--serif);font-size:1.5rem;color:#6ecb9a;line-height:1}
+.sv-val{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.5rem;color:#6ecb9a;line-height:1}
 .sv-note{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px}
 
 /* PILLS */
 .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.5rem}
-.pill{background:var(--cream);border:1px solid var(--ink3);border-radius:99px;padding:4px 12px;font-size:12px;color:var(--ink2)}
+.pill{background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:99px;padding:4px 12px;font-size:12px;color:rgba(28,28,26,.6)}
 
 /* TABS */
-.tabs-bar{display:flex;gap:0;border:1px solid var(--ink3);border-radius:10px;overflow:hidden;margin-bottom:1.5rem;background:var(--cream)}
-.tab{flex:1;padding:.65rem .5rem;font-family:var(--sans);font-size:12.5px;font-weight:300;color:var(--ink2);background:transparent;border:none;cursor:pointer;transition:all .18s;text-align:center;border-right:1px solid var(--ink3)}
+.tabs-bar{display:flex;border:1px solid rgba(28,28,26,.08);border-radius:10px;overflow:hidden;margin-bottom:1.5rem;background:#fff}
+.tab{flex:1;padding:.65rem .5rem;font-family:"DM Sans",system-ui,sans-serif;font-size:12.5px;font-weight:300;color:rgba(28,28,26,.5);background:transparent;border:none;cursor:pointer;transition:all .18s;text-align:center;border-right:1px solid rgba(28,28,26,.08)}
 .tab:last-child{border-right:none}
-.tab.active{background:var(--accent3);color:#fff;font-weight:400}
-.tab:hover:not(.active){background:var(--accent2);color:var(--accent3)}
+.tab.active{background:#1b4332;color:#fff;font-weight:400}
+.tab:hover:not(.active){background:#e8f5ee;color:#1b4332}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
 /* CHAT */
-.chat-box{background:var(--cream);border:1px solid var(--ink3);border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(28,28,26,.06)}
-.chat-header{background:var(--accent3);padding:.85rem 1.1rem;display:flex;align-items:center;gap:9px}
+.chat-box{background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(28,28,26,.06)}
+.chat-hdr{background:#1b4332;padding:.85rem 1.1rem;display:flex;align-items:center;gap:9px}
 .chat-ico{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .chat-ico svg{width:13px;height:13px}
-.chat-htext h3{font-size:13px;font-weight:400;color:#fff;margin-bottom:1px}
-.chat-htext p{font-size:11px;color:rgba(255,255,255,.38)}
-.chat-live{margin-left:auto;display:flex;align-items:center;gap:4px}
+.chat-ht h3{font-size:13px;font-weight:400;color:#fff;margin-bottom:1px}
+.chat-ht p{font-size:11px;color:rgba(255,255,255,.38)}
+.live{margin-left:auto;display:flex;align-items:center;gap:4px}
 .live-dot{width:5px;height:5px;border-radius:50%;background:#6ecb9a;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .live-lab{font-size:11px;color:rgba(255,255,255,.35)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .chat-msgs{padding:.85rem;display:flex;flex-direction:column;gap:.6rem;min-height:220px;max-height:380px;overflow-y:auto}
-.msg{display:flex;gap:7px;align-items:flex-start;animation:up .3s ease}
+.msg{display:flex;gap:7px;align-items:flex-start;animation:fadeup .3s ease}
 .msg.user{flex-direction:row-reverse}
 .bubble{padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.65;max-width:85%}
-.msg.bot .bubble{background:var(--bg);color:var(--ink);border-radius:4px 12px 12px 12px;border:1px solid var(--ink3)}
-.msg.user .bubble{background:var(--accent3);color:#fff;border-radius:12px 4px 12px 12px}
+.msg.bot .bubble{background:#fafaf8;color:#1c1c1a;border-radius:4px 12px 12px 12px;border:1px solid rgba(28,28,26,.08)}
+.msg.user .bubble{background:#1b4332;color:#fff;border-radius:12px 4px 12px 12px}
 .av{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500}
-.msg.bot .av{background:var(--accent2);color:var(--accent3)}
-.msg.user .av{background:var(--accent3);color:#fff}
-.typing{display:flex;gap:3px;align-items:center;padding:9px 13px}
-.typing span{width:5px;height:5px;border-radius:50%;background:var(--ink2);animation:bounce .9s infinite}
-.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+.msg.bot .av{background:#e8f5ee;color:#1b4332}
+.msg.user .av{background:#1b4332;color:#fff}
+.typing-dots{display:flex;gap:3px;align-items:center;padding:9px 13px}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:rgba(28,28,26,.3);animation:bounce .9s infinite}
+.typing-dots span:nth-child(2){animation-delay:.15s}
+.typing-dots span:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.sugs{display:flex;flex-wrap:wrap;gap:5px;padding:.6rem .85rem;border-top:1px solid var(--ink3);background:var(--bg)}
-.sug{padding:5px 11px;border:1px solid var(--ink3);border-radius:99px;font-size:11.5px;color:var(--ink2);cursor:pointer;background:var(--cream);transition:all .18s;font-family:var(--sans)}
-.sug:hover{border-color:var(--accent);color:var(--accent3);background:var(--accent2)}
-.chat-input-row{display:flex;gap:7px;padding:.75rem .85rem;border-top:1px solid var(--ink3)}
-.chat-input{flex:1;background:var(--bg);border:1px solid var(--ink3);border-radius:99px;padding:8px 14px;font-family:var(--sans);font-size:13px;font-weight:300;color:var(--ink);outline:none;transition:border-color .18s}
-.chat-input:focus{border-color:rgba(45,106,79,.4)}
-.chat-input::placeholder{color:var(--ink2)}
-.chat-send{width:34px;height:34px;border-radius:50%;background:var(--accent3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
-.chat-send:hover{background:var(--accent)}
+.sugs{display:flex;flex-wrap:wrap;gap:5px;padding:.6rem .85rem;border-top:1px solid rgba(28,28,26,.08);background:#fafaf8}
+.sug{padding:5px 11px;border:1px solid rgba(28,28,26,.1);border-radius:99px;font-size:11.5px;color:rgba(28,28,26,.6);cursor:pointer;background:#fff;transition:all .18s;font-family:"DM Sans",system-ui,sans-serif}
+.sug:hover{border-color:#1b4332;color:#1b4332;background:#e8f5ee}
+.chat-inp-row{display:flex;gap:7px;padding:.75rem .85rem;border-top:1px solid rgba(28,28,26,.08)}
+.chat-inp{flex:1;background:#fafaf8;border:1px solid rgba(28,28,26,.1);border-radius:99px;padding:8px 14px;font-family:"DM Sans",system-ui,sans-serif;font-size:13px;font-weight:300;color:#1c1c1a;outline:none;transition:border-color .18s}
+.chat-inp:focus{border-color:rgba(27,67,50,.4)}
+.chat-inp::placeholder{color:rgba(28,28,26,.4)}
+.chat-send{width:34px;height:34px;border-radius:50%;background:#1b4332;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+.chat-send:hover{background:#2d6a4f}
 .chat-send svg{width:13px;height:13px}
 
 /* TIPS */
-.tip-card{background:var(--cream);border:1px solid var(--ink3);border-radius:12px;overflow:hidden;margin-bottom:.85rem}
-.tip-hdr{padding:.8rem 1rem;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--ink3)}
+.tip-card{background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:12px;overflow:hidden;margin-bottom:.85rem}
+.tip-hdr{padding:.8rem 1rem;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(28,28,26,.08)}
 .tip-n{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
-.tip-n.high{background:var(--accent2);color:var(--accent3)}
-.tip-n.med{background:var(--amber2);color:var(--amber)}
-.tip-n.low{background:rgba(28,28,26,.06);color:var(--ink2)}
-.tip-ttl{font-size:13.5px;font-weight:400;color:var(--ink);flex:1}
+.tip-n.high{background:#e8f5ee;color:#1b4332}
+.tip-n.med{background:#fef3e2;color:#a05c00}
+.tip-n.low{background:rgba(28,28,26,.06);color:rgba(28,28,26,.5)}
+.tip-ttl{font-size:13.5px;font-weight:400;color:#1c1c1a;flex:1}
 .tip-bdg{font-size:11px;font-weight:500;padding:3px 8px;border-radius:99px;white-space:nowrap}
-.tip-bdg.high{background:var(--accent2);color:var(--accent3)}
-.tip-bdg.med{background:var(--amber2);color:var(--amber)}
-.tip-bdg.low{background:rgba(28,28,26,.06);color:var(--ink2)}
+.tip-bdg.high{background:#e8f5ee;color:#1b4332}
+.tip-bdg.med{background:#fef3e2;color:#a05c00}
+.tip-bdg.low{background:rgba(28,28,26,.06);color:rgba(28,28,26,.5)}
 .tip-body{padding:.85rem 1rem}
-.tip-desc{font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:.7rem}
+.tip-desc{font-size:13px;color:rgba(28,28,26,.6);line-height:1.7;margin-bottom:.7rem}
 .tip-steps{display:flex;flex-direction:column;gap:5px}
-.tip-step{display:flex;gap:8px;font-size:12.5px;color:var(--ink2);line-height:1.55}
-.tip-sn{width:16px;height:16px;border-radius:50%;background:var(--bg);border:1px solid var(--ink3);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px}
-.tip-eff{display:flex;align-items:center;gap:5px;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--ink3);font-size:11.5px;color:var(--ink2)}
+.tip-step{display:flex;gap:8px;font-size:12.5px;color:rgba(28,28,26,.6);line-height:1.55}
+.tip-sn{width:16px;height:16px;border-radius:50%;background:#fafaf8;border:1px solid rgba(28,28,26,.1);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px}
+.tip-eff{display:flex;align-items:center;gap:5px;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(28,28,26,.08);font-size:11.5px;color:rgba(28,28,26,.5)}
 .eff-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 
 /* GENERIC CARD */
-.card{background:var(--cream);border:1px solid var(--ink3);border-radius:12px;overflow:hidden;margin-bottom:1rem}
-.card-top{background:var(--bg);padding:.8rem 1rem;border-bottom:1px solid var(--ink3);font-size:13px;font-weight:400;color:var(--ink)}
+.card{background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.card-top{background:#fafaf8;padding:.8rem 1rem;border-bottom:1px solid rgba(28,28,26,.08);font-size:13px;font-weight:400;color:#1c1c1a}
 .card-body{padding:.85rem 1rem}
 
-/* COMPARISON BARS */
+/* INFO BADGES */
+.info-badge{background:#e8f5ee;border:1px solid rgba(27,67,50,.15);border-radius:8px;padding:.75rem 1rem;font-size:12.5px;color:#1b4332;line-height:1.6;margin-bottom:1rem;display:flex;gap:8px;align-items:flex-start}
+.warn-badge{background:#fef3e2;border:1px solid rgba(160,92,0,.15);border-radius:8px;padding:.75rem 1rem;font-size:12.5px;color:#a05c00;line-height:1.6;margin-bottom:1rem}
+
+/* BAR CHART */
 .bar-row{margin-bottom:.85rem}
-.bar-labels{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px}
-.bar-track{background:var(--bg);border-radius:99px;height:8px;overflow:hidden}
+.bar-labels{display:flex;justify-content:space-between;margin-bottom:4px}
+.bar-track{background:#fafaf8;border-radius:99px;height:8px;overflow:hidden}
 .bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
 
 /* CHECKLIST */
-.check-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--ink3);cursor:pointer}
+.check-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid rgba(28,28,26,.06);cursor:pointer}
 .check-item:last-child{border-bottom:none}
-.checkbox{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--ink3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.checkbox.checked{background:var(--accent);border-color:var(--accent)}
+.checkbox{width:17px;height:17px;border-radius:4px;border:1.5px solid rgba(28,28,26,.15);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.checkbox.checked{background:#1b4332;border-color:#1b4332}
 .checkbox svg{width:9px;height:9px;opacity:0;transition:opacity .15s}
 .checkbox.checked svg{opacity:1}
-.check-label{font-size:13px;color:var(--ink);transition:all .15s}
-.check-label.done{color:var(--ink2);text-decoration:line-through}
+.check-label{font-size:13px;color:#1c1c1a;transition:all .15s}
+.check-label.done{color:rgba(28,28,26,.4);text-decoration:line-through}
 
-/* INFO BADGE */
-.info-badge{background:var(--accent2);border:1px solid rgba(45,106,79,.2);border-radius:8px;padding:.75rem 1rem;font-size:12.5px;color:var(--accent3);line-height:1.6;margin-bottom:1rem;display:flex;gap:8px;align-items:flex-start}
-.warn-badge{background:var(--amber2);border:1px solid rgba(160,92,0,.15);border-radius:8px;padding:.75rem 1rem;font-size:12.5px;color:var(--amber);line-height:1.6;margin-bottom:1rem}
+/* ACCESS BOX */
+.access-box{background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:10px;padding:.85rem 1rem;margin-bottom:1.25rem}
+.access-label{font-size:11px;color:rgba(28,28,26,.45);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.access-row{display:flex;align-items:center;gap:8px}
+.access-input{flex:1;background:#fafaf8;border:1px solid rgba(28,28,26,.1);border-radius:6px;padding:7px 12px;font-size:12px;color:#1c1c1a;outline:none;font-family:"DM Sans",system-ui,sans-serif}
+.access-copy{padding:7px 14px;background:#1b4332;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:"DM Sans",system-ui,sans-serif;white-space:nowrap;transition:background .2s}
+.access-copy:hover{background:#2d6a4f}
+.access-hint{font-size:11px;color:rgba(28,28,26,.4);margin-top:5px}
 
-@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){nav{padding:.85rem 1.25rem}.savings-grid{grid-template-columns:1fr 1fr}}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  nav{padding:.85rem 1.25rem}
+  .sv-grid{grid-template-columns:1fr 1fr}
+  .tabs-bar .tab{font-size:11px;padding:.6rem .3rem}
+}
 </style>
 </head>
 <body>
+
 <nav>
   <a href="index.html" class="logo">SparWatt<sup>NO</sup></a>
   <div class="nav-tag">Full rapport</div>
 </nav>
+
 <div class="wrap">
 
-  <!-- BANNER WITH TOTAL SAVINGS -->
+  <!-- BANNER -->
   <div class="banner">
     <div class="banner-top">
       <div>
@@ -151,7 +161,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
         <div class="banner-place" id="banner-place">—</div>
       </div>
     </div>
-    <div class="savings-grid">
+    <div class="sv-grid">
       <div class="sv-card">
         <div class="sv-label">Estimert sparing</div>
         <div class="sv-val" id="sv-monthly">—</div>
@@ -170,14 +180,14 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
     </div>
   </div>
 
-  <!-- ACCESS URL HELPER -->
-  <div id="access-url-box" style="background:var(--cream);border:1px solid var(--ink3);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;display:none">
-    <div style="font-size:11px;color:var(--ink2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Din tilgangslenke — lagre denne</div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <input type="text" id="access-url-input" readonly style="flex:1;background:var(--bg);border:1px solid var(--ink3);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--ink);outline:none"/>
-      <button onclick="copyAccessUrl()" style="padding:7px 14px;background:var(--accent3);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--sans);white-space:nowrap">Kopier</button>
+  <!-- ACCESS BOX -->
+  <div class="access-box" id="access-box" style="display:none">
+    <div class="access-label">Din tilgangslenke — lagre denne</div>
+    <div class="access-row">
+      <input type="text" class="access-input" id="access-input" readonly/>
+      <button class="access-copy" onclick="copyAccess()">Kopier</button>
     </div>
-    <div style="font-size:11px;color:var(--ink2);margin-top:5px">Bokmerke denne lenken for å komme tilbake til rapporten din</div>
+    <div class="access-hint">Bokmerke denne lenken for å komme tilbake til rapporten din</div>
   </div>
 
   <!-- PILLS -->
@@ -195,17 +205,17 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
   <!-- TAB: AI -->
   <div class="tab-panel active" id="tab-ai">
     <div class="chat-box">
-      <div class="chat-header">
+      <div class="chat-hdr">
         <div class="chat-ico"><svg viewBox="0 0 14 14" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 1.5L2 8h5l-.5 4.5 6-7H7.5l.5-4z"/></svg></div>
-        <div class="chat-htext"><h3>SparWatt AI</h3><p id="chat-sub">Kjenner din bolig · Live priser</p></div>
-        <div class="chat-live"><div class="live-dot"></div><div class="live-lab">Live</div></div>
+        <div class="chat-ht"><h3>SparWatt AI</h3><p id="chat-sub">Kjenner din bolig · Live priser</p></div>
+        <div class="live"><div class="live-dot"></div><div class="live-lab">Live</div></div>
       </div>
       <div class="chat-msgs" id="chatMsgs">
-        <div class="msg bot"><div class="av">SW</div><div class="bubble" id="welcome-msg">Laster...</div></div>
+        <div class="msg bot"><div class="av">SW</div><div class="bubble" id="welcome-msg">Laster analysen din...</div></div>
       </div>
       <div class="sugs" id="sugs"></div>
-      <div class="chat-input-row">
-        <input type="text" class="chat-input" id="chatInput" placeholder="Still meg et spørsmål om strøm..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <div class="chat-inp-row">
+        <input type="text" class="chat-inp" id="chatInput" placeholder="Still meg et spørsmål om strøm..."/>
         <button class="chat-send" onclick="sendMsg()"><svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5"/></svg></button>
       </div>
     </div>
@@ -220,7 +230,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
     </div>
   </div>
 
-  <!-- TAB: LEVERANDØR -->
+  <!-- TAB: LEVERANDOR -->
   <div class="tab-panel" id="tab-leverandor">
     <div id="leverandor-content"></div>
   </div>
@@ -235,41 +245,83 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
   <div class="tab-panel" id="tab-regning">
     <div class="card">
       <div class="card-top">Slik er en typisk norsk strømregning fordelt</div>
-      <div class="card-body">
-        <div style="display:flex;flex-direction:column;gap:.85rem">
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:400;color:var(--ink)">Spotpris</span><span style="font-size:13px;color:var(--ink2)">~35%</span></div><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--accent3)"></div></div><div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.55">Prisen fra kraftmarkedet — varierer time for time. Høyest 17–21 og kalde vinterdager. <span style="color:var(--accent3)">Tips: flytt forbruk til 22–06.</span></div></div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:400;color:var(--ink)">Nettleie</span><span style="font-size:13px;color:var(--ink2)">~40%</span></div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--amber)"></div></div><div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.55">Betaling for transport av strøm — fast uansett leverandør. Kan reduseres ved å unngå effekttopper. <span style="color:var(--accent3)">Tips: ikke bruk ovn og vaskemaskin samtidig.</span></div></div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:400;color:var(--ink)">Avgifter og moms</span><span style="font-size:13px;color:var(--ink2)">~20%</span></div><div class="bar-track"><div class="bar-fill" style="width:20%;background:rgba(28,28,26,.2)"></div></div><div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.55">Lovpålagte og kan ikke påvirkes. Strømstøtten dekker deler av dette når prisen er høy.</div></div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:400;color:var(--ink)">Påslag og gebyr</span><span style="font-size:13px;color:var(--ink2)">~5%</span></div><div class="bar-track"><div class="bar-fill" style="width:5%;background:rgba(28,28,26,.3)"></div></div><div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.55">Det leverandøren tar i fortjeneste. Over 2 øre/kWh er dyrt. <span style="color:var(--accent3)">Sjekk på <a href="https://www.strompris.no" target="_blank" style="color:var(--accent3)">strompris.no</a>.</span></div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:1rem">
+        <div>
+          <div class="bar-labels"><span style="font-size:13px;font-weight:400;color:#1c1c1a">Spotpris</span><span style="font-size:13px;color:rgba(28,28,26,.5)">~35%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:35%;background:#1b4332"></div></div>
+          <div style="font-size:12px;color:rgba(28,28,26,.5);margin-top:4px;line-height:1.55">Prisen fra kraftmarkedet — varierer time for time. Høyest 17–21 og kalde vinterdager. <span style="color:#1b4332">Tips: flytt forbruk til 22–06.</span></div>
+        </div>
+        <div>
+          <div class="bar-labels"><span style="font-size:13px;font-weight:400;color:#1c1c1a">Nettleie</span><span style="font-size:13px;color:rgba(28,28,26,.5)">~40%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%;background:#a05c00"></div></div>
+          <div style="font-size:12px;color:rgba(28,28,26,.5);margin-top:4px;line-height:1.55">Betaling for transport av strøm — fast uansett leverandør. Reduseres ved å unngå effekttopper. <span style="color:#1b4332">Tips: ikke bruk ovn og vaskemaskin samtidig.</span></div>
+        </div>
+        <div>
+          <div class="bar-labels"><span style="font-size:13px;font-weight:400;color:#1c1c1a">Avgifter og moms</span><span style="font-size:13px;color:rgba(28,28,26,.5)">~20%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:20%;background:rgba(28,28,26,.2)"></div></div>
+          <div style="font-size:12px;color:rgba(28,28,26,.5);margin-top:4px;line-height:1.55">Lovpålagte og kan ikke påvirkes. Strømstøtten dekker deler av dette når prisen er høy.</div>
+        </div>
+        <div>
+          <div class="bar-labels"><span style="font-size:13px;font-weight:400;color:#1c1c1a">Påslag og gebyr</span><span style="font-size:13px;color:rgba(28,28,26,.5)">~5%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:5%;background:rgba(28,28,26,.3)"></div></div>
+          <div style="font-size:12px;color:rgba(28,28,26,.5);margin-top:4px;line-height:1.55">Det leverandøren tar i fortjeneste. Over 2 øre/kWh er dyrt. <span style="color:#1b4332">Sjekk på <a href="https://www.strompris.no" target="_blank" style="color:#1b4332">strompris.no</a>.</span></div>
         </div>
       </div>
     </div>
   </div>
 
 </div>
-<script>
 
-// ── TILGANGSKONTROLL ──
+<script>
+// ── ACCESS CONTROL ──
 (function(){
-  var VALID_TOKENS = [
-    "d002860aa39ab528f92d823d",  // master token
-    // Legg til nye tokens her når noen betaler
+  // ── TOKENS ──
+  // Gi én token per betalende kunde via e-post etter betaling.
+  // Format: sparwatt.vercel.app/full-rapport.html?access=TOKEN
+  // Legg til nye tokens ved å kopiere en linje og endre kommentaren.
+  var VALID = [
+    "d002860aa39ab528f92d823d",  // Master (test)
+    "de6ad5fc85a0a8c483eb81e0",  // Kunde 1
+    "ab69f8545254d0242e29a7d7",  // Kunde 2
+    "83b914ccefebbd97875bc257",  // Kunde 3
+    "4543f7502b33125f9cbe8f50",  // Kunde 4
+    "f6324b9cf2846077eee5d96f",  // Kunde 5
+    "3f28bd230f02c43792d0ea0c",  // Kunde 6
+    "a24f0df8a3ae7380187067fc",  // Kunde 7
+    "f2113faa3a68fbfd8fc9f631",  // Kunde 8
+    "31dc09c778df607af0bec31d",  // Kunde 9
+    "990a8c61824aeeab926dc1fe",  // Kunde 10
+    "1bb3ea71068814f572dd9a73",  // Kunde 11
+    "3448e521d560471c37560805",  // Kunde 12
+    "ef17d91a3daae66c782ea4f2",  // Kunde 13
+    "cf7af106e7b46fba35ca9f41",  // Kunde 14
+    "ab0763b2e96ef69908c9d468",  // Kunde 15
+    "6776b25518cee02f52d212e6",  // Kunde 16
+    "5a2aedde34b49cede5a57efd",  // Kunde 17
+    "ec3c63b726df6b075dc8cb29",  // Kunde 18
+    "26ea20aa0c8051435f9f4d73",  // Kunde 19
+    "6d3e9ddc31e2366cb8c17dff",  // Kunde 20
   ];
   var params = new URLSearchParams(window.location.search);
   var token = params.get("access");
-  // Also check localStorage (so bookmarked pages work)
-  var storedToken = localStorage.getItem("sw_access");
-  if(token && VALID_TOKENS.includes(token)){
+  var stored = localStorage.getItem("sw_access");
+  if(token && VALID.indexOf(token) > -1){
     localStorage.setItem("sw_access", token);
-  } else if(!VALID_TOKENS.includes(storedToken)){
-    // No valid token — redirect to payment
-    window.location.href = "sparwatt-analyse.html?msg=betaling";
+  } else if(VALID.indexOf(stored) === -1){
+    window.location.href = "sparwatt-analyse.html";
     return;
+  }
+  var activeToken = token || stored;
+  var box = document.getElementById("access-box");
+  var inp = document.getElementById("access-input");
+  if(box && inp){
+    inp.value = window.location.origin + "/full-rapport.html?access=" + activeToken;
+    box.style.display = "block";
   }
 })();
 
-function copyAccessUrl(){
-  var inp = document.getElementById("access-url-input");
+function copyAccess(){
+  var inp = document.getElementById("access-input");
   inp.select();
   document.execCommand("copy");
   var btn = inp.nextElementSibling;
@@ -277,207 +329,216 @@ function copyAccessUrl(){
   setTimeout(function(){ btn.textContent = "Kopier"; }, 2000);
 }
 
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach(function(t,i){
-    var ids = ['ai','tiltak','leverandor','innsikt','regning'];
-    t.classList.toggle('active', ids[i]===id);
-  });
-  document.querySelectorAll('.tab-panel').forEach(function(p){
-    p.classList.toggle('active', p.id==='tab-'+id);
-  });
+// ── HELPERS ──
+function switchTab(id){
+  var ids = ["ai","tiltak","leverandor","innsikt","regning"];
+  document.querySelectorAll(".tab").forEach(function(t,i){ t.classList.toggle("active", ids[i]===id); });
+  document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.toggle("active", p.id==="tab-"+id); });
 }
 
-function ptp(p,z){
-  if(!p){var m={"NO1":"Oslo og Øst-Norge","NO2":"Sørvest-Norge","NO3":"Midt-Norge","NO4":"Nord-Norge","NO5":"Vest-Norge"};return m[z]||"Norge";}
-  var n=parseInt(p);
-  if(n<1000)return"Oslo";if(n<2000)return"Akershus";if(n<3000)return"Innlandet";
-  if(n<4000)return"Telemark / Vestfold";if(n<5000)return"Agder / Rogaland";
-  if(n<5500)return"Vestland";if(n<6000)return"Rogaland";if(n<7000)return"Møre og Romsdal";
-  if(n<8000)return"Trøndelag";if(n<9000)return"Nordland";return"Troms og Finnmark";
+function ptp(post, zone){
+  if(!post){ var m={"NO1":"Oslo og Øst-Norge","NO2":"Sørvest-Norge","NO3":"Midt-Norge","NO4":"Nord-Norge","NO5":"Vest-Norge"}; return m[zone]||"Norge"; }
+  var n=parseInt(post);
+  if(n<1000)return"Oslo"; if(n<2000)return"Akershus"; if(n<3000)return"Innlandet";
+  if(n<4000)return"Telemark / Vestfold"; if(n<5000)return"Agder / Rogaland";
+  if(n<5500)return"Vestland"; if(n<6000)return"Rogaland"; if(n<7000)return"Møre og Romsdal";
+  if(n<8000)return"Trøndelag"; if(n<9000)return"Nordland"; return"Troms og Finnmark";
 }
 
-// Helper: get current access URL for bookmarking
-var currentToken = new URLSearchParams(window.location.search).get("access") || localStorage.getItem("sw_access");
-
-var pr={
-  q1:sessionStorage.getItem("sw_q1")||"Enebolig",
-  q2:sessionStorage.getItem("sw_q2")||"100-150 kvm",
-  q3post:sessionStorage.getItem("sw_q3post")||"",
-  q3zone:sessionStorage.getItem("sw_q3zone")||"NO1",
-  q4:sessionStorage.getItem("sw_q4")||"3-4 personer",
-  q5:(sessionStorage.getItem("sw_q5")||"Elektriske panelovner").split(","),
-  q6:sessionStorage.getItem("sw_q6")||"1000-2000 kWh",
-  q7:sessionStorage.getItem("sw_q7")||"Spotpris",
-  q8:sessionStorage.getItem("sw_q8")||"Nei, ikke aktuelt",
-  q9ev:sessionStorage.getItem("sw_q9ev")||"Nei",
-  q9:(sessionStorage.getItem("sw_q9")||"Ingen av disse").split(","),
-  q10:sessionStorage.getItem("sw_q10")||"",
-  q11provider:sessionStorage.getItem("sw_q11provider")||"",
-  q11markup:parseFloat(sessionStorage.getItem("sw_q11markup"))||0,
-  q11fee:parseFloat(sessionStorage.getItem("sw_q11fee"))||0
-};
-
-var place=ptp(pr.q3post,pr.q3zone);
-
-// Show access URL
-if(currentToken){
-  var box = document.getElementById("access-url-box");
-  var inp = document.getElementById("access-url-input");
-  var url = window.location.origin + "/full-rapport.html?access=" + currentToken;
-  inp.value = url;
-  box.style.display = "block";
+// ── LOAD PROFILE ──
+var pr;
+try {
+  var saved = localStorage.getItem("sw_profile");
+  var ts = parseInt(localStorage.getItem("sw_profile_ts")||"0");
+  if(saved && (Date.now()-ts) < 7200000){
+    var p = JSON.parse(saved);
+    pr = { q1:p.q1||"Enebolig", q2:p.q2||"100-150 kvm", q3post:p.q3post||"", q3zone:p.q3zone||"NO1", q4:p.q4||"3-4 personer", q5:(p.q5||"Elektriske panelovner").split(","), q6:p.q6||"1000-2000 kWh", q7:p.q7||"Spotpris", q8:p.q8||"Nei, ikke aktuelt", q9ev:p.q9ev||"Nei", q9:(p.q9||"Ingen av disse").split(","), q10:p.q10||"", q11provider:p.q11p||"", q11markup:parseFloat(p.q11m)||0, q11fee:parseFloat(p.q11f)||0 };
+  }
+} catch(e){}
+if(!pr){
+  pr = { q1:sessionStorage.getItem("sw_q1")||"Enebolig", q2:sessionStorage.getItem("sw_q2")||"100-150 kvm", q3post:sessionStorage.getItem("sw_q3post")||"", q3zone:sessionStorage.getItem("sw_q3zone")||"NO1", q4:sessionStorage.getItem("sw_q4")||"3-4 personer", q5:(sessionStorage.getItem("sw_q5")||"Elektriske panelovner").split(","), q6:sessionStorage.getItem("sw_q6")||"1000-2000 kWh", q7:sessionStorage.getItem("sw_q7")||"Spotpris", q8:sessionStorage.getItem("sw_q8")||"Nei, ikke aktuelt", q9ev:sessionStorage.getItem("sw_q9ev")||"Nei", q9:(sessionStorage.getItem("sw_q9")||"Ingen av disse").split(","), q10:sessionStorage.getItem("sw_q10")||"", q11provider:sessionStorage.getItem("sw_q11provider")||"", q11markup:parseFloat(sessionStorage.getItem("sw_q11markup"))||0, q11fee:parseFloat(sessionStorage.getItem("sw_q11fee"))||0 };
 }
 
-// Banner
-document.getElementById("banner-title").textContent="Hei! Her er rapporten din";
-document.getElementById("banner-sub").textContent=pr.q1+" · "+pr.q2+" · "+pr.q4;
-document.getElementById("banner-place").textContent=place;
+var place = ptp(pr.q3post, pr.q3zone);
 
-// Pills
-var pillData=[pr.q1,pr.q2,pr.q4+" i husstanden","Forbruk: "+pr.q6,pr.q7,pr.q9ev!=="Nei"?"Elbil: "+pr.q9ev:""].filter(Boolean);
-var pillsEl=document.getElementById("pills");
-pillData.forEach(function(p){var el=document.createElement("div");el.className="pill";el.textContent=p;pillsEl.appendChild(el);});
+// ── BANNER ──
+document.getElementById("banner-title").textContent = "Hei! Her er rapporten din";
+document.getElementById("banner-sub").textContent = pr.q1 + " · " + pr.q2 + " · " + pr.q4;
+document.getElementById("banner-place").textContent = place;
 
-// Tips
+// ── PILLS ──
+[pr.q1, pr.q2, pr.q4+" i husstanden", "Forbruk: "+pr.q6, pr.q7].forEach(function(t){
+  var el=document.createElement("div"); el.className="pill"; el.textContent=t;
+  document.getElementById("pills").appendChild(el);
+});
+
+// ── TIPS ──
 function getAllTips(){
-  var panel=pr.q5.includes("Elektriske panelovner");
-  var pump=pr.q5.includes("Varmepumpe");
-  var many=pr.q4==="3-4 personer"||pr.q4==="5 eller flere";
-  var high=pr.q6==="1000-2000 kWh"||pr.q6==="Over 2000 kWh";
-  var hytte=pr.q1==="Hytte / fritidsbolig";
-  var norgespris=pr.q7==="Norgespris"||pr.q7==="Fastpris";
-  var doneNight=pr.q9.includes("Vasker klær om natta");
-  var doneBereder=pr.q9.includes("Tidsstyring på berederen");
-  return[
-    panel&&!pump?{p:"high",t:"Bytt panelovner til varmepumpe",s:"400–800 kr/mnd",sv:600,d:"Elektriske panelovner er den dyreste oppvarmingen. En varmepumpe bruker 3× mindre strøm for samme varme.",st:["Få 3 tilbud fra godkjente installatorer (mittanbud.no)","Velg luft-til-luft varmepumpe for stue/gang","Investering 15–25 000 kr, tjent inn på 2–3 år"],e:"Engangsgreie · Spar for alltid"}:null,
-    norgespris?{p:"high",t:"Bytt til spotprisavtale",s:"100–300 kr/mnd",sv:200,d:"Du har "+pr.q7.toLowerCase()+". Spotpris er billigst over tid for de fleste norske husstander.",st:["Sjekk ditt nåværende påslag på strømregningen","Sammenlign på strompris.no","Bytte tar 5 minutter og er gratis"],e:"Enkel å gjennomføre · Umiddelbar effekt"}:null,
-    high&&many&&!doneBereder?{p:"high",t:"Tidsstyring på varmtvannsberederen",s:"150–280 kr/mnd",sv:215,d:"Med "+pr.q4+" i husstanden er berederen en stor utgiftspost. Skru ned om natta — du merker ingen forskjell.",st:["Kjøp tidsstyring (ca. 150–300 kr)","Still inn: av 23:00, på 05:00","Alternativt: elektriker installerer smart-styring"],e:"Sett opp én gang · Spar for alltid"}:null,
-    hytte?{p:"high",t:"Smartplugg på varmesystemet",s:"200–450 kr/mnd",sv:325,d:"Hytta bruker strøm når du ikke er der. Smartplugg lar deg styre varmen fra mobilen.",st:["Kjøp smartplugg (ca. 300–500 kr)","Koble til varmesystemet og last ned appen","Skru på 2 timer før ankomst"],e:"Enkel oppsett · Betaler seg første måneden"}:null,
-    !doneNight?{p:"med",t:"Unngå strøm i høypristimene 17–21",s:"60–150 kr/mnd",sv:100,d:"I "+place+" er strømprisene 2–4× høyere mellom 17 og 21. Flytt vaskemaskin og oppvask til etter kl. 22.",st:["Still inn oppvaskmaskin til å starte etter kl. 22","Vask klær mellom 00:00 og 06:00","Lad elbil om natta"],e:"Ingen kostnad · Liten vaneendring"}:null,
+  var panel = pr.q5.join(",").includes("panelovner");
+  var pump = pr.q5.join(",").includes("Varmepumpe");
+  var many = pr.q4==="3-4 personer"||pr.q4==="5 eller flere";
+  var high = pr.q6==="1000-2000 kWh"||pr.q6==="Over 2000 kWh";
+  var hytte = pr.q1==="Hytte / fritidsbolig";
+  var dyrAvtale = pr.q7==="Norgespris"||pr.q7==="Fastpris";
+  var doneNight = pr.q9.join(",").includes("Vasker");
+  var doneBereder = pr.q9.join(",").includes("Tidsstyring");
+  return [
+    panel&&!pump ? {p:"high",t:"Bytt panelovner til varmepumpe",s:"400–800 kr/mnd",sv:600,d:"Elektriske panelovner er den dyreste oppvarmingen. En varmepumpe bruker 3× mindre strøm for samme varme.",st:["Få 3 tilbud fra godkjente installatorer (mittanbud.no)","Velg luft-til-luft varmepumpe for stue/gang","Investering 15–25 000 kr, tjent inn på 2–3 år"],e:"Engangsgreie · Spar for alltid"} : null,
+    dyrAvtale ? {p:"high",t:"Bytt til spotprisavtale",s:"100–300 kr/mnd",sv:200,d:"Du har "+pr.q7.toLowerCase()+". Spotpris er billigst over tid for de fleste norske husstander.",st:["Sjekk nåværende påslag på strømregningen","Sammenlign på strompris.no","Bytte tar 5 minutter og er gratis"],e:"Enkel å gjennomføre · Umiddelbar effekt"} : null,
+    high&&many&&!doneBereder ? {p:"high",t:"Tidsstyring på varmtvannsberederen",s:"150–280 kr/mnd",sv:215,d:"Med "+pr.q4+" i husstanden er berederen en stor utgiftspost. Skru ned om natta — du merker ingen forskjell.",st:["Kjøp tidsstyring (ca. 150–300 kr)","Still inn: av 23:00, på 05:00","Alternativt: elektriker installerer smart-styring"],e:"Sett opp én gang · Spar for alltid"} : null,
+    hytte ? {p:"high",t:"Smartplugg på varmesystemet",s:"200–450 kr/mnd",sv:325,d:"Hytta bruker strøm når du ikke er der. Smartplugg lar deg styre varmen fra mobilen.",st:["Kjøp smartplugg (ca. 300–500 kr)","Koble til varmesystemet og last ned appen","Skru på 2 timer før ankomst"],e:"Enkel oppsett · Betaler seg første måneden"} : null,
+    !doneNight ? {p:"med",t:"Unngå strøm i høypristimene 17–21",s:"60–150 kr/mnd",sv:100,d:"I "+place+" er strømprisene 2–4× høyere mellom 17 og 21. Flytt vaskemaskin og oppvask til etter kl. 22.",st:["Still inn oppvaskmaskin til å starte etter kl. 22","Vask klær mellom 00:00 og 06:00","Lad elbil om natta"],e:"Ingen kostnad · Liten vaneendring"} : null,
     {p:"low",t:"Reduser effekttopper i nettleien",s:"50–120 kr/mnd",sv:80,d:"Nettleien beregnes delvis etter høyeste forbruk i løpet av en time.",st:["Ikke bruk ovn og vaskemaskin samtidig","Skru ned panelovner litt i stedet for maks","Bruk smart-styring for automatikk"],e:"Liten vaneendring · Stor effekt over tid"}
   ].filter(Boolean).slice(0,3);
 }
 
-var tips=getAllTips();
+var tips = getAllTips();
 
-// Calculate total savings incl leverandør switch
-var monthlyKwh=pr.q6==="Over 2000 kWh"?2200:pr.q6==="1000-2000 kWh"?1500:pr.q6==="500-1000 kWh"?750:350;
-var tipSaving=tips.reduce(function(s,t){return s+t.sv;},0);
-var leverandorSaving=0;
-if(pr.q11markup>0){
-  var currentCost=(pr.q11markup/100)*monthlyKwh*100+pr.q11fee;
-  leverandorSaving=Math.max(0,Math.round(currentCost-19));
-}
-var totalMonthly=tipSaving+leverandorSaving;
-var totalYearly=totalMonthly*12;
-
-document.getElementById("sv-monthly").textContent="~"+totalMonthly+" kr";
-document.getElementById("sv-yearly").textContent="~"+totalYearly+" kr";
-document.getElementById("sv-tips").textContent=tips.length+" stk";
+// Total savings
+var monthlyKwh = pr.q6==="Over 2000 kWh"?2200:pr.q6==="1000-2000 kWh"?1500:pr.q6==="500-1000 kWh"?750:350;
+var tipSaving = tips.reduce(function(s,t){return s+t.sv;},0);
+var leverandorSaving = 0;
+if(pr.q11markup>0){ var cur=(pr.q11markup/100)*monthlyKwh*100+pr.q11fee; leverandorSaving=Math.max(0,Math.round(cur-19)); }
+var totalMonthly = tipSaving + leverandorSaving;
+document.getElementById("sv-monthly").textContent = "~"+totalMonthly+" kr";
+document.getElementById("sv-yearly").textContent = "~"+(totalMonthly*12)+" kr";
+document.getElementById("sv-tips").textContent = tips.length+" stk";
 
 // Render tips
-var tipsCont=document.getElementById("tips-container");
-var checkCont=document.getElementById("checklist");
+var tipsCont = document.getElementById("tips-container");
+var checkCont = document.getElementById("checklist");
 tips.forEach(function(tip,i){
-  var ec=tip.p==="high"?"#1b4332":tip.p==="med"?"#a05c00":"#888";
-  var card=document.createElement("div");card.className="tip-card";
-  card.innerHTML="<div class='tip-hdr'><div class='tip-n "+tip.p+"'>"+(i+1)+"</div><div class='tip-ttl'>"+tip.t+"</div><div class='tip-bdg "+tip.p+"'>"+tip.s+"</div></div><div class='tip-body'><p class='tip-desc'>"+tip.d+"</p><div class='tip-steps'>"+tip.st.map(function(s,j){return"<div class='tip-step'><div class='tip-sn'>"+(j+1)+"</div><span>"+s+"</span></div>";}).join("")+"</div><div class='tip-eff'><div class='eff-dot' style='background:"+ec+"'></div>"+tip.e+"</div></div>";
+  var ec = tip.p==="high"?"#1b4332":tip.p==="med"?"#a05c00":"#888";
+  var card = document.createElement("div"); card.className="tip-card";
+  card.innerHTML = "<div class='tip-hdr'><div class='tip-n "+tip.p+"'>"+(i+1)+"</div><div class='tip-ttl'>"+tip.t+"</div><div class='tip-bdg "+tip.p+"'>"+tip.s+"</div></div><div class='tip-body'><p class='tip-desc'>"+tip.d+"</p><div class='tip-steps'>"+tip.st.map(function(s,j){return"<div class='tip-step'><div class='tip-sn'>"+(j+1)+"</div><span>"+s+"</span></div>";}).join("")+"</div><div class='tip-eff'><div class='eff-dot' style='background:"+ec+"'></div>"+tip.e+"</div></div>";
   tipsCont.appendChild(card);
-  var item=document.createElement("div");item.className="check-item";
-  var ck=localStorage.getItem("sw_ck_"+i)==="1";
-  item.innerHTML="<div class='checkbox "+(ck?"checked":"")+"' id='cb"+i+"'><svg viewBox='0 0 9 9' fill='none'><path d='M1.5 4.5l2 2 4-4' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg></div><span class='check-label "+(ck?"done":"")+"' id='cl"+i+"'>"+tip.t+"</span>";
-  item.onclick=function(){var cb=document.getElementById("cb"+i);var cl=document.getElementById("cl"+i);var was=cb.classList.contains("checked");cb.classList.toggle("checked");cl.classList.toggle("done");localStorage.setItem("sw_ck_"+i,was?"0":"1");};
+  var item = document.createElement("div"); item.className="check-item";
+  var ck = localStorage.getItem("sw_ck_"+i)==="1";
+  item.innerHTML = "<div class='checkbox "+(ck?"checked":"")+"' id='cb"+i+"'><svg viewBox='0 0 9 9' fill='none'><path d='M1.5 4.5l2 2 4-4' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg></div><span class='check-label "+(ck?"done":"")+"' id='cl"+i+"'>"+tip.t+"</span>";
+  item.onclick = function(){ var cb=document.getElementById("cb"+i);var cl=document.getElementById("cl"+i);var was=cb.classList.contains("checked");cb.classList.toggle("checked");cl.classList.toggle("done");localStorage.setItem("sw_ck_"+i,was?"0":"1"); };
   checkCont.appendChild(item);
 });
 
-// Leverandør tab
-function buildLeverandor(){
-  var el=document.getElementById("leverandor-content");
-  var alts=[{n:"Tibber",m:0,f:39,note:"Ingen påslag, smart app med live priser"},{n:"Vibb",m:0,f:49,note:"Ingen påslag, sanntidsmåling tilgjengelig"},{n:"Jærkraft Kun Strøm",m:0,f:19,note:"Billigste faste kostnad på markedet"}];
-  var html="";
-  if(pr.q11markup>0&&leverandorSaving>30){
-    html+="<div class='info-badge'><svg width='14' height='14' viewBox='0 0 14 14' fill='none' style='flex-shrink:0;margin-top:1px'><path d='M7 1.5l1.3 2.6 2.9.42-2.1 2.05.5 2.9L7 8.1l-2.6 1.37.5-2.9L2.8 4.52l2.9-.42z' stroke='#1b4332' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/></svg><span>Du kan potensielt spare ca. <strong>"+leverandorSaving+" kr/mnd</strong> ved å bytte fra "+(pr.q11provider||"nåværende leverandør")+" ("+pr.q11markup+" øre/kWh påslag) til en av alternativene under.</span></div>";
-  } else if(pr.q11provider&&pr.q11markup<=1&&pr.q11fee<=49){
-    html+="<div class='info-badge'>Du har allerede en god avtale — lavt påslag og rimelig gebyr. Bra jobbet!</div>";
+// ── LEVERANDOR ──
+(function(){
+  var el = document.getElementById("leverandor-content");
+  var alts = [{n:"Tibber",m:0,f:39,note:"Ingen påslag, smart app med live priser"},{n:"Vibb",m:0,f:49,note:"Ingen påslag, sanntidsmåling"},{n:"Jærkraft Kun Strøm",m:0,f:19,note:"Billigste faste kostnad på markedet"}];
+  var html = "";
+  if(leverandorSaving>30){
+    html += "<div class='info-badge'><svg width='14' height='14' viewBox='0 0 14 14' fill='none' style='flex-shrink:0;margin-top:1px'><path d='M7 1.5l1.3 2.6 2.9.4-2.1 2.1.5 2.9L7 8l-2.6 1.5.5-2.9L2.8 4.5l2.9-.4z' stroke='#1b4332' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/></svg><span>Du kan potensielt spare ca. <strong>"+leverandorSaving+" kr/mnd</strong> ved å bytte fra "+(pr.q11provider||"nåværende leverandør")+" ("+pr.q11markup+" øre/kWh påslag) til en billigere avtale.</span></div>";
+  } else if(pr.q11markup<=1&&pr.q11fee<=49&&pr.q11provider){
+    html += "<div class='info-badge'>Du har allerede en god avtale — lavt påslag og rimelig gebyr.</div>";
   } else {
-    html+="<div class='info-badge'>Her er de billigste strømalternativene på markedet akkurat nå. Oppgi påslag og gebyr i skjemaet for personlig sammenlikning.</div>";
+    html += "<div class='info-badge'>Her er de billigste strømalternativene akkurat nå. Oppgi påslag og gebyr i skjemaet for personlig sammenligning.</div>";
   }
-  html+="<div class='card' style='margin-bottom:1rem'><div class='card-top'>Billigste alternativer akkurat nå</div><div class='card-body' style='display:flex;flex-direction:column;gap:.65rem'>";
+  html += "<div class='card'><div class='card-top'>Billigste alternativer akkurat nå</div><div class='card-body' style='display:flex;flex-direction:column;gap:.65rem'>";
   alts.forEach(function(a){
-    var est=Math.round((a.m/100)*monthlyKwh*100+a.f);
-    var isCurrent=pr.q11provider&&pr.q11provider.toLowerCase().includes(a.n.toLowerCase().split(" ")[0]);
-    html+="<div style='display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:"+(isCurrent?"var(--accent2)":"var(--bg)")+";border-radius:8px;border:1px solid "+(isCurrent?"rgba(45,106,79,.3)":"transparent")+";gap:.5rem;flex-wrap:wrap'>";
-    html+="<div><div style='font-size:13.5px;font-weight:400;color:var(--ink)'>"+a.n+(isCurrent?" <span style='font-size:11px;color:var(--accent3)'>(din nåværende)</span>":"")+"</div><div style='font-size:12px;color:var(--ink2);margin-top:2px'>"+a.note+"</div></div>";
-    html+="<div style='text-align:right;flex-shrink:0'><div style='font-size:13px;font-weight:400;color:var(--accent3)'>~"+est+" kr/mnd</div><div style='font-size:11px;color:var(--ink2)'>"+(a.m===0?"0 øre påslag":a.m+" øre")+" + "+a.f+" kr/mnd</div></div></div>";
+    var est = Math.round((a.m/100)*monthlyKwh*100+a.f);
+    html += "<div style='display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#fafaf8;border-radius:8px;gap:.5rem;flex-wrap:wrap'><div><div style='font-size:13.5px;font-weight:400;color:#1c1c1a'>"+a.n+"</div><div style='font-size:12px;color:rgba(28,28,26,.5);margin-top:2px'>"+a.note+"</div></div><div style='text-align:right;flex-shrink:0'><div style='font-size:13px;font-weight:400;color:#1b4332'>~"+est+" kr/mnd</div><div style='font-size:11px;color:rgba(28,28,26,.4)'>"+a.f+" kr gebyr/mnd</div></div></div>";
   });
-  html+="</div></div>";
-  html+="<a href='https://www.strompris.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:var(--accent3);color:#fff;border-radius:6px;font-size:13px;text-decoration:none'>Se alle leverandører på strompris.no <svg width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M2 10L10 2M6 2h4v4' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg></a>";
-  el.innerHTML=html;
-}
+  html += "</div></div><a href='https://www.strompris.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1b4332;color:#fff;border-radius:6px;font-size:13px;text-decoration:none'>Se alle leverandører på strompris.no <svg width='11' height='11' viewBox='0 0 11 11' fill='none'><path d='M2 9L9 2M5.5 2h3.5v3.5' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg></a>";
+  el.innerHTML = html;
+})();
 
-// Innsikt tab — comparison + elbil
-function buildInnsikt(){
-  var compEl=document.getElementById("comparison-content");
-  var elbilEl=document.getElementById("elbil-content");
-  var avgMap={"Leilighet":{"Under 50 kvm":250,"50-100 kvm":450,"100-150 kvm":600,"Over 150 kvm":750,"default":400},"Rekkehus / tomannsbolig":{"Under 50 kvm":500,"50-100 kvm":800,"100-150 kvm":1100,"Over 150 kvm":1400,"default":900},"Enebolig":{"Under 50 kvm":600,"50-100 kvm":1000,"100-150 kvm":1400,"Over 150 kvm":1800,"default":1300},"Hytte / fritidsbolig":{"default":600}};
-  var userKwh=pr.q6==="Over 2000 kWh"?2200:pr.q6==="1000-2000 kWh"?1500:pr.q6==="500-1000 kWh"?750:pr.q6==="Under 500 kWh"?350:0;
+// ── INNSIKT ──
+(function(){
+  var compEl = document.getElementById("comparison-content");
+  var elbilEl = document.getElementById("elbil-content");
+  var avgMap = {"Leilighet":{"Under 50 kvm":250,"50-100 kvm":450,"100-150 kvm":600,"Over 150 kvm":750,"default":400},"Rekkehus / tomannsbolig":{"default":900},"Enebolig":{"Under 50 kvm":600,"50-100 kvm":1000,"100-150 kvm":1400,"Over 150 kvm":1800,"default":1300},"Hytte / fritidsbolig":{"default":600}};
+  var userKwh = pr.q6==="Over 2000 kWh"?2200:pr.q6==="1000-2000 kWh"?1500:pr.q6==="500-1000 kWh"?750:pr.q6==="Under 500 kWh"?350:0;
   if(userKwh){
-    var typeAvg=avgMap[pr.q1]||avgMap["Enebolig"];
-    var avg=typeAvg[pr.q2]||typeAvg["default"];
-    var diff=Math.round(((userKwh-avg)/avg)*100);
-    var isAbove=diff>0;
-    var bUser=Math.round((userKwh/Math.max(userKwh,avg))*100);
-    var bAvg=Math.round((avg/Math.max(userKwh,avg))*100);
-    var badge=isAbove?"<div class='warn-badge'>Din husstand bruker <strong>"+Math.abs(diff)+"% mer</strong> enn gjennomsnittet for tilsvarende boliger i "+place+" — her er det potensial.</div>":"<div class='info-badge'>Bra jobbet! Du bruker <strong>"+Math.abs(diff)+"% mindre</strong> enn gjennomsnittet i "+place+".</div>";
-    compEl.innerHTML=badge+"<div class='card'><div class='card-top'>Din husstand vs gjennomsnittet i "+place+"</div><div class='card-body'><div class='bar-row'><div class='bar-labels'><span style='font-size:12px;color:var(--ink2)'>Din husstand</span><span style='font-size:12px;font-weight:400;color:var(--ink)'>"+userKwh+" kWh/mnd</span></div><div class='bar-track'><div class='bar-fill' style='width:"+bUser+"%;background:"+(isAbove?"var(--amber)":"var(--accent)")+"'></div></div></div><div class='bar-row'><div class='bar-labels'><span style='font-size:12px;color:var(--ink2)'>Gjennomsnitt "+pr.q1.toLowerCase()+" i "+place+"</span><span style='font-size:12px;font-weight:400;color:var(--ink)'>"+avg+" kWh/mnd</span></div><div class='bar-track'><div class='bar-fill' style='width:"+bAvg+"%;background:var(--ink3)'></div></div></div>"+(isAbove&&Math.abs(diff)>10?"<p style='font-size:12px;color:var(--ink2);margin-top:.85rem;line-height:1.6'>Spør AI-en hva som kan forklare differansen — det er ofte oppvarming eller varmtvann.</p>":"")+"</div></div>";
+    var typeAvg = avgMap[pr.q1]||avgMap["Enebolig"];
+    var avg = typeAvg[pr.q2]||typeAvg["default"];
+    var diff = Math.round(((userKwh-avg)/avg)*100);
+    var isAbove = diff>0;
+    var bUser = Math.round((userKwh/Math.max(userKwh,avg))*100);
+    var bAvg = Math.round((avg/Math.max(userKwh,avg))*100);
+    var badge = isAbove ? "<div class='warn-badge'>Din husstand bruker <strong>"+Math.abs(diff)+"% mer</strong> enn gjennomsnittet for tilsvarende boliger i "+place+".</div>" : "<div class='info-badge'>Bra! Du bruker <strong>"+Math.abs(diff)+"% mindre</strong> enn gjennomsnittet i "+place+".</div>";
+    compEl.innerHTML = badge+"<div class='card'><div class='card-top'>Din husstand vs gjennomsnittet i "+place+"</div><div class='card-body'><div class='bar-row'><div class='bar-labels'><span style='font-size:12px;color:rgba(28,28,26,.5)'>Din husstand</span><span style='font-size:12px;font-weight:400;color:#1c1c1a'>"+userKwh+" kWh/mnd</span></div><div class='bar-track'><div class='bar-fill' style='width:"+bUser+"%;background:"+(isAbove?"#a05c00":"#1b4332")+"'></div></div></div><div class='bar-row' style='margin-top:.75rem'><div class='bar-labels'><span style='font-size:12px;color:rgba(28,28,26,.5)'>Gjennomsnitt i "+place+"</span><span style='font-size:12px;font-weight:400;color:#1c1c1a'>"+avg+" kWh/mnd</span></div><div class='bar-track'><div class='bar-fill' style='width:"+bAvg+"%;background:rgba(28,28,26,.15)'></div></div></div></div></div>";
   }
-  var ev=pr.q9ev;
+  var ev = pr.q9ev;
   if(ev==="Nei"){elbilEl.innerHTML="";return;}
-  var rows="";
-  if(ev==="Ja, lader hjemme"){
-    rows=tipRow("Lad alltid mellom 23:00 og 06:00","I "+place+" er prisene lavest nattestid. Sett ladetimeren én gang og glem det.","Potensiell sparing: 100–300 kr/mnd","high")+tipRow("Bruk smartlading hvis du har Tibber","Tibber styrer ladingen automatisk etter timepris og når du trenger bilen klar.","Kan halvere ladekostnaden","med")+tipRow("Unngå lading og matlaging samtidig","Komfyr + elbillading i samme time gir effekttopper som øker nettleien.","Reduserer nettleiepåslag","low");
-  } else if(ev==="Ja, lader ute / på jobb"){
-    rows=tipRow("Sjekk om jobben har gratis lading","Mange arbeidsgivere tilbyr gratis elbillading. Skattefri fordel opp til en viss grense.","Kan spare 200–500 kr/mnd","high")+tipRow("Bruk destinasjonslading strategisk","Hurtiglading er dyrt per kWh. Foretrekk lading på kjøpesenter eller IKEA der du parkerer uansett.","Reduserer ladekostnad","med");
-  } else if(ev.includes("vurderer")){
-    rows=tipRow("Elbil kan spare deg penger totalt","Med din spotprisavtale koster det ca. 2–4 kr å lade tilsvarende 1 liter bensin.","Avhenger av kjøremønster","med")+tipRow("Sjekk støtteordninger i "+place,"Mange kommuner har parkeringsfordeler og bompengefritak for elbil.","Kan gi betydelige besparelser","low");
+  var rows = "";
+  function tipR(title,desc,saving,p){var c=p==="high"?["#e8f5ee","#1b4332"]:p==="med"?["#fef3e2","#a05c00"]:["rgba(28,28,26,.06)","rgba(28,28,26,.4)"];return"<div style='border:1px solid rgba(28,28,26,.08);border-radius:8px;padding:.8rem 1rem;margin-bottom:.65rem'><div style='display:flex;align-items:center;gap:7px;margin-bottom:4px'><span style='font-size:10px;padding:2px 8px;border-radius:99px;background:"+c[0]+";color:"+c[1]+";font-weight:500'>"+(p==="high"?"Viktig":p==="med"?"Tips":"Info")+"</span><span style='font-size:13px;font-weight:400;color:#1c1c1a'>"+title+"</span></div><p style='font-size:12.5px;color:rgba(28,28,26,.55);line-height:1.6;margin-bottom:4px'>"+desc+"</p><span style='font-size:11.5px;color:#1b4332'>"+saving+"</span></div>";}
+  if(ev==="Ja, lader hjemme"){rows=tipR("Lad alltid mellom 23:00 og 06:00","I "+place+" er prisene lavest nattestid. Sett ladetimeren én gang og glem det.","Potensiell sparing: 100–300 kr/mnd","high")+tipR("Bruk smartlading med Tibber","Tibber styrer ladingen automatisk etter timepris og når du trenger bilen klar.","Kan halvere ladekostnaden","med")+tipR("Unngå lading og matlaging samtidig","Komfyr + elbillading i samme time gir effekttopper i nettleien.","Reduserer nettleiepåslag","low");}
+  else if(ev.includes("ute")){rows=tipR("Sjekk om jobben har gratis lading","Mange arbeidsgivere tilbyr gratis elbillading. Skattefri fordel.","Kan spare 200–500 kr/mnd","high")+tipR("Bruk destinasjonslading strategisk","Hurtiglading er dyrt. Foretrekk lading på kjøpesenter der du parkerer uansett.","Reduserer ladekostnad","med");}
+  else{rows=tipR("Elbil kan spare deg penger totalt","Med spotprisavtale koster det ca. 2–4 kr å lade tilsvarende 1 liter bensin.","Avhenger av kjøremønster","med")+tipR("Sjekk støtteordninger i "+place,"Mange kommuner har parkeringsfordeler og bompengefritak for elbil.","Kan gi betydelige besparelser","low");}
+  elbilEl.innerHTML = "<div class='card'><div class='card-top' style='background:#1b4332;color:#fff'>Elbil-optimalisering</div><div class='card-body'>"+rows+"</div></div>";
+})();
+
+// ── AI CHAT ──
+var chatHist = [];
+document.getElementById("chatInput").addEventListener("keydown", function(e){ if(e.key==="Enter") sendMsg(); });
+
+var hasPanel = pr.q5.join(",").includes("panelovner") && !pr.q5.join(",").includes("Varmepumpe");
+var hasDyr = pr.q7==="Norgespris"||pr.q7==="Fastpris";
+var wMsg = "Hei! Jeg har analysert din "+pr.q1.toLowerCase()+" i "+place+". ";
+if(hasPanel) wMsg += "Du har panelovner som primæroppvarming — det er typisk den dyreste løsningen. Vil du at jeg forklarer hva en varmepumpe ville spart deg?";
+else if(hasDyr) wMsg += "Jeg ser du har "+pr.q7.toLowerCase()+". Det kan være dyrere enn nødvendig. Vil du at jeg forklarer forskjellen fra spotpris?";
+else wMsg += "Jeg kjenner boligen din og henter live strømpriser fra "+place+". Hva lurer du på?";
+document.getElementById("welcome-msg").textContent = wMsg;
+document.getElementById("chat-sub").textContent = "Kjenner din "+pr.q1.toLowerCase()+" · Live priser fra "+place;
+
+var sugList = [
+  "Hva koster strømmen i "+place+" nå?",
+  hasPanel ? "Lønner varmepumpe seg for meg?" : "Hva er mitt beste sparetiltak?",
+  hasDyr ? "Bør jeg bytte til spotpris?" : "Når er strømmen billigst i dag?",
+  "Hva er nettleie?"
+];
+var sugsEl = document.getElementById("sugs");
+sugList.forEach(function(s){
+  var btn = document.createElement("button"); btn.className="sug"; btn.textContent=s;
+  btn.onclick = function(){ document.getElementById("chatInput").value=s; sendMsg(); };
+  sugsEl.appendChild(btn);
+});
+
+function appendMsg(role, text){
+  var msgs = document.getElementById("chatMsgs");
+  var div = document.createElement("div"); div.className="msg "+(role==="user"?"user":"bot");
+  div.innerHTML = "<div class='av'>"+(role==="user"?"Deg":"SW")+"</div><div class='bubble'>"+text+"</div>";
+  msgs.appendChild(div); msgs.scrollTop=msgs.scrollHeight;
+}
+function showTyping(){
+  var msgs = document.getElementById("chatMsgs");
+  var div = document.createElement("div"); div.className="msg bot"; div.id="typing";
+  div.innerHTML = "<div class='av'>SW</div><div class='bubble'><div class='typing-dots'><span></span><span></span><span></span></div></div>";
+  msgs.appendChild(div); msgs.scrollTop=msgs.scrollHeight;
+}
+function rmTyping(){ var t=document.getElementById("typing"); if(t) t.remove(); }
+function hideSugs(){ document.getElementById("sugs").style.display="none"; }
+
+async function sendMsg(){
+  var inp = document.getElementById("chatInput");
+  var txt = inp.value.trim(); if(!txt) return;
+  inp.value = ""; hideSugs();
+
+  // Profile updates via chat
+  var lower = txt.toLowerCase();
+  if(lower.includes("varmepumpe")&&(lower.includes("fått")||lower.includes("installert"))){
+    pr.q5 = pr.q5.filter(function(s){return !s.includes("panelovner");});
+    pr.q5.push("Varmepumpe");
   }
-  elbilEl.innerHTML="<div class='card'><div class='card-top' style='background:var(--accent3);color:#fff'>Elbil-optimalisering</div><div class='card-body' style='display:flex;flex-direction:column;gap:.75rem'>"+rows+"</div></div>";
+  if(lower.includes("tibber")&&(lower.includes("byttet")||lower.includes("har"))){
+    pr.q11provider="Tibber"; pr.q11markup=0; pr.q11fee=39;
+  }
+
+  appendMsg("user", txt);
+  chatHist.push({role:"user", content:txt});
+  showTyping();
+  try {
+    var res = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        messages: chatHist,
+        profile: {q1:pr.q1,q2:pr.q2,q3:pr.q3zone,q4:pr.q4,q5:pr.q5.join(", "),q6:pr.q6,q7:pr.q7,q8:pr.q8,q11provider:pr.q11provider,q11markup:pr.q11markup,placeName:place}
+      })
+    });
+    var data = await res.json(); rmTyping();
+    var reply = data.reply || "Beklager, noe gikk galt. Prøv igjen.";
+    appendMsg("bot", reply);
+    chatHist.push({role:"assistant", content:reply});
+  } catch(e){ rmTyping(); appendMsg("bot","Kunne ikke koble til akkurat nå. Prøv igjen."); }
 }
-
-function tipRow(title,desc,saving,p){
-  var c=p==="high"?["var(--accent2)","var(--accent3)"]:p==="med"?["var(--amber2)","var(--amber)"]:["rgba(28,28,26,.06)","var(--ink2)"];
-  return"<div style='border:1px solid var(--ink3);border-radius:8px;padding:.8rem 1rem'><div style='display:flex;align-items:center;gap:7px;margin-bottom:4px'><span style='font-size:10px;padding:2px 8px;border-radius:99px;background:"+c[0]+";color:"+c[1]+";font-weight:500'>"+(p==="high"?"Viktig":p==="med"?"Tips":"Info")+"</span><span style='font-size:13px;font-weight:400;color:var(--ink)'>"+title+"</span></div><p style='font-size:12.5px;color:var(--ink2);line-height:1.6;margin-bottom:4px'>"+desc+"</p><span style='font-size:11.5px;color:var(--accent3)'>"+saving+"</span></div>";
-}
-
-// Welcome message
-var hasPanel=pr.q5.includes("Elektriske panelovner")&&!pr.q5.includes("Varmepumpe");
-var hasDyrAvtale=pr.q7==="Norgespris"||pr.q7==="Fastpris";
-var wMsg="Hei! Jeg har analysert din "+pr.q1.toLowerCase()+" i "+place+". ";
-if(hasPanel)wMsg+="Du har panelovner som primæroppvarming — det er typisk den dyreste løsningen. Vil du at jeg forklarer hva en varmepumpe ville spart deg?";
-else if(hasDyrAvtale)wMsg+="Jeg ser du har "+pr.q7.toLowerCase()+". Det kan være dyrere enn nødvendig. Vil du at jeg forklarer hva du faktisk betaler?";
-else wMsg+="Jeg kjenner boligen din og henter live strømpriser fra "+place+". Hva lurer du på?";
-document.getElementById("welcome-msg").textContent=wMsg;
-document.getElementById("chat-sub").textContent="Kjenner din "+pr.q1.toLowerCase()+" · Live priser fra "+place;
-
-// Suggestions
-var sugList=["Hva koster strømmen i "+place+" nå?",hasPanel?"Lønner varmepumpe seg for meg?":"Hva er mitt beste sparetiltak?",hasDyrAvtale?"Bør jeg bytte til spotpris?":"Når er strømmen billigst i dag?","Hva er nettleie?"];
-var sugsEl=document.getElementById("sugs");
-sugList.forEach(function(s){var btn=document.createElement("button");btn.className="sug";btn.textContent=s;btn.onclick=function(){sendSuggestion(btn);};sugsEl.appendChild(btn);});
-
-buildLeverandor();
-buildInnsikt();
-
-// Chat
-var chatHist=[];
-function appendMsg(role,text){var msgs=document.getElementById("chatMsgs");var div=document.createElement("div");div.className="msg "+(role==="user"?"user":"bot");div.innerHTML="<div class='av'>"+(role==="user"?"Deg":"SW")+"</div><div class='bubble'>"+text+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
-function showTyping(){var msgs=document.getElementById("chatMsgs");var div=document.createElement("div");div.className="msg bot";div.id="typing";div.innerHTML="<div class='av'>SW</div><div class='bubble'><div class='typing'><span></span><span></span><span></span></div></div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
-function rmTyping(){var t=document.getElementById("typing");if(t)t.remove();}
-function hideSugs(){document.getElementById("sugs").style.display="none";}
-async function sendMsg(){var inp=document.getElementById("chatInput");var txt=inp.value.trim();if(!txt)return;inp.value="";hideSugs();appendMsg("user",txt);chatHist.push({role:"user",content:txt});showTyping();
-  try{var res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:chatHist,profile:{q1:pr.q1,q2:pr.q2,q3:pr.q3zone,q4:pr.q4,q5:pr.q5.join(", "),q6:pr.q6,q7:pr.q7,q8:pr.q8,q11provider:pr.q11provider,q11markup:pr.q11markup,placeName:place}})});var data=await res.json();rmTyping();var reply=data.reply||"Beklager, noe gikk galt.";appendMsg("bot",reply);chatHist.push({role:"assistant",content:reply});}
-  catch(e){rmTyping();appendMsg("bot","Kunne ikke koble til akkurat nå. Prøv igjen.");}
-}
-function sendSuggestion(btn){document.getElementById("chatInput").value=btn.textContent;sendMsg();}
 </script>
 </body>
 </html>

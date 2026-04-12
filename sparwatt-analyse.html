@@ -3,66 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SparWatt — Din personlige AI-rådgiver for strøm</title>
+<title>SparWatt — Din strømanalyse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#fafaf8;--ink:#1c1c1a;--ink2:rgba(28,28,26,.45);--ink3:rgba(28,28,26,.08);
-  --cream:#fff;--accent:#2d6a4f;--accent2:#e8f5ee;--accent3:#1b4332;
-  --radius:10px;--serif:'Cormorant Garamond',serif;--sans:'DM Sans',sans-serif;
-}
-html,body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;overflow-x:hidden}
-.progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--ink3);z-index:100}
-.progress-fill{height:100%;background:var(--accent3);transition:width .45s cubic-bezier(.4,0,.2,1)}
-nav{position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(247,244,239,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--ink3)}
-.logo{font-family:var(--serif);font-size:1.3rem;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
-.logo sup{font-size:.5rem;color:var(--accent);vertical-align:super;font-family:var(--sans);font-weight:500;letter-spacing:.08em}
-.step-counter{font-size:12px;color:var(--ink2)}
+
+html,body{min-height:100vh;background:#fafaf8;color:#1c1c1a;font-family:"DM Sans",system-ui,sans-serif;font-weight:300;overflow-x:hidden}
+.progress{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(28,28,26,.1);z-index:100}
+.progress-fill{height:100%;background:#1b4332;transition:width .45s cubic-bezier(.4,0,.2,1)}
+nav{position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(250,250,248,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(28,28,26,.1)}
+.logo{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.3rem;color:#1c1c1a;text-decoration:none;letter-spacing:-.01em}
+.logo sup{font-size:.5rem;color:#2d6a4f;vertical-align:super;font-family:"DM Sans",system-ui,sans-serif;font-weight:500;letter-spacing:.08em}
+.step-counter{font-size:12px;color:rgba(28,28,26,.6)}
 .container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 3rem}
 .screen{width:100%;max-width:540px;display:none;animation:up .4s cubic-bezier(.4,0,.2,1) forwards}
 .screen.active{display:block}
 @keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.step-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;font-weight:400}
-h2{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400;letter-spacing:-.025em;line-height:1.2;margin-bottom:.6rem}
-.screen-sub{font-size:.95rem;color:var(--ink2);line-height:1.7;margin-bottom:1.75rem}
+.step-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#1b4332;margin-bottom:1.25rem;font-weight:400}
+h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400;letter-spacing:-.025em;line-height:1.2;margin-bottom:.6rem}
+.screen-sub{font-size:.95rem;color:rgba(28,28,26,.6);line-height:1.7;margin-bottom:1.75rem}
 .options{display:flex;flex-direction:column;gap:9px;margin-bottom:1.5rem}
-.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid var(--ink3);border-radius:var(--radius);cursor:pointer;background:var(--cream);font-size:.9rem;color:var(--ink);text-align:left;width:100%;transition:border-color .18s,background .18s,transform .12s;font-family:var(--sans);font-weight:300}
-.opt:hover{border-color:rgba(45,106,79,.4);background:var(--accent2);transform:translateX(3px)}
-.opt.selected,.opt.multi-on{border-color:var(--accent);background:var(--accent2)}
-.opt-k{width:24px;height:24px;border-radius:6px;border:1px solid var(--ink3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink2);flex-shrink:0;transition:all .18s;font-family:var(--sans)}
-.opt.selected .opt-k,.opt.multi-on .opt-k{border-color:var(--accent);color:var(--accent);background:rgba(45,106,79,.08)}
-textarea,input[type="email"],input[type="text"]{width:100%;background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);color:var(--ink);font-family:var(--sans);font-size:.9rem;font-weight:300;padding:14px 16px;outline:none;transition:border-color .18s;margin-bottom:1.25rem}
+.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid rgba(28,28,26,.1);border-radius:10px;cursor:pointer;background:#fff;font-size:.9rem;color:#1c1c1a;text-align:left;width:100%;transition:border-color .18s,background .18s,transform .12s;font-family:"DM Sans",system-ui,sans-serif;font-weight:300}
+.opt:hover{border-color:rgba(27,67,50,.4);background:#e8f5ee;transform:translateX(3px)}
+.opt.selected,.opt.multi-on{border-color:#1b4332;background:#e8f5ee}
+.opt-k{width:24px;height:24px;border-radius:6px;border:1px solid rgba(28,28,26,.1);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(28,28,26,.6);flex-shrink:0;transition:all .18s;font-family:"DM Sans",system-ui,sans-serif}
+.opt.selected .opt-k,.opt.multi-on .opt-k{border-color:#1b4332;color:#1b4332;background:#e8f5ee}
+textarea,input[type="email"],input[type="text"]{width:100%;background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:10px;color:#1c1c1a;font-family:"DM Sans",system-ui,sans-serif;font-size:.9rem;font-weight:300;padding:14px 16px;outline:none;transition:border-color .18s;margin-bottom:1.25rem}
 textarea{resize:none;min-height:110px;line-height:1.7}
 textarea:focus,input:focus{border-color:rgba(45,106,79,.4)}
-textarea::placeholder,input::placeholder{color:var(--ink2)}
+textarea::placeholder,input::placeholder{color:rgba(28,28,26,.6)}
 .btn-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
-.btn-main{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;background:var(--accent3);color:#fff;border-radius:99px;font-family:var(--sans);font-size:13.5px;font-weight:400;border:none;cursor:pointer;transition:background .2s,transform .15s}
-.btn-main:hover{background:var(--accent);transform:translateY(-1px)}
-.btn-back{display:inline-flex;align-items:center;gap:6px;padding:13px 20px;background:transparent;color:var(--ink2);border:1px solid var(--ink3);border-radius:99px;font-family:var(--sans);font-size:13px;font-weight:300;cursor:pointer;transition:all .18s}
-.btn-back:hover{background:var(--cream);color:var(--ink)}
-.err{font-size:12.5px;color:var(--accent);margin-top:.5rem;display:none}
-.hint{font-size:12px;color:var(--ink2);margin-top:.85rem}
-.w-ico{width:48px;height:48px;background:var(--accent2);border:1px solid rgba(45,106,79,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.btn-main{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;background:#1b4332;color:#fff;border-radius:6px;font-family:"DM Sans",system-ui,sans-serif;font-size:13.5px;font-weight:400;border:none;cursor:pointer;transition:background .2s,transform .15s}
+.btn-main:hover{background:#2d6a4f;transform:translateY(-1px)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;padding:13px 20px;background:transparent;color:rgba(28,28,26,.6);border:1px solid rgba(28,28,26,.1);border-radius:6px;font-family:"DM Sans",system-ui,sans-serif;font-size:13px;font-weight:300;cursor:pointer;transition:all .18s}
+.btn-back:hover{background:#fff;color:#1c1c1a}
+.err{font-size:12.5px;color:#c0392b;margin-top:.5rem;display:none}
+.hint{font-size:12px;color:rgba(28,28,26,.6);margin-top:.85rem}
+.w-ico{width:48px;height:48px;background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
 .w-ico svg{width:22px;height:22px}
-.postcode-result{font-size:13px;color:var(--accent3);margin-top:6px;min-height:20px;font-weight:400}
+.postcode-result{font-size:13px;color:#1b4332;font-weight:400;margin-top:6px;min-height:20px;font-weight:400}
 .r-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.1rem}
-.r-metric{background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);padding:11px 13px}
-.r-ml{font-size:10.5px;color:var(--ink2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
-.r-mv{font-family:var(--serif);font-size:1.2rem;color:var(--ink);line-height:1}
+.r-metric{background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:10px;padding:11px 13px}
+.r-ml{font-size:10.5px;color:rgba(28,28,26,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.r-mv{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.2rem;color:#1c1c1a;line-height:1}
 .r-tips{display:flex;flex-direction:column;gap:9px;margin-bottom:1rem}
-.r-tip{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--ink3);border-radius:var(--radius);background:var(--cream)}
+.r-tip{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid rgba(28,28,26,.1);border-radius:10px;background:#fff}
 .r-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.r-tt{font-size:13.5px;font-weight:400;color:var(--ink);margin-bottom:2px}
-.r-td{font-size:12.5px;color:var(--ink2);line-height:1.55}
-.r-ts{font-size:12px;color:var(--accent);margin-top:4px;font-weight:400}
-.r-locked{background:var(--cream);border:1px solid var(--ink3);border-radius:var(--radius);padding:1.4rem;text-align:center;margin-top:.5rem}
-.r-locked p{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:1.1rem}
-.result-intro{font-size:.95rem;color:var(--ink2);margin-bottom:1.25rem;line-height:1.65}
-.final-ico{width:48px;height:48px;background:var(--accent2);border:1px solid rgba(45,106,79,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.r-tt{font-size:13.5px;font-weight:400;color:#1c1c1a;margin-bottom:2px}
+.r-td{font-size:12.5px;color:rgba(28,28,26,.6);line-height:1.55}
+.r-ts{font-size:12px;color:#1b4332;margin-top:4px;font-weight:400}
+.r-locked{background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:10px;padding:1.4rem;text-align:center;margin-top:.5rem}
+.r-locked p{font-size:13px;color:rgba(28,28,26,.6);line-height:1.6;margin-bottom:1.1rem}
+.result-intro{font-size:.95rem;color:rgba(28,28,26,.6);margin-bottom:1.25rem;line-height:1.65}
+.final-ico{width:48px;height:48px;background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
 .final-ico svg{width:22px;height:22px}
-h1.done{font-family:var(--serif);font-size:2.5rem;font-weight:400;letter-spacing:-.03em;margin-bottom:.85rem}
-.done-email{font-size:13px;color:var(--accent);margin-top:.85rem}
+h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-weight:400;letter-spacing:-.03em;margin-bottom:.85rem}
+.done-email{font-size:13px;color:#2d6a4f;margin-top:.85rem}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media(max-width:480px){nav{padding:.85rem 1.25rem}.r-grid{grid-template-columns:1fr}}
@@ -225,30 +223,30 @@ h1.done{font-family:var(--serif);font-size:2.5rem;font-weight:400;letter-spacing
 
     <!-- MINI CHAT -->
     <div id="mini-chat-toggle" style="margin-bottom:1rem">
-      <button onclick="toggleMiniChat()" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--ink3);border-radius:99px;background:var(--cream);font-family:var(--sans);font-size:13px;color:var(--ink2);cursor:pointer;transition:all .18s;width:100%;justify-content:space-between" id="miniChatBtn">
+      <button onclick="toggleMiniChat()" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid rgba(28,28,26,.1);border-radius:99px;background:#fff;font-family:"DM Sans",system-ui,sans-serif;font-size:13px;color:rgba(28,28,26,.6);cursor:pointer;transition:all .18s;width:100%;justify-content:space-between" id="miniChatBtn">
         <span style="display:flex;align-items:center;gap:8px">
-          <span style="width:20px;height:20px;border-radius:6px;background:var(--accent2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M6.5 1L1.5 7h4.5l-.5 3.5L10 4H5.5L6.5 1z" stroke="#e8500a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span style="width:20px;height:20px;border-radius:6px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M6.5 1L1.5 7h4.5l-.5 3.5L10 4H5.5L6.5 1z" stroke="#e8500a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           La AI-en stille deg oppfølgingsspørsmål for bedre resultat
         </span>
-        <span id="chatArrow" style="font-size:14px;color:var(--ink2);transition:transform .2s">↓</span>
+        <span id="chatArrow" style="font-size:14px;color:rgba(28,28,26,.6);transition:transform .2s">↓</span>
       </button>
     </div>
 
-    <div id="mini-chat-box" style="display:none;background:var(--cream);border:1px solid var(--ink3);border-radius:14px;overflow:hidden;margin-bottom:1.25rem">
-      <div style="background:var(--ink);padding:.75rem 1rem;display:flex;align-items:center;gap:8px">
-        <div style="width:24px;height:24px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 1L2 7h4l-1 4 5-6H6L7 1z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div id="mini-chat-box" style="display:none;background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:14px;overflow:hidden;margin-bottom:1.25rem">
+      <div style="background:#1c1c1a;padding:.75rem 1rem;display:flex;align-items:center;gap:8px">
+        <div style="width:24px;height:24px;border-radius:7px;background:#2d6a4f;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 1L2 7h4l-1 4 5-6H6L7 1z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <span style="font-size:13px;font-weight:400;color:rgba(247,244,239,.9)">SparWatt AI</span>
         <span style="margin-left:auto;font-size:11px;color:rgba(247,244,239,.4);display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:#3dd68c;animation:pulse 2s infinite"></span>Live</span>
       </div>
       <div id="mini-msgs" style="padding:.85rem;display:flex;flex-direction:column;gap:.6rem;max-height:220px;overflow-y:auto">
         <div style="display:flex;gap:7px;align-items:flex-start">
-          <div style="width:22px;height:22px;border-radius:6px;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--accent);flex-shrink:0">SW</div>
-          <div style="background:var(--bg);padding:8px 12px;border-radius:4px 10px 10px 10px;font-size:13px;color:var(--ink);line-height:1.6">Hei! Jeg kan hjelpe deg å gi oss mer info slik at analysen din blir så presis som mulig. Hva er den største utfordringen din med strøm akkurat nå?</div>
+          <div style="width:22px;height:22px;border-radius:6px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;font-size:10px;color:#2d6a4f;flex-shrink:0">SW</div>
+          <div style="background:#fafaf8;padding:8px 12px;border-radius:4px 10px 10px 10px;font-size:13px;color:#1c1c1a;line-height:1.6">Hei! Jeg kan hjelpe deg å gi oss mer info slik at analysen din blir så presis som mulig. Hva er den største utfordringen din med strøm akkurat nå?</div>
         </div>
       </div>
-      <div style="display:flex;gap:7px;padding:.75rem;border-top:1px solid var(--ink3);background:var(--bg)">
+      <div style="display:flex;gap:7px;padding:.75rem;border-top:1px solid rgba(28,28,26,.1);background:#fafaf8">
         <input type="text" id="miniChatInput" placeholder="Skriv her..." style="flex:1;border-radius:99px;padding:8px 14px;font-size:13px;margin-bottom:0" onkeydown="if(event.key==='Enter')sendMiniChat()"/>
-        <button onclick="sendMiniChat()" style="width:34px;height:34px;border-radius:50%;background:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button onclick="sendMiniChat()" style="width:34px;height:34px;border-radius:50%;background:#1c1c1a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </div>
 
@@ -262,26 +260,26 @@ h1.done{font-family:var(--serif);font-size:2.5rem;font-weight:400;letter-spacing
     <h2>Hva er strømavtalen din?</h2>
     <p class="screen-sub">Vi sjekker om du kan spare ved å bytte leverandør — og viser deg konkret hva du kan spare.</p>
 
-    <div style="background:var(--accent2);border:1px solid rgba(45,106,79,.2);border-radius:var(--radius);padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;gap:10px;align-items:flex-start">
+    <div style="background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:10px;padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;gap:10px;align-items:flex-start">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink:0;margin-top:2px"><path d="M7.5 2l1.4 2.8 3.1.45-2.25 2.2.53 3.1L7.5 9l-2.78 1.55.53-3.1L3 5.25l3.1-.45z" stroke="#1b4332" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span style="font-size:12.5px;color:var(--accent3);line-height:1.6">Alle felt er valgfrie. Vet du ikke nøyaktig, skriv hva du husker — vi gjør vårt beste.</span>
+      <span style="font-size:12.5px;color:#1b4332;line-height:1.6">Alle felt er valgfrie. Vet du ikke nøyaktig, skriv hva du husker — vi gjør vårt beste.</span>
     </div>
 
     <div style="margin-bottom:1rem">
-      <label style="font-size:13px;color:var(--ink2);display:block;margin-bottom:5px">Hvem er leverandøren din?</label>
+      <label style="font-size:13px;color:rgba(28,28,26,.6);display:block;margin-bottom:5px">Hvem er leverandøren din?</label>
       <input type="text" id="q11provider" placeholder="F.eks. Tibber, Fortum, Fjordkraft, Lyse..." style="margin-bottom:0"/>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem">
       <div>
-        <label style="font-size:13px;color:var(--ink2);display:block;margin-bottom:5px">Påslag (øre/kWh)</label>
+        <label style="font-size:13px;color:rgba(28,28,26,.6);display:block;margin-bottom:5px">Påslag (øre/kWh)</label>
         <input type="text" id="q11markup" placeholder="F.eks. 3.9" style="margin-bottom:0"/>
-        <div style="font-size:11px;color:var(--ink2);margin-top:4px">Finn på strømregningen</div>
+        <div style="font-size:11px;color:rgba(28,28,26,.6);margin-top:4px">Finn på strømregningen</div>
       </div>
       <div>
-        <label style="font-size:13px;color:var(--ink2);display:block;margin-bottom:5px">Månedsgebyr (kr)</label>
+        <label style="font-size:13px;color:rgba(28,28,26,.6);display:block;margin-bottom:5px">Månedsgebyr (kr)</label>
         <input type="text" id="q11fee" placeholder="F.eks. 49" style="margin-bottom:0"/>
-        <div style="font-size:11px;color:var(--ink2);margin-top:4px">Fast kostnad per mnd</div>
+        <div style="font-size:11px;color:rgba(28,28,26,.6);margin-top:4px">Fast kostnad per mnd</div>
       </div>
     </div>
 
@@ -294,21 +292,21 @@ h1.done{font-family:var(--serif);font-size:2.5rem;font-weight:400;letter-spacing
 
   <div class="screen" id="s13">
     <div class="step-tag">Din personlige analyse</div>
-    <div style="background:var(--accent2);border:1px solid rgba(45,106,79,.2);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+    <div style="background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
       <div>
-        <div style="font-size:11px;color:var(--accent3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Estimert sparing</div>
-        <div id="r-total" style="font-family:var(--serif);font-size:1.8rem;color:var(--ink);line-height:1"></div>
+        <div style="font-size:11px;color:#1b4332;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Estimert sparing</div>
+        <div id="r-total" style="font-family:"Cormorant Garamond",Georgia,serif;font-size:1.8rem;color:#1c1c1a;line-height:1"></div>
       </div>
-      <div style="font-size:12px;color:var(--ink2);text-align:right">per måned<br>med full rapport</div>
+      <div style="font-size:12px;color:rgba(28,28,26,.6);text-align:right">per måned<br>med full rapport</div>
     </div>
     <p class="result-intro" id="r-intro"></p>
     <div class="r-grid" id="r-grid"></div>
     <div class="r-tips" id="r-tips"></div>
     <div id="r-leverandor"></div>
     <div class="r-locked">
-      <div style="font-size:13px;font-weight:400;color:var(--ink);margin-bottom:.4rem">Mer er låst</div>
+      <div style="font-size:13px;font-weight:400;color:#1c1c1a;margin-bottom:.4rem">Mer er låst</div>
       <p>Full tilgang inkluderer alle sparetiltak, komplett leverandøranalyse med bytteanbefalinger, strømregningen forklart og din personlige AI-rådgiver med live priser.</p>
-      <div style="font-size:12px;color:var(--ink2);margin:.75rem 0 1rem">49 kr/mnd · ingen bindingstid · avslutt når du vil</div>
+      <div style="font-size:12px;color:rgba(28,28,26,.6);margin:.75rem 0 1rem">49 kr/mnd · ingen bindingstid · avslutt når du vil</div>
       <div class="btn-row" style="justify-content:center"><button class="btn-main" onclick="goToStripe()">Lås opp full tilgang — 49 kr/mnd <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     </div>
   </div>
@@ -469,19 +467,19 @@ function buildResult(){
   const leverandorEl=document.getElementById('r-leverandor');
   if(a.q11markup&&leverandorSaving>50){
     leverandorEl.innerHTML=`
-      <div class="r-tip" style="border-color:rgba(45,106,79,.3);background:var(--accent2)">
-        <div class="r-dot" style="background:var(--accent3)"></div>
+      <div class="r-tip" style="border-color:rgba(45,106,79,.3);background:#e8f5ee">
+        <div class="r-dot" style="background:#1b4332"></div>
         <div>
-          <div class="r-tt" style="color:var(--accent3)">Du kan spare ~${leverandorSaving} kr/mnd ved å bytte leverandør</div>
+          <div class="r-tt" style="color:#1b4332">Du kan spare ~${leverandorSaving} kr/mnd ved å bytte leverandør</div>
           <div class="r-td">${a.q11provider?'Du er på '+a.q11provider+' med '+a.q11markup+' øre/kWh påslag':'Basert på påslaget ditt'}. Full rapport viser deg nøyaktig hvilken avtale som passer best for deg.</div>
         </div>
       </div>`;
   } else if(a.q11provider&&!a.q11markup){
     leverandorEl.innerHTML=`
-      <div class="r-tip" style="border-color:rgba(45,106,79,.2);background:var(--accent2)">
-        <div class="r-dot" style="background:var(--accent3)"></div>
+      <div class="r-tip" style="border-color:rgba(45,106,79,.2);background:#e8f5ee">
+        <div class="r-dot" style="background:#1b4332"></div>
         <div>
-          <div class="r-tt" style="color:var(--accent3)">Leverandøranalyse inkludert i full rapport</div>
+          <div class="r-tt" style="color:#1b4332">Leverandøranalyse inkludert i full rapport</div>
           <div class="r-td">Full rapport viser om ${a.q11provider} er et godt valg for din husstand, og hvilke alternativer som kan spare deg penger.</div>
         </div>
       </div>`;
@@ -498,22 +496,20 @@ function goToResult(){
 }
 
 function goToStripe(){
-  // Save answers to sessionStorage first
-  sessionStorage.setItem('sw_q1',a.q1);
-  sessionStorage.setItem('sw_q2',a.q2);
-  sessionStorage.setItem('sw_q3post',a.q3post);
-  sessionStorage.setItem('sw_q3zone',a.q3zone);
-  sessionStorage.setItem('sw_q4',a.q4);
-  sessionStorage.setItem('sw_q5',Array.isArray(a.q5)?a.q5.join(','):'');
-  sessionStorage.setItem('sw_q6',a.q6);
-  sessionStorage.setItem('sw_q7',a.q7);
-  sessionStorage.setItem('sw_q8',a.q8);
-  sessionStorage.setItem('sw_q9ev',a.q9ev||'');
-  sessionStorage.setItem('sw_q9',Array.isArray(a.q9)?a.q9.join(','):'');
-  sessionStorage.setItem('sw_q10',a.q10);
-  sessionStorage.setItem('sw_q11provider',a.q11provider||'');
-  sessionStorage.setItem('sw_q11markup',a.q11markup||'');
-  sessionStorage.setItem('sw_q11fee',a.q11fee||'');
+  // Pack all answers into a compact object
+  var profile = {
+    q1:a.q1, q2:a.q2, q3post:a.q3post, q3zone:a.q3zone,
+    q4:a.q4, q5:Array.isArray(a.q5)?a.q5.join(','):'',
+    q6:a.q6, q7:a.q7, q8:a.q8, q9ev:a.q9ev||'',
+    q9:Array.isArray(a.q9)?a.q9.join(','):'',
+    q10:a.q10, q11p:a.q11provider||'',
+    q11m:a.q11markup||'', q11f:a.q11fee||''
+  };
+  // Save to sessionStorage as backup
+  Object.keys(profile).forEach(function(k){ sessionStorage.setItem('sw_'+k, profile[k]); });
+  // Also save to localStorage so it survives Stripe redirect
+  localStorage.setItem('sw_profile', JSON.stringify(profile));
+  localStorage.setItem('sw_profile_ts', Date.now().toString());
   // Redirect to Stripe
   window.location.href = 'https://buy.stripe.com/9B6bIT5947Ma6Ece8m1kA00';
 }
@@ -548,8 +544,8 @@ function toggleMiniChat(){
   document.getElementById('chatArrow').style.transform = miniChatOpen ? 'rotate(180deg)' : '';
   const btn = document.getElementById('miniChatBtn');
   btn.style.borderColor = miniChatOpen ? 'rgba(232,80,10,.4)' : '';
-  btn.style.background = miniChatOpen ? 'var(--accent2)' : '';
-  btn.style.color = miniChatOpen ? 'var(--ink)' : '';
+  btn.style.background = miniChatOpen ? '#e8f5ee' : '';
+  btn.style.color = miniChatOpen ? '#1c1c1a' : '';
 }
 
 function appendMiniMsg(role, text){
@@ -558,9 +554,9 @@ function appendMiniMsg(role, text){
   div.style.cssText = 'display:flex;gap:7px;align-items:flex-start;animation:up .3s ease';
   if(role === 'user'){
     div.style.flexDirection = 'row-reverse';
-    div.innerHTML = `<div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--bg);flex-shrink:0">Deg</div><div style="background:var(--ink);padding:8px 12px;border-radius:10px 4px 10px 10px;font-size:13px;color:var(--bg);line-height:1.6;max-width:80%">${text}</div>`;
+    div.innerHTML = `<div style="width:22px;height:22px;border-radius:6px;background:#1c1c1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fafaf8;flex-shrink:0">Deg</div><div style="background:#1c1c1a;padding:8px 12px;border-radius:10px 4px 10px 10px;font-size:13px;color:#fafaf8;line-height:1.6;max-width:80%">${text}</div>`;
   } else {
-    div.innerHTML = `<div style="width:22px;height:22px;border-radius:6px;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--accent);flex-shrink:0">SW</div><div style="background:var(--bg);padding:8px 12px;border-radius:4px 10px 10px 10px;font-size:13px;color:var(--ink);line-height:1.6;max-width:80%">${text}</div>`;
+    div.innerHTML = `<div style="width:22px;height:22px;border-radius:6px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;font-size:10px;color:#2d6a4f;flex-shrink:0">SW</div><div style="background:#fafaf8;padding:8px 12px;border-radius:4px 10px 10px 10px;font-size:13px;color:#1c1c1a;line-height:1.6;max-width:80%">${text}</div>`;
   }
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
@@ -571,7 +567,7 @@ function showMiniTyping(){
   const div = document.createElement('div');
   div.id = 'mini-typing';
   div.style.cssText = 'display:flex;gap:7px;align-items:flex-start';
-  div.innerHTML = `<div style="width:22px;height:22px;border-radius:6px;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--accent);flex-shrink:0">SW</div><div style="background:var(--bg);padding:10px 14px;border-radius:4px 10px 10px 10px;display:flex;gap:4px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:var(--ink2);animation:bounce .9s infinite"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--ink2);animation:bounce .9s .15s infinite"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--ink2);animation:bounce .9s .3s infinite"></span></div>`;
+  div.innerHTML = `<div style="width:22px;height:22px;border-radius:6px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;font-size:10px;color:#2d6a4f;flex-shrink:0">SW</div><div style="background:#fafaf8;padding:10px 14px;border-radius:4px 10px 10px 10px;display:flex;gap:4px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:rgba(28,28,26,.6);animation:bounce .9s infinite"></span><span style="width:5px;height:5px;border-radius:50%;background:rgba(28,28,26,.6);animation:bounce .9s .15s infinite"></span><span style="width:5px;height:5px;border-radius:50%;background:rgba(28,28,26,.6);animation:bounce .9s .3s infinite"></span></div>`;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
