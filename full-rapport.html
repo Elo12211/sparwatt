@@ -444,6 +444,48 @@ function renderTips(tipsToRender) {
   });
 }
 
+// ── FALLBACK TIPS ──
+function getFallbackTips(){
+  var panel = pr.q5.join(",").includes("panelovner");
+  var pump = pr.q5.join(",").includes("Varmepumpe");
+  var many = pr.q4==="3-4 personer"||pr.q4==="5 eller flere";
+  var high = pr.q6==="1000-2000 kWh"||pr.q6==="Over 2000 kWh";
+  var hytte = pr.q1==="Hytte / fritidsbolig";
+  var dyrAvtale = pr.q7==="Norgespris"||pr.q7==="Norgespris variabel"||pr.q7==="Fastpris";
+  var doneNight = pr.q9.join(",").includes("Vasker");
+  var doneBereder = pr.q9.join(",").includes("Tidsstyring");
+  return [
+    panel&&!pump ? {p:"high",t:"Bytt panelovner til varmepumpe",s:"400–800 kr/mnd",sv:600,d:"Elektriske panelovner er den dyreste oppvarmingen. En varmepumpe bruker 3× mindre strøm for samme varme.",st:["Få 3 tilbud fra godkjente installatorer (mittanbud.no)","Velg luft-til-luft varmepumpe for stue/gang","Investering 15–25 000 kr, tjent inn på 2–3 år"],e:"Engangsgreie · Spar for alltid"} : null,
+    dyrAvtale ? {p:"high",t:"Bytt til spotprisavtale",s:"100–300 kr/mnd",sv:200,d:"Du har "+pr.q7.toLowerCase()+". Spotpris er billigst over tid for de fleste norske husstander.",st:["Sjekk nåværende påslag på strømregningen","Sammenlign på strompris.no","Bytte tar 5 minutter og er gratis"],e:"Enkel å gjennomføre · Umiddelbar effekt"} : null,
+    high&&many&&!doneBereder ? {p:"high",t:"Tidsstyring på varmtvannsberederen",s:"150–280 kr/mnd",sv:215,d:"Med "+pr.q4+" i husstanden er berederen en stor utgiftspost. Skru ned om natta.",st:["Kjøp tidsstyring (ca. 150–300 kr)","Still inn: av 23:00, på 05:00","Alternativt: elektriker installerer smart-styring"],e:"Sett opp én gang · Spar for alltid"} : null,
+    hytte ? {p:"high",t:"Smartplugg på varmesystemet",s:"200–450 kr/mnd",sv:325,d:"Hytta bruker strøm når du ikke er der. Smartplugg lar deg styre varmen fra mobilen.",st:["Kjøp smartplugg (ca. 300–500 kr)","Koble til varmesystemet og last ned appen","Skru på 2 timer før ankomst"],e:"Enkel oppsett · Betaler seg første måneden"} : null,
+    !doneNight ? {p:"med",t:"Unngå strøm i høypristimene 17–21",s:"60–150 kr/mnd",sv:100,d:"I "+place+" er strømprisene 2–4× høyere mellom 17 og 21. Flytt vaskemaskin og oppvask til etter kl. 22.",st:["Still inn oppvaskmaskin til å starte etter kl. 22","Vask klær mellom 00:00 og 06:00","Lad elbil om natta"],e:"Ingen kostnad · Liten vaneendring"} : null,
+    {p:"low",t:"Reduser effekttopper i nettleien",s:"50–120 kr/mnd",sv:80,d:"Nettleien beregnes delvis etter høyeste forbruk i løpet av en time.",st:["Ikke bruk ovn og vaskemaskin samtidig","Skru ned panelovner litt i stedet for maks"],e:"Liten vaneendring · Stor effekt over tid"}
+  ].filter(Boolean).slice(0,3);
+}
+
+// ── AI TIPS ──
+async function loadAITips(priceInfo) {
+  var month = new Date().getMonth() + 1;
+  var season = month>=11||month<=2?"vinter":month>=3&&month<=5?"var":month>=6&&month<=8?"sommer":"host";
+  var profileStr = "Bolig: "+pr.q1+", "+pr.q2+", "+pr.q4+", "+pr.q5.join("/")+", "+pr.q6+", "+pr.q7+", "+place+", sesong: "+season+", gjort: "+pr.q9.join("/");
+  var systemPrompt = "Du er norsk stromekspert. Generer 3 sparetiltak som JSON-array. Svar KUN med array, ingen tekst rundt. Hvert element: priority(high/med/low), title, saving(eks 100-200 kr/mnd), sv(tall), desc, steps(array), effort. Profil: "+profileStr+". Priser: "+priceInfo;
+  try {
+    var res = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        messages:[{role:"user",content:"Generer 3 sparetiltak som JSON-array."}],
+        profile:{q1:pr.q1,q2:pr.q2,q3:pr.q3zone,q4:pr.q4,q5:pr.q5.join(", "),q6:pr.q6,q7:pr.q7,placeName:place,_systemOverride:systemPrompt}
+      })
+    });
+    var data = await res.json();
+    var reply = (data.reply||"").replace(/```json|```/g,"").trim();
+    var aiTips = JSON.parse(reply);
+    if(Array.isArray(aiTips)&&aiTips.length>0) return aiTips.slice(0,3);
+  } catch(e){ console.log("AI tips failed", e); }
+  return null;
+}
+
 // Show fallback tips immediately, then upgrade with AI tips
 function showTipsLoading() {
   var cont = document.getElementById("tips-container");
