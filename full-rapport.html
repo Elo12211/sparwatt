@@ -445,6 +445,13 @@ function renderTips(tipsToRender) {
 }
 
 // Show fallback tips immediately, then upgrade with AI tips
+function showTipsLoading() {
+  var cont = document.getElementById("tips-container");
+  if(!cont) return;
+  cont.innerHTML = '<div style="display:flex;flex-direction:column;gap:.85rem">' +
+    [1,2,3].map(function(){ return '<div style="background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:12px;padding:1.1rem;display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:rgba(28,28,26,.06);flex-shrink:0"></div><div style="flex:1"><div style="height:13px;background:rgba(28,28,26,.06);border-radius:4px;margin-bottom:6px;width:60%"></div><div style="height:11px;background:rgba(28,28,26,.04);border-radius:4px;width:80%"></div></div></div>'; }).join('') +
+    '</div>';
+}
 showTipsLoading();
 renderTips(tips);
 
