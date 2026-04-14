@@ -432,13 +432,20 @@ function renderTips(tipsToRender) {
   tipsCont.innerHTML = "";
   checkCont.innerHTML = "";
   tipsToRender.forEach(function(tip,i){
-  var ec = tip.p==="high"?"#1b4332":tip.p==="med"?"#a05c00":"#888";
+  var ec = tip.p==="high"||tip.priority==="high"?"#1b4332":tip.p==="med"||tip.priority==="med"?"#a05c00":"#888";
+  var priority = tip.p||tip.priority||"low";
+  var title = tip.t||tip.title||"";
+  var saving = tip.s||tip.saving||"";
+  var desc = tip.d||tip.desc||"";
+  var steps = tip.st||tip.steps||[];
+  var effort = tip.e||tip.effort||"";
   var card = document.createElement("div"); card.className="tip-card";
-  card.innerHTML = "<div class='tip-hdr'><div class='tip-n "+tip.p+"'>"+(i+1)+"</div><div class='tip-ttl'>"+tip.t+"</div><div class='tip-bdg "+tip.p+"'>"+tip.s+"</div></div><div class='tip-body'><p class='tip-desc'>"+tip.d+"</p><div class='tip-steps'>"+tip.st.map(function(s,j){return"<div class='tip-step'><div class='tip-sn'>"+(j+1)+"</div><span>"+s+"</span></div>";}).join("")+"</div><div class='tip-eff'><div class='eff-dot' style='background:"+ec+"'></div>"+tip.e+"</div></div>";
+  card.innerHTML = "<div class='tip-hdr'><div class='tip-n "+priority+"'>"+(i+1)+"</div><div class='tip-ttl'>"+title+"</div><div class='tip-bdg "+priority+"'>"+saving+"</div></div><div class='tip-body'><p class='tip-desc'>"+desc+"</p><div class='tip-steps'>"+(Array.isArray(steps)?steps.map(function(s,j){return"<div class='tip-step'><div class='tip-sn'>"+(j+1)+"</div><span>"+s+"</span></div>";}).join(""):"")+"</div><div class='tip-eff'><div class='eff-dot' style='background:"+ec+"'></div>"+effort+"</div></div>";
   tipsCont.appendChild(card);
   var item = document.createElement("div"); item.className="check-item";
   var ck = localStorage.getItem("sw_ck_"+i)==="1";
-  item.innerHTML = "<div class='checkbox "+(ck?"checked":"")+"' id='cb"+i+"'><svg viewBox='0 0 9 9' fill='none'><path d='M1.5 4.5l2 2 4-4' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg></div><span class='check-label "+(ck?"done":"")+"' id='cl"+i+"'>"+tip.t+"</span>";
+  var tipTitle = tip.t||tip.title||"";
+  item.innerHTML = "<div class='checkbox "+(ck?"checked":"")+"' id='cb"+i+"'><svg viewBox='0 0 9 9' fill='none'><path d='M1.5 4.5l2 2 4-4' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg></div><span class='check-label "+(ck?"done":"")+"' id='cl"+i+"'>"+tipTitle+"</span>";
   item.onclick = function(){ var cb=document.getElementById("cb"+i);var cl=document.getElementById("cl"+i);var was=cb.classList.contains("checked");cb.classList.toggle("checked");cl.classList.toggle("done");localStorage.setItem("sw_ck_"+i,was?"0":"1"); };
   checkCont.appendChild(item);
   });
