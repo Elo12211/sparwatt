@@ -468,20 +468,24 @@ function getFallbackTips(){
 async function loadAITips(priceInfo) {
   var month = new Date().getMonth() + 1;
   var season = month>=11||month<=2?"vinter":month>=3&&month<=5?"var":month>=6&&month<=8?"sommer":"host";
-  var profileStr = "Bolig: "+pr.q1+", "+pr.q2+", "+pr.q4+", "+pr.q5.join("/")+", "+pr.q6+", "+pr.q7+", "+place+", sesong: "+season+", gjort: "+pr.q9.join("/");
-  var systemPrompt = "Du er norsk stromekspert. Generer 3 sparetiltak som JSON-array. Svar KUN med array, ingen tekst rundt. Hvert element: priority(high/med/low), title, saving(eks 100-200 kr/mnd), sv(tall), desc, steps(array), effort. Profil: "+profileStr+". Priser: "+priceInfo;
+  var profileStr = pr.q1+", "+pr.q2+", "+pr.q4+", "+pr.q5.join("/")+", "+pr.q6+", "+pr.q7+", "+place+", "+season;
   try {
     var res = await fetch("/api/chat", {
       method:"POST", headers:{"Content-Type":"application/json"},
       body: JSON.stringify({
-        messages:[{role:"user",content:"Generer 3 sparetiltak som JSON-array."}],
-        profile:{q1:pr.q1,q2:pr.q2,q3:pr.q3zone,q4:pr.q4,q5:pr.q5.join(", "),q6:pr.q6,q7:pr.q7,placeName:place,_systemOverride:systemPrompt}
+        messages:[{role:"user",content:"Generer 3 sparetiltak som JSON-array for: "+profileStr+". Priser: "+priceInfo}],
+        profile:{q1:pr.q1,q2:pr.q2,q3:pr.q3zone,q4:pr.q4,q5:pr.q5.join(", "),q6:pr.q6,q7:pr.q7,placeName:place,
+          _systemOverride:"Du er norsk stromekspert. Svar KUN med en JSON-array, ingen tekst for eller etter. Array med 3 objekter med feltene: priority (high/med/low), title (string), saving (eks 100-200 kr/mnd), sv (tall), desc (string), steps (array med 2-3 strings), effort (string). Ingen markdown, ingen forklaring, bare arrayen."}
       })
     });
     var data = await res.json();
-    var reply = (data.reply||"").replace(/```json|```/g,"").trim();
-    var aiTips = JSON.parse(reply);
-    if(Array.isArray(aiTips)&&aiTips.length>0) return aiTips.slice(0,3);
+    var reply = (data.reply||"").trim();
+    // Strip any markdown or text before/after the array
+    var match = reply.match(/\[[\s\S]*\]/);
+    if(match) {
+      var aiTips = JSON.parse(match[0]);
+      if(Array.isArray(aiTips)&&aiTips.length>0) return aiTips.slice(0,3);
+    }
   } catch(e){ console.log("AI tips failed", e); }
   return null;
 }
