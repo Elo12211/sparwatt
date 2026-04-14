@@ -36,6 +36,33 @@ module.exports = async function handler(req, res) {
 
   const place = profile.placeName || profile.q3 || 'Norge';
 
+  // If _systemOverride is provided (used for AI tips generation), use it directly
+  if(profile._systemOverride) {
+    try {
+      const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-8b-instant',
+          messages: [
+            { role: 'system', content: profile._systemOverride },
+            ...messages
+          ],
+          max_tokens: 800,
+          temperature: 0.7
+        })
+      });
+      if(groqRes.ok) {
+        const data = await groqRes.json();
+        const reply = data.choices[0].message.content;
+        return res.status(200).json({ reply });
+      }
+    } catch(e) {}
+  }
+
   const systemPrompt = 'Du er SparWatt-assistenten — en vennlig og kunnskapsrik norsk stromradgiver. Du hjelper denne spesifikke brukeren med a spare penger pa strom basert pa deres bolig og situasjon.\n\nBRUKERPROFIL:\n- Boligtype: ' + (profile.q1||'') + '\n- Storrelse: ' + (profile.q2||'') + '\n- Antall i husstanden: ' + (profile.q4||profile.q3||'') + '\n- Oppvarming: ' + (profile.q5||profile.q4||'') + '\n- Manedlig forbruk: ' + (profile.q6||profile.q5||'') + '\n- Stromavtale: ' + (profile.q7||'') + '\n- Leverandor: ' + (profile.q11provider||'ukjent') + '\n- Paslag: ' + (profile.q11markup ? profile.q11markup + ' ore/kWh' : 'ukjent') + '\n- Sted: ' + place + '\n- Ekstra info: ' + (profile.q10||profile.q6extra||profile.q6||'Ingen') + '\n\nLIVE STROMPRISINFORMASJON:\n' + priceInfo + '\n\nINSTRUKSJONER:\n- Svar alltid pa norsk, kort og konkret\n- Bruk brukerens profil aktivt — ikke gi generiske rad\n- Referer til live-priser og stedet nar relevant\n- Gi konkrete kronebel\u00f8p og estimater nar mulig\n- Vennlig men direkte — ingen unodvendig fluff\n- Maks 3-4 setninger per svar med mindre brukeren ber om mer';
 
   try {
