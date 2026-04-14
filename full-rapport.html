@@ -219,6 +219,24 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
         <button class="chat-send" onclick="sendMsg()"><svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5"/></svg></button>
       </div>
     </div>
+
+  <!-- LIVE PRICE WIDGET -->
+  <div id="live-price-widget" style="margin-top:1rem;background:#fff;border:1px solid rgba(28,28,26,.08);border-radius:14px;overflow:hidden">
+    <div style="background:#1b4332;padding:.75rem 1.1rem;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#6ecb9a;animation:pulse 2s infinite"></div>
+        <span style="font-size:13px;font-weight:400;color:#fff">Live strømpriser</span>
+        <span id="price-region-label" style="font-size:11px;color:rgba(255,255,255,.4)"></span>
+      </div>
+      <div id="price-now" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;color:#6ecb9a;font-weight:300"></div>
+    </div>
+    <div id="price-chart-wrap" style="padding:.85rem 1rem">
+      <canvas id="price-chart" height="80" style="width:100%;display:block"></canvas>
+      <div id="price-legend" style="display:flex;justify-content:space-between;margin-top:.5rem;font-size:11px;color:rgba(28,28,26,.4)"></div>
+    </div>
+    <div id="price-insight" style="padding:.5rem 1rem .85rem;font-size:12.5px;color:rgba(28,28,26,.6);line-height:1.6;border-top:1px solid rgba(28,28,26,.06)"></div>
+  </div>
+
   </div>
 
   <!-- TAB: TILTAK -->
@@ -265,6 +283,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2
           <div class="bar-labels"><span style="font-size:13px;font-weight:400;color:#1c1c1a">Påslag og gebyr</span><span style="font-size:13px;color:rgba(28,28,26,.5)">~5%</span></div>
           <div class="bar-track"><div class="bar-fill" style="width:5%;background:rgba(28,28,26,.3)"></div></div>
           <div style="font-size:12px;color:rgba(28,28,26,.5);margin-top:4px;line-height:1.55">Det leverandøren tar i fortjeneste. Over 2 øre/kWh er dyrt. <span style="color:#1b4332">Sjekk på <a href="https://www.strompris.no" target="_blank" style="color:#1b4332">strompris.no</a>.</span></div>
+        </div>
+        <div style="background:#e8f5ee;border:1px solid rgba(27,67,50,.15);border-radius:8px;padding:.85rem 1rem;margin-top:.5rem">
+          <div style="font-size:13px;font-weight:500;color:#1b4332;margin-bottom:4px">Norgespris — nytt fra oktober 2025</div>
+          <div style="font-size:12px;color:rgba(28,28,26,.6);line-height:1.6">Norgespris gir deg en fast pris på 50 øre/kWh ut 2026. Har vært lønnsomt i Sør- og Midt-Norge denne vinteren. Kan bestilles på <a href="https://www.elhub.no" target="_blank" style="color:#1b4332">elhub.no</a>. Er du usikker — spør AI-rådgiveren din.</div>
         </div>
       </div>
     </div>
@@ -384,7 +406,7 @@ function getAllTips(){
   var doneBereder = pr.q9.join(",").includes("Tidsstyring");
   return [
     panel&&!pump ? {p:"high",t:"Bytt panelovner til varmepumpe",s:"400–800 kr/mnd",sv:600,d:"Elektriske panelovner er den dyreste oppvarmingen. En varmepumpe bruker 3× mindre strøm for samme varme.",st:["Få 3 tilbud fra godkjente installatorer (mittanbud.no)","Velg luft-til-luft varmepumpe for stue/gang","Investering 15–25 000 kr, tjent inn på 2–3 år"],e:"Engangsgreie · Spar for alltid"} : null,
-    dyrAvtale ? {p:"high",t:"Bytt til spotprisavtale",s:"100–300 kr/mnd",sv:200,d:"Du har "+pr.q7.toLowerCase()+". Spotpris er billigst over tid for de fleste norske husstander.",st:["Sjekk nåværende påslag på strømregningen","Sammenlign på strompris.no","Bytte tar 5 minutter og er gratis"],e:"Enkel å gjennomføre · Umiddelbar effekt"} : null,
+    dyrAvtale ? (pr.q7.includes("Norgespris") ? {p:"high",t:"Vurder om Norgespris er riktig for deg",s:"Kan spare 100–400 kr/mnd",sv:200,d:"Norgespris gir deg 50 øre/kWh fast pris ut 2026. I Sør- og Midt-Norge har dette vært lønnsomt i vinter — men hvis prisene faller kan spotpris bli billigere.",st:["Sjekk din region — Sør-Norge: Norgespris lønnsomt","Nord-Norge: spotpris har historisk vært billigere","Vurder å bytte tilbake til spotpris på elhub.no"],e:"Avhenger av prisområde og fremtidige priser"} : {p:"high",t:"Bytt til spotprisavtale",s:"100–300 kr/mnd",sv:200,d:"Du har "+pr.q7.toLowerCase()+". Spotpris er billigst over tid for de fleste norske husstander.",st:["Sjekk nåværende påslag på strømregningen","Sammenlign på strompris.no","Bytte tar 5 minutter og er gratis"],e:"Enkel å gjennomføre · Umiddelbar effekt"}) : null,
     high&&many&&!doneBereder ? {p:"high",t:"Tidsstyring på varmtvannsberederen",s:"150–280 kr/mnd",sv:215,d:"Med "+pr.q4+" i husstanden er berederen en stor utgiftspost. Skru ned om natta — du merker ingen forskjell.",st:["Kjøp tidsstyring (ca. 150–300 kr)","Still inn: av 23:00, på 05:00","Alternativt: elektriker installerer smart-styring"],e:"Sett opp én gang · Spar for alltid"} : null,
     hytte ? {p:"high",t:"Smartplugg på varmesystemet",s:"200–450 kr/mnd",sv:325,d:"Hytta bruker strøm når du ikke er der. Smartplugg lar deg styre varmen fra mobilen.",st:["Kjøp smartplugg (ca. 300–500 kr)","Koble til varmesystemet og last ned appen","Skru på 2 timer før ankomst"],e:"Enkel oppsett · Betaler seg første måneden"} : null,
     !doneNight ? {p:"med",t:"Unngå strøm i høypristimene 17–21",s:"60–150 kr/mnd",sv:100,d:"I "+place+" er strømprisene 2–4× høyere mellom 17 og 21. Flytt vaskemaskin og oppvask til etter kl. 22.",st:["Still inn oppvaskmaskin til å starte etter kl. 22","Vask klær mellom 00:00 og 06:00","Lad elbil om natta"],e:"Ingen kostnad · Liten vaneendring"} : null,
@@ -396,7 +418,7 @@ var tips = getAllTips();
 
 // Total savings
 var monthlyKwh = pr.q6==="Over 2000 kWh"?2200:pr.q6==="1000-2000 kWh"?1500:pr.q6==="500-1000 kWh"?750:350;
-var tipSaving = tips.reduce(function(s,t){return s+t.sv;},0);
+var tipSaving = tips.reduce(function(s,t){return s+(t.sv||100);},0);
 var leverandorSaving = 0;
 if(pr.q11markup>0){ var cur=(pr.q11markup/100)*monthlyKwh*100+pr.q11fee; leverandorSaving=Math.max(0,Math.round(cur-19)); }
 var totalMonthly = tipSaving + leverandorSaving;
@@ -404,10 +426,12 @@ document.getElementById("sv-monthly").textContent = "~"+totalMonthly+" kr";
 document.getElementById("sv-yearly").textContent = "~"+(totalMonthly*12)+" kr";
 document.getElementById("sv-tips").textContent = tips.length+" stk";
 
-// Render tips
-var tipsCont = document.getElementById("tips-container");
-var checkCont = document.getElementById("checklist");
-tips.forEach(function(tip,i){
+function renderTips(tipsToRender) {
+  var tipsCont = document.getElementById("tips-container");
+  var checkCont = document.getElementById("checklist");
+  tipsCont.innerHTML = "";
+  checkCont.innerHTML = "";
+  tipsToRender.forEach(function(tip,i){
   var ec = tip.p==="high"?"#1b4332":tip.p==="med"?"#a05c00":"#888";
   var card = document.createElement("div"); card.className="tip-card";
   card.innerHTML = "<div class='tip-hdr'><div class='tip-n "+tip.p+"'>"+(i+1)+"</div><div class='tip-ttl'>"+tip.t+"</div><div class='tip-bdg "+tip.p+"'>"+tip.s+"</div></div><div class='tip-body'><p class='tip-desc'>"+tip.d+"</p><div class='tip-steps'>"+tip.st.map(function(s,j){return"<div class='tip-step'><div class='tip-sn'>"+(j+1)+"</div><span>"+s+"</span></div>";}).join("")+"</div><div class='tip-eff'><div class='eff-dot' style='background:"+ec+"'></div>"+tip.e+"</div></div>";
@@ -417,7 +441,46 @@ tips.forEach(function(tip,i){
   item.innerHTML = "<div class='checkbox "+(ck?"checked":"")+"' id='cb"+i+"'><svg viewBox='0 0 9 9' fill='none'><path d='M1.5 4.5l2 2 4-4' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg></div><span class='check-label "+(ck?"done":"")+"' id='cl"+i+"'>"+tip.t+"</span>";
   item.onclick = function(){ var cb=document.getElementById("cb"+i);var cl=document.getElementById("cl"+i);var was=cb.classList.contains("checked");cb.classList.toggle("checked");cl.classList.toggle("done");localStorage.setItem("sw_ck_"+i,was?"0":"1"); };
   checkCont.appendChild(item);
-});
+  });
+}
+
+// Show fallback tips immediately, then upgrade with AI tips
+showTipsLoading();
+renderTips(tips);
+
+// Async: load AI-generated tips after live prices are available
+(async function(){
+  try {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = String(today.getMonth()+1).padStart(2,'0');
+    var day = String(today.getDate()).padStart(2,'0');
+    var zone = pr.q3zone||'NO1';
+    var priceRes = await fetch('https://www.hvakosterstrommen.no/api/v1/prices/'+year+'/'+month+'-'+day+'_'+zone+'.json');
+    var priceInfo = 'Live priser utilgjengelig';
+    if(priceRes.ok){
+      var prices = await priceRes.json();
+      var now = today.getHours();
+      var cur = prices[now]&&prices[now].NOK_per_kWh;
+      var min = Math.min.apply(null,prices.map(function(p){return p.NOK_per_kWh;}));
+      var max = Math.max.apply(null,prices.map(function(p){return p.NOK_per_kWh;}));
+      var cheap = prices.filter(function(p){return p.NOK_per_kWh<=min*1.2;}).map(function(p){return new Date(p.time_start).getHours()+':00';}).join(', ');
+      priceInfo = 'Nåpris: '+(cur*100).toFixed(1)+' øre/kWh. Billigste timer: '+cheap+'. Dyreste: '+(max*100).toFixed(1)+' øre/kWh.';
+    }
+    var aiTips = await loadAITips(priceInfo);
+    if(aiTips){
+      // Update savings with AI tips
+      var aiSaving = aiTips.reduce(function(s,t){return s+(t.sv||100);},0);
+      var newTotal = aiSaving + leverandorSaving;
+      document.getElementById("sv-monthly").textContent = "~"+newTotal+" kr";
+      document.getElementById("sv-yearly").textContent = "~"+(newTotal*12)+" kr";
+      document.getElementById("sv-tips").textContent = aiTips.length+" stk";
+      renderTips(aiTips);
+    }
+  } catch(e) {
+    console.log("Async tips load failed", e);
+  }
+})();
 
 // ── LEVERANDOR ──
 function buildLeverandor(){
@@ -466,7 +529,11 @@ function buildLeverandor(){
     html += "<div style='text-align:right;flex-shrink:0'><div style='font-size:13px;font-weight:400;color:#1b4332'>~"+est+" kr/mnd</div><div style='font-size:11px;color:rgba(28,28,26,.4)'>"+a.f+" kr gebyr/mnd</div></div></div>";
   });
   html += "</div></div>";
-  html += "<a href='https://www.strompris.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1b4332;color:#fff;border-radius:6px;font-size:13px;text-decoration:none;margin-top:.5rem'>Se alle leverandører på strompris.no <svg width='11' height='11' viewBox='0 0 11 11' fill='none'><path d='M2 9L9 2M5.5 2h3.5v3.5' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg></a>";
+  html += "<div style='display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.75rem'>";
+  html += "<a href='https://tibber.com/no/invite/join' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1b4332;color:#fff;border-radius:6px;font-size:13px;text-decoration:none'>Bytt til Tibber <svg width='11' height='11' viewBox='0 0 11 11' fill='none'><path d=\'M2 9L9 2M5.5 2h3.5v3.5\' stroke=\'white\' stroke-width=\'1.4\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/>\</svg></a>";
+  html += "<a href='https://www.vibb.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#fff;color:#1b4332;border:1px solid #1b4332;border-radius:6px;font-size:13px;text-decoration:none'>Bytt til Vibb <svg width=\'11\' height=\'11\' viewBox=\'0 0 11 11\' fill=\'none\'><path d=\'M2 9L9 2M5.5 2h3.5v3.5\' stroke=\'#1b4332\' stroke-width=\'1.4\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/>\</svg></a>";
+  html += "<a href='https://www.strompris.no' target='_blank' style='display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#fff;color:rgba(28,28,26,.6);border:1px solid rgba(28,28,26,.12);border-radius:6px;font-size:13px;text-decoration:none'>Se alle på strompris.no</a>";
+  html += "</div>";
 
   el.innerHTML = html;
 
@@ -539,11 +606,97 @@ buildLeverandor();
 })();
 
 // ── AI CHAT ──
+
+// ── LIVE PRICE WIDGET ──
+async function buildLivePriceWidget() {
+  try {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = String(today.getMonth()+1).padStart(2,'0');
+    var day = String(today.getDate()).padStart(2,'0');
+    var zone = pr.q3zone || 'NO1';
+
+    var res = await fetch('https://www.hvakosterstrommen.no/api/v1/prices/'+year+'/'+month+'-'+day+'_'+zone+'.json');
+    if(!res.ok) return;
+    var prices = await res.json();
+
+    var now = today.getHours();
+    var currentPrice = prices[now] ? (prices[now].NOK_per_kWh * 100).toFixed(1) : null;
+    var allPrices = prices.map(function(p){ return p.NOK_per_kWh * 100; });
+    var minPrice = Math.min.apply(null, allPrices);
+    var maxPrice = Math.max.apply(null, allPrices);
+
+    // Update current price display
+    if(currentPrice) {
+      document.getElementById('price-now').textContent = currentPrice + ' øre/kWh nå';
+    }
+    document.getElementById('price-region-label').textContent = '· ' + place;
+
+    // Draw bar chart on canvas
+    var canvas = document.getElementById('price-chart');
+    var ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth * window.devicePixelRatio || 600;
+    canvas.height = 80 * window.devicePixelRatio || 80;
+    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+    var w = canvas.offsetWidth || 600;
+    var h = 80;
+    var barW = (w / 24) - 1;
+
+    prices.forEach(function(p, i) {
+      var price = p.NOK_per_kWh * 100;
+      var barH = ((price - minPrice) / (maxPrice - minPrice || 1)) * (h - 16) + 8;
+      var x = i * (w / 24);
+      var isCurrent = i === now;
+      var isCheap = price <= minPrice * 1.15;
+      var isExpensive = price >= maxPrice * 0.85;
+
+      ctx.fillStyle = isCurrent ? '#1b4332' : isCheap ? '#6ecb9a' : isExpensive ? '#e8b96a' : 'rgba(28,28,26,.12)';
+      ctx.fillRect(x + 1, h - barH, barW, barH);
+
+      // Current hour marker
+      if(isCurrent) {
+        ctx.fillStyle = '#1b4332';
+        ctx.fillRect(x + 1, 0, barW, 3);
+      }
+    });
+
+    // Legend
+    var cheapHours = prices
+      .map(function(p,i){ return {h:i, p:p.NOK_per_kWh*100}; })
+      .filter(function(x){ return x.p <= minPrice * 1.15; })
+      .map(function(x){ return x.h+':00'; })
+      .slice(0,4)
+      .join(', ');
+
+    document.getElementById('price-legend').innerHTML =
+      '<span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:00</span>';
+
+    // Insight text
+    var insight = '';
+    if(currentPrice <= minPrice * 1.15) {
+      insight = '✅ Strømmen er billig akkurat nå — godt tidspunkt å vaske klær eller lade elbil.';
+    } else if(currentPrice >= maxPrice * 0.85) {
+      insight = '⚡ Strømmen er dyr akkurat nå. Unngå vaskemaskin, oppvask og tørketrommel.';
+    } else {
+      insight = 'Billigste timer i dag: ' + cheapHours + '. Flytt strømkrevende oppgaver dit.';
+    }
+    document.getElementById('price-insight').textContent = insight;
+
+  } catch(e) {
+    var wrap = document.getElementById('live-price-widget');
+    if(wrap) wrap.style.display = 'none';
+  }
+}
+
+buildLivePriceWidget();
+// Refresh every 30 minutes
+setInterval(buildLivePriceWidget, 30 * 60 * 1000);
+
 var chatHist = [];
 document.getElementById("chatInput").addEventListener("keydown", function(e){ if(e.key==="Enter") sendMsg(); });
 
 var hasPanel = pr.q5.join(",").includes("panelovner") && !pr.q5.join(",").includes("Varmepumpe");
-var hasDyr = pr.q7==="Norgespris"||pr.q7==="Fastpris";
+var hasDyr = pr.q7==="Norgespris"||pr.q7==="Norgespris variabel"||pr.q7==="Fastpris";
 var wMsg = "Hei! Jeg har analysert din "+pr.q1.toLowerCase()+" i "+place+". ";
 if(hasPanel) wMsg += "Du har panelovner som primæroppvarming — det er typisk den dyreste løsningen. Vil du at jeg forklarer hva en varmepumpe ville spart deg?";
 else if(hasDyr) wMsg += "Jeg ser du har "+pr.q7.toLowerCase()+". Det kan være dyrere enn nødvendig. Vil du at jeg forklarer forskjellen fra spotpris?";

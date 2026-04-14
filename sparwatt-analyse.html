@@ -41,7 +41,7 @@ textarea::placeholder,input::placeholder{color:rgba(28,28,26,.6)}
 .btn-back:hover{background:#fff;color:#1c1c1a}
 .err{font-size:12.5px;color:#c0392b;margin-top:.5rem;display:none}
 .hint{font-size:12px;color:rgba(28,28,26,.6);margin-top:.85rem}
-.w-ico{width:48px;height:48px;background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.w-ico{width:48px;height:48px;background:#e8f5ee;border:1px solid rgba(27,67,50,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
 .w-ico svg{width:22px;height:22px}
 .postcode-result{font-size:13px;color:#1b4332;font-weight:400;margin-top:6px;min-height:20px;font-weight:400}
 .r-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.1rem}
@@ -75,7 +75,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
 <div class="container">
 
   <div class="screen active" id="s0">
-    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#e8500a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 13h8l-1 7 9-11h-8l1-7z"/></svg></div>
+    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#1b4332" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 13h8l-1 7 9-11h-8l1-7z"/></svg></div>
     <h2>Din personlige strøm-AI starter her</h2>
     <p class="screen-sub">Svar på 12 korte spørsmål — så setter vi opp din personlige AI-rådgiver som kjenner boligen din og gir deg svar basert på live strømpriser.</p>
     <div class="btn-row"><button class="btn-main" onclick="go(1)">Se hva du kan spare <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
@@ -83,7 +83,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s1">
-    <div class="step-tag">Spørsmål 1 av 10</div>
+    <div class="step-tag">Spørsmål 1 av 12</div>
     <h2>Hva slags bolig bor du i?</h2>
     <p class="screen-sub">Velg det som passer best.</p>
     <div class="options" id="q1">
@@ -96,7 +96,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s2">
-    <div class="step-tag">Spørsmål 2 av 10</div>
+    <div class="step-tag">Spørsmål 2 av 12</div>
     <h2>Hvor stor er boligen?</h2>
     <p class="screen-sub">Omtrentlig er bra nok.</p>
     <div class="options" id="q2">
@@ -109,7 +109,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s3">
-    <div class="step-tag">Spørsmål 3 av 10</div>
+    <div class="step-tag">Spørsmål 3 av 12</div>
     <h2>Hva er postnummeret ditt?</h2>
     <p class="screen-sub">Vi bruker dette til å finne ditt prisområde — strømprisene varierer mye mellom nord og sør i Norge.</p>
     <input type="text" id="q3post" placeholder="F.eks. 0182" maxlength="4" oninput="lookupPostcode(this.value)" />
@@ -122,7 +122,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s4">
-    <div class="step-tag">Spørsmål 4 av 10</div>
+    <div class="step-tag">Spørsmål 4 av 12</div>
     <h2>Hvor mange bor i husstanden?</h2>
     <p class="screen-sub">Inkluder alle som bor der fast.</p>
     <div class="options" id="q4">
@@ -135,7 +135,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s5">
-    <div class="step-tag">Spørsmål 5 av 10</div>
+    <div class="step-tag">Spørsmål 5 av 12</div>
     <h2>Hva bruker dere til oppvarming?</h2>
     <p class="screen-sub">Du kan velge flere.</p>
     <div class="options" id="q5">
@@ -150,7 +150,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s6">
-    <div class="step-tag">Spørsmål 6 av 10</div>
+    <div class="step-tag">Spørsmål 6 av 12</div>
     <h2>Omtrent hvor mye strøm bruker dere per måned?</h2>
     <p class="screen-sub">Står på strømregningen som kWh. Vet du ikke er det helt greit.</p>
     <div class="options" id="q6">
@@ -164,7 +164,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s7">
-    <div class="step-tag">Spørsmål 7 av 10</div>
+    <div class="step-tag">Spørsmål 7 av 12</div>
     <h2>Hvilken type strømavtale har du?</h2>
     <p class="screen-sub">Avtaletypen påvirker hva du betaler og hva du kan spare.</p>
     <div class="options" id="q7">
@@ -177,7 +177,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s8">
-    <div class="step-tag">Spørsmål 8 av 10</div>
+    <div class="step-tag">Spørsmål 8 av 12</div>
     <h2>Har du solcellepanel?</h2>
     <p class="screen-sub">Dette påvirker hvilke tiltak som er mest relevante for deg.</p>
     <div class="options" id="q8">
@@ -203,7 +203,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s10">
-    <div class="step-tag">Spørsmål 9 av 10</div>
+    <div class="step-tag">Spørsmål 10 av 12</div>
     <h2>Gjør du allerede noen av disse?</h2>
     <p class="screen-sub">Vi gir deg kun tips du ikke allerede har prøvd.</p>
     <div class="options" id="q9">
@@ -301,7 +301,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s14">
-    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#e8500a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 9l9 5 9-5"/></svg></div>
+    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#1b4332" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 9l9 5 9-5"/></svg></div>
     <h2>Nesten der!</h2>
     <p class="screen-sub">Legg igjen e-posten din så sender vi deg den fulle rapporten med alle sparetiltak og din personlige AI-rådgiver.</p>
     <input type="email" id="emailVal" placeholder="din@epost.no"/>
@@ -311,7 +311,7 @@ h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-wei
   </div>
 
   <div class="screen" id="s15">
-    <div class="final-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#e8500a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5V11a9 9 0 11-5.34-8.23"/><polyline points="20 4 11 13 8 10"/></svg></div>
+    <div class="final-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#1b4332" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5V11a9 9 0 11-5.34-8.23"/><polyline points="20 4 11 13 8 10"/></svg></div>
     <h1 class="done">Du er i gang!</h1>
     <p class="screen-sub">Vi har mottatt svarene dine og sender deg den fulle rapporten innen 24 timer. Mange SparWatt-brukere sparer over 300 kr allerede første måned.</p>
     <p class="done-email" id="done-email"></p>
@@ -409,10 +409,10 @@ function getTip(a){
   const fastpris=a.q7==='Fastpris';
   const doneNight=Array.isArray(a.q9)&&a.q9.includes('Vasker klær om natta');
   const doneBereder=Array.isArray(a.q9)&&a.q9.includes('Tidsstyring på berederen');
-  if(panel&&!pump)return{t:'Bytt panelovner til varmepumpe',d:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En varmepumpe bruker 3x mindre strøm for samme varme.',s:'Estimert sparing: 400–800 kr/mnd',c:'#e8500a',total:'opptil 800 kr/mnd'};
-  if(norgespris||fastpris)return{t:'Bytt til spotprisavtale',d:'Du har '+a.q7.toLowerCase()+', som over tid er dyrere enn spotpris for de fleste norske husstander. Tibber eller Vibb er gode alternativer.',s:'Estimert sparing: 100–300 kr/mnd',c:'#e8500a',total:'opptil 500 kr/mnd'};
+  if(panel&&!pump)return{t:'Bytt panelovner til varmepumpe',d:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En varmepumpe bruker 3x mindre strøm for samme varme.',s:'Estimert sparing: 400–800 kr/mnd',c:'#1b4332',total:'opptil 800 kr/mnd'};
+  if(norgespris||fastpris)return{t:'Bytt til spotprisavtale',d:'Du har '+a.q7.toLowerCase()+', som over tid er dyrere enn spotpris for de fleste norske husstander. Tibber eller Vibb er gode alternativer.',s:'Estimert sparing: 100–300 kr/mnd',c:'#1b4332',total:'opptil 500 kr/mnd'};
   if(high&&many&&!doneBereder)return{t:'Tidsstyring på varmtvannsberederen',d:'Med '+a.q4+' i husstanden er berederen trolig en stor utgiftspost. Skru ned 23:00–05:00 — du merker ingen forskjell.',s:'Estimert sparing: 150–280 kr/mnd',c:'#f0a06a',total:'opptil 640 kr/mnd'};
-  if(hytte)return{t:'Smartplugg på varmesystemet',d:'Hytta bruker strøm på oppvarming når du ikke er der. En smartplugg (300 kr) lar deg styre varmen fra mobilen.',s:'Estimert sparing: 200–450 kr/mnd',c:'#e8500a',total:'opptil 450 kr/mnd'};
+  if(hytte)return{t:'Smartplugg på varmesystemet',d:'Hytta bruker strøm på oppvarming når du ikke er der. En smartplugg (300 kr) lar deg styre varmen fra mobilen.',s:'Estimert sparing: 200–450 kr/mnd',c:'#1b4332',total:'opptil 450 kr/mnd'};
   if(solar)return{t:'Solcellepanel kan lønne seg for deg',d:'Med din boligtype er solceller et reelt alternativ. I prisområde '+a.q3zone+' er investeringen typisk tjent inn på 8–12 år.',s:'Estimert sparing: 200–500 kr/mnd',c:'#f0a06a',total:'opptil 500 kr/mnd'};
   if(!doneNight)return{t:'Unngå strøm i høypristimene 17–21',d:'I prisområde '+a.q3zone+' er strømprisene typisk 2–4x høyere mellom kl. 17 og 21. Flytt vaskemaskin og oppvask til kveld.',s:'Estimert sparing: 60–150 kr/mnd',c:'#f0a06a',total:'opptil 380 kr/mnd'};
   return{t:'Reduser effekttopper i nettleien',d:'Nettleien din øker når mange apparater er på samtidig. Unngå å bruke ovn, vaskemaskin og varmepumpe på en gang.',s:'Estimert sparing: 50–120 kr/mnd',c:'#f0a06a',total:'opptil 300 kr/mnd'};
