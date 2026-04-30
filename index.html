@@ -49,6 +49,27 @@
     overflow-x: hidden;
     width: 100%;
     max-width: 100vw;
+    animation: page-load 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ===== PAGE TRANSITIONS ===== */
+  @keyframes page-load {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) {
+    animation: vt-fade-out 0.25s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  ::view-transition-new(root) {
+    animation: vt-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes vt-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* ===== NOISE TEXTURE BACKDROP ===== */

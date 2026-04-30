@@ -47,6 +47,27 @@
     width: 100%;
     max-width: 100vw;
     padding-bottom: 60px;
+    animation: page-load 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ===== PAGE TRANSITIONS ===== */
+  @keyframes page-load {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) {
+    animation: vt-fade-out 0.25s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  ::view-transition-new(root) {
+    animation: vt-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes vt-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* Subtil støy-tekstur */
@@ -391,6 +412,80 @@
     font-weight: 600;
   }
 
+  /* ===== TOMORROW PROGNOSIS ===== */
+  .tomorrow-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .tom-stat {
+    text-align: center;
+    padding: 10px 8px;
+    background: var(--bg-warm);
+    border-radius: 10px;
+  }
+  .tom-stat-label {
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .tom-stat-value {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--green-deep);
+    line-height: 1;
+  }
+  .tom-stat-value-sm {
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-family: var(--sans);
+    font-weight: 400;
+    margin-left: 2px;
+  }
+  .cheap-windows {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .cheap-windows-title {
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .cheap-windows-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cheap-window {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--green-light);
+    border: 1px solid rgba(45,106,79,0.15);
+    color: var(--green-deep);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .cheap-window-time {
+    font-weight: 600;
+  }
+  .cheap-window-price {
+    color: var(--green-mid);
+    font-size: 12px;
+  }
+
   /* ===== DAILY INSIGHT CARD (the "aha"-moment) ===== */
   .daily-insight {
     background: linear-gradient(135deg, white, var(--green-light));
@@ -439,6 +534,68 @@
   .daily-insight-text strong {
     color: var(--green-deep);
     font-weight: 600;
+  }
+
+  /* ===== PROGRESS CARD (Din fremgang) ===== */
+  .progress-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px;
+    transition: all 0.3s ease;
+  }
+  .progress-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    border-color: var(--green-glow);
+  }
+  .progress-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+  .progress-card-label {
+    font-size: 11px;
+    color: var(--green-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .progress-card-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .progress-card-text {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .progress-ring {
+    position: relative;
+    width: 64px; height: 64px;
+    flex-shrink: 0;
+  }
+  .progress-ring svg {
+    width: 100%; height: 100%;
+  }
+  .progress-ring circle {
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .progress-ring-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-deep);
+    font-variant-numeric: tabular-nums;
   }
 
   /* ===== TIPS LIST ===== */
@@ -526,6 +683,16 @@
     background: rgba(217, 119, 6, 0.1);
     color: var(--warn);
   }
+  .tip-tag.season {
+    background: rgba(82, 183, 136, 0.18);
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+  .tip-tag.season::before {
+    content: '★';
+    margin-right: 4px;
+    font-size: 10px;
+  }
 
   /* ===== CHECKLIST ===== */
   .checklist {
@@ -559,12 +726,23 @@
   .check-item.done .check-box {
     background: var(--green-deep);
     border-color: var(--green-deep);
+    animation: check-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .check-item.done .check-box::after {
     content: '✓';
     color: white;
     font-size: 14px;
     font-weight: 700;
+    animation: check-mark 0.3s 0.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes check-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+  @keyframes check-mark {
+    from { opacity: 0; transform: scale(0.4); }
+    to { opacity: 1; transform: scale(1); }
   }
   .check-text {
     font-size: 14px;
@@ -1170,6 +1348,29 @@
       </div>
     </div>
 
+    <!-- Din fremgang -->
+    <div class="section">
+      <div class="progress-card">
+        <div class="progress-card-header">
+          <div>
+            <div class="progress-card-label">Din fremgang</div>
+            <div class="progress-card-title" id="progress-title">Du er i gang!</div>
+          </div>
+          <div class="progress-ring">
+            <svg viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(45,106,79,0.15)" stroke-width="5"/>
+              <circle cx="30" cy="30" r="26" fill="none" stroke="var(--green-deep)" stroke-width="5"
+                stroke-linecap="round" stroke-dasharray="163.36"
+                stroke-dashoffset="163.36" id="progress-ring-fill"
+                transform="rotate(-90 30 30)"/>
+            </svg>
+            <div class="progress-ring-text" id="progress-ring-text">0/6</div>
+          </div>
+        </div>
+        <div class="progress-card-text" id="progress-card-text">Huk av tiltak du har gjennomført på Tiltak-tab — så ser du fremgangen din her.</div>
+      </div>
+    </div>
+
     <!-- Live priser -->
     <div class="section">
       <h2 class="sec-title">Live <em>strømpriser</em></h2>
@@ -1187,6 +1388,40 @@
         </div>
         <div class="price-insight" id="price-insight">
           Laster prisanalyse...
+        </div>
+      </div>
+    </div>
+
+    <!-- I morgen-prognose -->
+    <div class="section" id="tomorrow-section" style="display:none;">
+      <h2 class="sec-title">Prisene <em>i morgen</em></h2>
+      <p class="sec-sub">Publiseres typisk kl. 13 samme dag · planlegg vask, lading og oppvask</p>
+      <div class="price-card">
+        <div class="price-card-header">
+          <span class="price-card-title" id="tomorrow-title">Prognose i morgen</span>
+          <span class="price-card-live" style="color:var(--ink-muted);">Prognose</span>
+        </div>
+        <div class="tomorrow-summary" id="tomorrow-summary">
+          <div class="tom-stat">
+            <div class="tom-stat-label">Snitt</div>
+            <div class="tom-stat-value" id="tom-avg">—</div>
+          </div>
+          <div class="tom-stat">
+            <div class="tom-stat-label">Billigst</div>
+            <div class="tom-stat-value" id="tom-min">—</div>
+          </div>
+          <div class="tom-stat">
+            <div class="tom-stat-label">Dyrest</div>
+            <div class="tom-stat-value" id="tom-max">—</div>
+          </div>
+        </div>
+        <div class="price-bars" id="tomorrow-bars"></div>
+        <div class="price-hours">
+          <span>00</span><span>06</span><span>12</span><span>18</span><span>23</span>
+        </div>
+        <div class="cheap-windows" id="cheap-windows">
+          <div class="cheap-windows-title">Billigste timer i morgen</div>
+          <div class="cheap-windows-list" id="cheap-windows-list"></div>
         </div>
       </div>
     </div>
@@ -1440,9 +1675,11 @@
     const minSaving = tips.reduce((s, t) => s + t.minMonthly, 0);
     const maxSaving = tips.reduce((s, t) => s + t.maxMonthly, 0);
     const avgSaving = Math.round((minSaving + maxSaving) / 2);
-    document.getElementById('banner-saving').innerHTML = avgSaving + '<span class="hero-banner-value-sm"> kr/mnd</span>';
-    document.getElementById('banner-yearly').innerHTML = (avgSaving * 12).toLocaleString('no-NO') + '<span class="hero-banner-value-sm"> kr/år</span>';
-    document.getElementById('stat-tips').textContent = tips.length;
+
+    // Telle-opp animasjon
+    countUp('banner-saving', avgSaving, ' kr/mnd', 1200);
+    countUp('banner-yearly', avgSaving * 12, ' kr/år', 1400);
+    countUp('stat-tips', tips.length, '', 800);
 
     document.getElementById('banner-context').textContent = 'Basert på din ' + (p.q1 || 'bolig').toLowerCase() + ' i ' + place + ' med ' + (p.q4 || 'din husstand').toLowerCase() + '. Reell sparing kan variere.';
 
@@ -1452,6 +1689,27 @@
     if (hour >= 12 && hour < 17) greet = 'God dag';
     else if (hour >= 17) greet = 'God kveld';
     document.getElementById('nav-greeting').innerHTML = greet + ', velkommen tilbake';
+  }
+
+  // Telle-opp animasjon — gir folk dopamin-rush når sidene åpnes
+  function countUp(elId, target, suffix, duration) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    const start = performance.now();
+    const startVal = 0;
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic — starter raskt, avtar mot slutten
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startVal + (target - startVal) * eased);
+      const formatted = current.toLocaleString('no-NO');
+      el.innerHTML = formatted + (suffix ? '<span class="hero-banner-value-sm">' + suffix + '</span>' : '');
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+    requestAnimationFrame(step);
   }
 
   // === DAILY INSIGHT (aha-moment) ===
@@ -1534,6 +1792,68 @@
     renderPrices(curve.map(p => ({NOK_per_kWh: p / 100})), zone);
   }
 
+  // === I MORGEN-PROGNOSE ===
+  async function loadTomorrowPrices() {
+    const zone = profile.q3zone || 'NO1';
+    try {
+      const tomorrow = new Date(Date.now() + 86400000);
+      const y = tomorrow.getFullYear();
+      const m = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      const d = String(tomorrow.getDate()).padStart(2, '0');
+      const url = 'https://www.hvakosterstrommen.no/api/v1/prices/' + y + '/' + m + '-' + d + '_' + zone + '.json';
+      const r = await fetch(url);
+      if (!r.ok) {
+        // Prisene er ikke publisert ennå (typisk før 13:00) — skjul seksjonen
+        return;
+      }
+      const data = await r.json();
+      if (!data || data.length === 0) return;
+      renderTomorrow(data);
+      document.getElementById('tomorrow-section').style.display = 'block';
+    } catch (e) {
+      // Stille feil — ikke vis seksjonen
+    }
+  }
+
+  function renderTomorrow(data) {
+    const prices = data.map(p => p.NOK_per_kWh * 100);
+    const max = Math.max(...prices);
+    const min = Math.min(...prices);
+    const avg = prices.reduce((a,b) => a+b, 0) / prices.length;
+    const minHour = prices.indexOf(min);
+    const maxHour = prices.indexOf(max);
+
+    document.getElementById('tom-avg').innerHTML = avg.toFixed(1).replace('.',',') + '<span class="tom-stat-value-sm"> øre</span>';
+    document.getElementById('tom-min').innerHTML = min.toFixed(1).replace('.',',') + '<span class="tom-stat-value-sm"> kl ' + String(minHour).padStart(2,'0') + '</span>';
+    document.getElementById('tom-max').innerHTML = max.toFixed(1).replace('.',',') + '<span class="tom-stat-value-sm"> kl ' + String(maxHour).padStart(2,'0') + '</span>';
+
+    // Render bars
+    const bars = document.getElementById('tomorrow-bars');
+    bars.innerHTML = '';
+    prices.forEach((price, i) => {
+      const bar = document.createElement('div');
+      bar.className = 'price-bar';
+      const norm = (price - min) / (max - min || 1);
+      bar.style.height = (10 + norm * 90) + '%';
+      bar.style.animationDelay = (i * 25) + 'ms';
+      if (price < min + (max - min) * 0.33) bar.classList.add('cheap');
+      else if (price < min + (max - min) * 0.66) bar.classList.add('mid');
+      else bar.classList.add('expensive');
+      bars.appendChild(bar);
+    });
+
+    // Find 3 cheapest 1-hour windows
+    const sorted = prices.map((p, i) => ({p, i})).sort((a, b) => a.p - b.p);
+    const top3 = sorted.slice(0, 3).sort((a, b) => a.i - b.i);
+    const list = document.getElementById('cheap-windows-list');
+    list.innerHTML = top3.map(item => {
+      return '<span class="cheap-window">' +
+        '<span class="cheap-window-time">' + String(item.i).padStart(2,'0') + ':00</span>' +
+        '<span class="cheap-window-price">' + item.p.toFixed(1).replace('.',',') + ' øre</span>' +
+        '</span>';
+    }).join('');
+  }
+
   // === LEVERANDØR ===
   function calcLev() {
     const markup = parseFloat(document.getElementById('lev-markup').value) || 0;
@@ -1581,6 +1901,27 @@
     if (!doneNight) tips.push({title:'Flytt vask og oppvask til natt', desc:'I ditt prisområde er strømmen 2–4× dyrere mellom 17–21 enn om natta. Sett vaskemaskin og oppvaskmaskin på timer.', tags:['Gratis å gjøre'], minMonthly:60, maxMonthly:150, prio:'lav'});
     tips.push({title:'Reduser effekttopper i nettleien', desc:'Nettleien beregnes etter høyeste samtidige effektbruk. Unngå å kjøre flere store apparater samtidig (vaskemaskin + tørketrommel + ovn).', tags:['Gratis å gjøre'], minMonthly:50, maxMonthly:120, prio:'lav'});
     if (ved) tips.push({title:'Bruk vedovnen i kuldeperioder', desc:'Når strømprisen er høy (kl. 17–21 og kalde dager) er vedfyring ofte billigere enn elektrisk varme. Lat veden gjøre jobben i topplastperioder.', tags:['Gratis å gjøre'], minMonthly:80, maxMonthly:200, prio:'medium'});
+
+    // Sesongbaserte tiltak
+    const month = new Date().getMonth(); // 0=jan, 11=des
+    const winter = month >= 10 || month <= 2; // nov-feb
+    const spring = month >= 3 && month <= 4; // apr-mai
+    const summer = month >= 5 && month <= 7; // jun-aug
+    const autumn = month >= 8 && month <= 9; // sep-okt
+
+    if (winter) {
+      tips.push({title:'Vinter-tips: Skru ned 1 grad om natta', desc:'1 grad lavere temperatur kutter typisk 5% av varmekostnaden. På en typisk januar-regning utgjør det 80–150 kr alene. Ingen merker forskjellen mellom 20 og 19 grader om natta.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:80, maxMonthly:150, prio:'medium'});
+    }
+    if (spring) {
+      tips.push({title:'Vår-tips: Sjekk vifteinnstillinger på varmepumpe', desc:'Renslighet på varmepumpens filter kan utgjøre 10–15% i effektivitet. Ta fram støvsugeren — det tar 5 minutter og påvirker resten av året.', tags:['Sesongtiltak','Lett å gjøre'], minMonthly:40, maxMonthly:90, prio:'lav'});
+    }
+    if (summer) {
+      tips.push({title:'Sommer-tips: Skru av varmtvannsberederen i ferien', desc:'Hvis du reiser bort i 1+ uke — skru av berederen helt eller still den til 40°C. Når du kommer hjem, varm den opp natten før — du sparer 100–200 kr på en uke.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:60, maxMonthly:140, prio:'medium'});
+    }
+    if (autumn) {
+      tips.push({title:'Høst-tips: Forbered boligen før vinter', desc:'Tett luftlekkasjer rundt vinduer og dører før det blir kaldt. En typisk leilighet har 3–5 lekkasjer som koster 50–100 kr/mnd i vinter. Tetningslist fra Biltema koster 50 kr og varer i mange år.', tags:['Sesongtiltak','Engangsinvestering'], minMonthly:50, maxMonthly:120, prio:'medium'});
+    }
+
     return tips;
   }
 
@@ -1592,7 +1933,10 @@
       return;
     }
     list.innerHTML = tips.map((t, i) => {
-      const tagsHtml = t.tags.map(tag => '<span class="tip-tag">' + tag + '</span>').join('');
+      const tagsHtml = t.tags.map(tag => {
+        const cls = tag === 'Sesongtiltak' ? 'tip-tag season' : 'tip-tag';
+        return '<span class="' + cls + '">' + tag + '</span>';
+      }).join('');
       return '<div class="tip">' +
         '<div class="tip-num">' + (i+1) + '</div>' +
         '<div class="tip-body">' +
@@ -1623,7 +1967,43 @@
     const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
     saved[i] = !saved[i];
     localStorage.setItem('sw_checklist', JSON.stringify(saved));
-    renderChecklist();
+    // Toggle klasse direkte i stedet for å re-render hele lista (bevarer animasjonen)
+    const items = document.querySelectorAll('.check-item');
+    if (items[i]) items[i].classList.toggle('done');
+    // Oppdater fremgangstelleren hvis den finnes
+    updateWeekProgress();
+  }
+
+  // === DIN FREMGANG ===
+  function updateWeekProgress() {
+    const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
+    const total = 6; // antall sjekkliste-elementer
+    const done = Object.values(saved).filter(v => v).length;
+    const ringText = document.getElementById('progress-ring-text');
+    const ringFill = document.getElementById('progress-ring-fill');
+    const titleEl = document.getElementById('progress-title');
+    const textEl = document.getElementById('progress-card-text');
+    if (!ringText) return;
+
+    ringText.textContent = done + '/' + total;
+    const circumference = 2 * Math.PI * 26; // 163.36
+    const offset = circumference - (done / total) * circumference;
+    ringFill.style.strokeDashoffset = offset;
+
+    // Tilbakemelding basert på fremgang
+    if (done === 0) {
+      titleEl.textContent = 'Du er i gang!';
+      textEl.textContent = 'Huk av tiltak du har gjennomført på Tiltak-tab — så ser du fremgangen din her.';
+    } else if (done < 3) {
+      titleEl.textContent = 'Bra startet!';
+      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Hver eneste sak gjør en forskjell på regningen.';
+    } else if (done < total) {
+      titleEl.textContent = 'På god vei!';
+      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Bare ' + (total - done) + ' igjen — du sparer allerede mer enn de fleste.';
+    } else {
+      titleEl.textContent = 'Fullført — sterkt jobbet!';
+      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">alle ' + total + ' tiltakene</strong>. Du er nå i den øverste 5% av strømsmarte husholdninger.';
+    }
   }
 
   // === ACCESS LINK ===
@@ -1650,6 +2030,38 @@
     const place = profile.q3post ? postcodeToPlace(profile.q3post) : 'din region';
     const intro = 'Hei! Jeg er din personlige strømrådgiver. Jeg vet at du bor i ' + (profile.q1 || 'bolig').toLowerCase() + ' i ' + place + ' med ' + (profile.q4 || 'din husstand').toLowerCase() + '. Hva lurer du på?';
     addBotMsg(intro);
+    buildSmartSuggestions();
+  }
+
+  // Personlige forslag basert på profilen
+  function buildSmartSuggestions() {
+    const sug = [];
+    const panel = (profile.q5 || '').includes('Elektriske panelovner');
+    const pump = (profile.q5 || '').includes('Varmepumpe');
+    const elbil = profile.q9ev && profile.q9ev.includes('Ja, lader hjemme');
+    const solar = profile.q8 === 'Nei, men vurderer det';
+    const norge = profile.q7 === 'Norgespris';
+    const fast = profile.q7 === 'Fastpris';
+    const hytte = profile.q1 === 'Hytte / fritidsbolig';
+
+    sug.push('Når er strømmen billigst i dag?');
+
+    if (norge) sug.push('Bør jeg gå bort fra Norgespris?');
+    else if (fast) sug.push('Lønner det seg å bytte fra fastpris?');
+    else sug.push('Bør jeg bytte strømleverandør?');
+
+    if (panel && !pump) sug.push('Lønner varmepumpe seg for meg?');
+    else if (elbil) sug.push('Hvordan lader jeg elbil billigst?');
+    else if (solar) sug.push('Lønner solceller seg for meg?');
+    else if (hytte) sug.push('Hvordan kutter jeg strøm på hytta?');
+    else sug.push('Hvor mye kan jeg spare på smartplugg?');
+
+    sug.push('Hva er Norgespris?');
+
+    const container = document.getElementById('chat-suggestions');
+    container.innerHTML = sug.slice(0, 4).map(s =>
+      '<button class="suggestion" onclick="askSuggestion(\'' + s.replace(/'/g, "\\'") + '\')">' + s + '</button>'
+    ).join('');
   }
 
   function addBotMsg(text) {
@@ -1716,9 +2128,12 @@
     fillStats();
     setDailyInsight();
     loadPrices();
+    loadTomorrowPrices();
     renderTips();
     renderChecklist();
     setAccessLink();
+    // Liten delay så ringen animerer fra 0 til riktig verdi
+    setTimeout(updateWeekProgress, 300);
   })();
 </script>
 
