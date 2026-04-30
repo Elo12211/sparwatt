@@ -3,524 +3,1682 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
 <title>SparWatt — Din strømanalyse</title>
+<meta name="description" content="Få en personlig analyse av din strømsituasjon på under 3 minutter.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  /* ===== TOKENS (matcher landingsside) ===== */
+  :root {
+    --green-deep: #1b4332;
+    --green-mid: #2d6a4f;
+    --green-light: #e8f5ee;
+    --green-glow: #52b788;
+    --bg: #fafaf8;
+    --bg-warm: #f4f1ea;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-muted: #8a8a8a;
+    --line: #e6e2da;
+    --gold: #c9a961;
+    --warn: #d97706;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+  }
 
-html,body{min-height:100vh;background:#fafaf8;color:#1c1c1a;font-family:"DM Sans",system-ui,sans-serif;font-weight:300;overflow-x:hidden}
-.progress{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(28,28,26,.1);z-index:100}
-.progress-fill{height:100%;background:#1b4332;transition:width .45s cubic-bezier(.4,0,.2,1)}
-nav{position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(250,250,248,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(28,28,26,.1)}
-.logo{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.3rem;color:#1c1c1a;text-decoration:none;letter-spacing:-.01em}
-.logo sup{font-size:.5rem;color:#2d6a4f;vertical-align:super;font-family:"DM Sans",system-ui,sans-serif;font-weight:500;letter-spacing:.08em}
-.step-counter{font-size:12px;color:rgba(28,28,26,.6)}
-.container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 3rem}
-.screen{width:100%;max-width:540px;display:none;animation:up .4s cubic-bezier(.4,0,.2,1) forwards}
-.screen.active{display:block}
-@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.step-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#1b4332;margin-bottom:1.25rem;font-weight:400}
-h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400;letter-spacing:-.025em;line-height:1.2;margin-bottom:.6rem}
-.screen-sub{font-size:.95rem;color:rgba(28,28,26,.6);line-height:1.7;margin-bottom:1.75rem}
-.options{display:flex;flex-direction:column;gap:9px;margin-bottom:1.5rem}
-.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid rgba(28,28,26,.1);border-radius:10px;cursor:pointer;background:#fff;font-size:.9rem;color:#1c1c1a;text-align:left;width:100%;transition:border-color .18s,background .18s,transform .12s;font-family:"DM Sans",system-ui,sans-serif;font-weight:300}
-.opt:hover{border-color:rgba(27,67,50,.4);background:#e8f5ee;transform:translateX(3px)}
-.opt.selected,.opt.multi-on{border-color:#1b4332;background:#e8f5ee}
-.opt-k{width:24px;height:24px;border-radius:6px;border:1px solid rgba(28,28,26,.1);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(28,28,26,.6);flex-shrink:0;transition:all .18s;font-family:"DM Sans",system-ui,sans-serif}
-.opt.selected .opt-k,.opt.multi-on .opt-k{border-color:#1b4332;color:#1b4332;background:#e8f5ee}
-textarea,input[type="email"],input[type="text"]{width:100%;background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:10px;color:#1c1c1a;font-family:"DM Sans",system-ui,sans-serif;font-size:.9rem;font-weight:300;padding:14px 16px;outline:none;transition:border-color .18s;margin-bottom:1.25rem}
-textarea{resize:none;min-height:110px;line-height:1.7}
-textarea:focus,input:focus{border-color:rgba(45,106,79,.4)}
-textarea::placeholder,input::placeholder{color:rgba(28,28,26,.6)}
-.btn-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
-.btn-main{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;background:#1b4332;color:#fff;border-radius:6px;font-family:"DM Sans",system-ui,sans-serif;font-size:13.5px;font-weight:400;border:none;cursor:pointer;transition:background .2s,transform .15s}
-.btn-main:hover{background:#2d6a4f;transform:translateY(-1px)}
-.btn-back{display:inline-flex;align-items:center;gap:6px;padding:13px 20px;background:transparent;color:rgba(28,28,26,.6);border:1px solid rgba(28,28,26,.1);border-radius:6px;font-family:"DM Sans",system-ui,sans-serif;font-size:13px;font-weight:300;cursor:pointer;transition:all .18s}
-.btn-back:hover{background:#fff;color:#1c1c1a}
-.err{font-size:12.5px;color:#c0392b;margin-top:.5rem;display:none}
-.hint{font-size:12px;color:rgba(28,28,26,.6);margin-top:.85rem}
-.w-ico{width:48px;height:48px;background:#e8f5ee;border:1px solid rgba(27,67,50,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
-.w-ico svg{width:22px;height:22px}
-.postcode-result{font-size:13px;color:#1b4332;font-weight:400;margin-top:6px;min-height:20px;font-weight:400}
-.r-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.1rem}
-.r-metric{background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:10px;padding:11px 13px}
-.r-ml{font-size:10.5px;color:rgba(28,28,26,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
-.r-mv{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.2rem;color:#1c1c1a;line-height:1}
-.r-tips{display:flex;flex-direction:column;gap:9px;margin-bottom:1rem}
-.r-tip{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid rgba(28,28,26,.1);border-radius:10px;background:#fff}
-.r-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.r-tt{font-size:13.5px;font-weight:400;color:#1c1c1a;margin-bottom:2px}
-.r-td{font-size:12.5px;color:rgba(28,28,26,.6);line-height:1.55}
-.r-ts{font-size:12px;color:#1b4332;margin-top:4px;font-weight:400}
-.r-locked{background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:10px;padding:1.4rem;text-align:center;margin-top:.5rem}
-.r-locked p{font-size:13px;color:rgba(28,28,26,.6);line-height:1.6;margin-bottom:1.1rem}
-.result-intro{font-size:.95rem;color:rgba(28,28,26,.6);margin-bottom:1.25rem;line-height:1.65}
-.final-ico{width:48px;height:48px;background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
-.final-ico svg{width:22px;height:22px}
-h1.done{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.5rem;font-weight:400;letter-spacing:-.03em;margin-bottom:.85rem}
-.done-email{font-size:13px;color:#2d6a4f;margin-top:.85rem}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@media(max-width:480px){nav{padding:.85rem 1.25rem}.r-grid{grid-template-columns:1fr}}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    color-scheme: light;
+  }
+
+  /* Subtil støy-tekstur som matcher landingsside */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+  }
+
+  /* ===== PROGRESS BAR (øverst) ===== */
+  .progress {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(28, 28, 26, 0.06);
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-deep), var(--green-glow));
+    width: 0%;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 3px; left: 0; right: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: rgba(250, 250, 248, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--line);
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--green-deep);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-mark {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--green-glow), var(--green-deep));
+    position: relative;
+  }
+  .logo-mark::after {
+    content: '';
+    position: absolute; inset: 5px;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+  .step-counter {
+    font-size: 13px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .step-counter strong {
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 24px 60px;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  /* Bakgrunns-orb (statisk, matcher landingsside) */
+  .container::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(82, 183, 136, 0.12), transparent 70%);
+    top: -100px; right: -200px;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* ===== SCREEN ===== */
+  .screen {
+    width: 100%;
+    max-width: 600px;
+    display: none;
+    animation: screen-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .screen.active { display: block; }
+
+  @keyframes screen-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Eyebrow / step tag */
+  .step-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--green-light);
+    border: 1px solid rgba(45, 106, 79, 0.15);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--green-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+  }
+  .step-tag .dot {
+    width: 5px; height: 5px;
+    background: var(--green-glow);
+    border-radius: 50%;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  h2 em {
+    font-style: italic;
+    color: var(--green-deep);
+  }
+
+  .screen-sub {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 32px;
+    max-width: 540px;
+  }
+
+  /* ===== OPTIONS ===== */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    cursor: pointer;
+    background: white;
+    font-size: 15px;
+    color: var(--ink);
+    text-align: left;
+    width: 100%;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: var(--sans);
+    font-weight: 400;
+    position: relative;
+    overflow: hidden;
+  }
+  .opt::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: var(--green-deep);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+  }
+  .opt:hover {
+    border-color: var(--green-glow);
+    background: var(--green-light);
+    transform: translateX(4px);
+  }
+  .opt:hover::after {
+    transform: scaleY(1);
+  }
+  .opt.selected, .opt.multi-on {
+    border-color: var(--green-deep);
+    background: var(--green-light);
+    box-shadow: 0 4px 16px rgba(27, 67, 50, 0.08);
+  }
+  .opt.selected::after, .opt.multi-on::after {
+    transform: scaleY(1);
+  }
+  .opt-k {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+    font-family: var(--sans);
+  }
+  .opt:hover .opt-k {
+    border-color: var(--green-glow);
+    color: var(--green-deep);
+    background: white;
+  }
+  .opt.selected .opt-k, .opt.multi-on .opt-k {
+    border-color: var(--green-deep);
+    color: white;
+    background: var(--green-deep);
+  }
+  .opt-text { flex: 1; }
+
+  /* ===== INPUTS ===== */
+  textarea, input[type="email"], input[type="text"], input[type="number"] {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 400;
+    padding: 16px 20px;
+    outline: none;
+    transition: all 0.25s ease;
+    margin-bottom: 16px;
+  }
+  textarea {
+    resize: none;
+    min-height: 130px;
+    line-height: 1.6;
+  }
+  textarea:focus, input:focus {
+    border-color: var(--green-deep);
+    box-shadow: 0 0 0 4px rgba(82, 183, 136, 0.15);
+  }
+  textarea::placeholder, input::placeholder {
+    color: var(--ink-muted);
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .btn-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 28px;
+    background: var(--green-deep);
+    color: white;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(27, 67, 50, 0.18);
+  }
+  .btn-main::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .btn-main:hover::before { transform: translateX(100%); }
+  .btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(27, 67, 50, 0.25);
+    background: var(--green-mid);
+  }
+  .btn-main svg {
+    transition: transform 0.3s ease;
+  }
+  .btn-main:hover svg { transform: translateX(3px); }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 22px;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .btn-back:hover {
+    background: white;
+    color: var(--ink);
+    border-color: var(--ink-muted);
+  }
+
+  .err {
+    font-size: 13px;
+    color: #c0392b;
+    margin-top: 8px;
+    display: none;
+    padding: 8px 12px;
+    background: rgba(192, 57, 43, 0.06);
+    border-radius: 8px;
+    border-left: 3px solid #c0392b;
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  /* ===== INTRO SCREEN (s0) ===== */
+  .intro-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-icon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(82, 183, 136, 0.1));
+  }
+  .intro-icon svg {
+    width: 28px; height: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== POSTCODE RESULT ===== */
+  .postcode-result {
+    font-size: 14px;
+    color: var(--green-deep);
+    font-weight: 500;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    min-height: 22px;
+    padding: 0 4px;
+    transition: all 0.3s ease;
+  }
+  .postcode-result.has-data {
+    background: var(--green-light);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(45, 106, 79, 0.15);
+  }
+
+  /* ===== INFO CALLOUT ===== */
+  .info-callout {
+    background: var(--green-light);
+    border: 1px solid rgba(45, 106, 79, 0.15);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--green-deep);
+    line-height: 1.55;
+  }
+  .info-callout svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ===== INPUT GROUPS ===== */
+  .input-group {
+    margin-bottom: 16px;
+  }
+  .input-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .input-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .input-help {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+
+  /* ===== MINI CHAT (s11) — oppgradert med quick-replies ===== */
+  .mini-chat {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+  .mini-chat-hdr {
+    background: var(--ink);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mini-chat-ico {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--green-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .mini-chat-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+  }
+  .mini-chat-live {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .mini-chat-live-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green-glow);
+  }
+  .mini-msgs {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .mini-msg {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    animation: msg-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .mini-msg.user { flex-direction: row-reverse; }
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .mini-msg-av {
+    width: 24px; height: 24px;
+    border-radius: 7px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .mini-msg.bot .mini-msg-av {
+    background: var(--green-light);
+    color: var(--green-deep);
+  }
+  .mini-msg.user .mini-msg-av {
+    background: var(--green-deep);
+    color: white;
+  }
+  .mini-msg-bubble {
+    padding: 10px 14px;
+    border-radius: 4px 14px 14px 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 86%;
+  }
+  .mini-msg.bot .mini-msg-bubble {
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .mini-msg.user .mini-msg-bubble {
+    background: var(--green-deep);
+    color: white;
+    border-radius: 14px 4px 14px 14px;
+  }
+  /* Typing indicator */
+  .typing-bubble {
+    background: var(--bg);
+    border-radius: 4px 14px 14px 14px;
+    padding: 12px 14px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .typing-bubble span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--ink-muted);
+    animation: typing-bounce 1.2s ease-in-out infinite;
+  }
+  .typing-bubble span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-bubble span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+  /* Quick reply buttons */
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 14px 12px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .quick-reply {
+    padding: 8px 14px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-family: var(--sans);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .quick-reply:hover {
+    border-color: var(--green-deep);
+    color: var(--green-deep);
+    background: var(--green-light);
+    transform: translateY(-1px);
+  }
+  .mini-chat-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .mini-chat-input {
+    flex: 1;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+  .mini-chat-send {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--green-deep);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  .mini-chat-send:hover {
+    background: var(--green-mid);
+    transform: scale(1.05);
+  }
+
+  /* ===== RESULT SCREEN (s13) ===== */
+  .result-banner {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-banner::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(82, 183, 136, 0.3), transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .result-banner-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .result-banner-value {
+    font-family: var(--serif);
+    font-size: 44px;
+    color: white;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .result-banner-context {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: right;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+
+  .result-intro {
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .r-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .r-metric {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 18px;
+  }
+  .r-ml {
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .r-mv {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1.1;
+    font-weight: 500;
+  }
+
+  .r-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .r-tip {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: white;
+    transition: all 0.3s ease;
+  }
+  .r-tip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+  .r-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .r-tt {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .r-td {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .r-ts {
+    font-size: 13px;
+    color: var(--green-deep);
+    margin-top: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .r-ts::before {
+    content: '↗';
+    color: var(--green-glow);
+  }
+
+  .r-locked {
+    background: linear-gradient(180deg, white, var(--green-light));
+    border: 2px solid var(--green-deep);
+    border-radius: 20px;
+    padding: 28px 24px;
+    text-align: center;
+    margin-top: 16px;
+    position: relative;
+  }
+  .r-locked::before {
+    content: 'Mest populær';
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-deep);
+    color: white;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .r-locked-title {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .r-locked p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .r-locked-meta {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin: 12px 0 18px;
+  }
+
+  /* ===== EMAIL SCREEN ===== */
+  .email-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  /* ===== DONE SCREEN ===== */
+  .done-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 2px solid var(--green-deep);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    animation: done-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes done-pop {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .done-icon svg {
+    width: 36px; height: 36px;
+  }
+  h1.done {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin-bottom: 14px;
+    color: var(--ink);
+    line-height: 1.05;
+  }
+  h1.done em { font-style: italic; color: var(--green-deep); }
+  .done-email {
+    font-size: 14px;
+    color: var(--green-deep);
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--green-light);
+    border-radius: 12px;
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    nav { padding: 12px 18px; }
+    .container { padding: 90px 18px 50px; }
+    .r-grid { grid-template-columns: 1fr; }
+    .input-row-2 { grid-template-columns: 1fr; }
+    .result-banner {
+      padding: 22px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .result-banner-context { text-align: left; }
+    .opt { padding: 14px 16px; font-size: 14px; }
+    h2 { font-size: 26px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
-<div class="progress"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+
+<!-- PROGRESS BAR -->
+<div class="progress"><div class="progress-fill" id="pbar"></div></div>
+
+<!-- NAV -->
 <nav>
-  <a href="index.html" class="logo">SparWatt<sup>NO</sup></a>
+  <a href="index.html" class="logo">
+    <span class="logo-mark"></span>
+    SparWatt
+  </a>
   <div class="step-counter" id="counter"></div>
 </nav>
+
+<!-- CONTAINER -->
 <div class="container">
 
+  <!-- INTRO SCREEN -->
   <div class="screen active" id="s0">
-    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#1b4332" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 13h8l-1 7 9-11h-8l1-7z"/></svg></div>
-    <h2>Din personlige strøm-AI starter her</h2>
+    <div class="intro-icon">
+      <svg viewBox="0 0 28 28" fill="none" stroke="#1b4332" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3L4 16h10l-1 9 11-13H14l1-9z"/>
+      </svg>
+    </div>
+    <h2>Din personlige <em>strøm-AI</em> starter her</h2>
     <p class="screen-sub">Svar på 12 korte spørsmål — så setter vi opp din personlige AI-rådgiver som kjenner boligen din og gir deg svar basert på live strømpriser.</p>
-    <div class="btn-row"><button class="btn-main" onclick="go(1)">Se hva du kan spare <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="btn-row">
+      <button class="btn-main" onclick="go(1)">
+        Se hva du kan spare
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </button>
+    </div>
     <p class="hint">Under 3 minutter · Ingen registrering · 100% gratis</p>
   </div>
 
+  <!-- Q1 -->
   <div class="screen" id="s1">
-    <div class="step-tag">Spørsmål 1 av 12</div>
-    <h2>Hva slags bolig bor du i?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 1 av 12</div>
+    <h2>Hva slags <em>bolig</em> bor du i?</h2>
     <p class="screen-sub">Velg det som passer best.</p>
     <div class="options" id="q1">
-      <button class="opt" data-v="Leilighet" onclick="pick(this,'q1',2)"><span class="opt-k">A</span>Leilighet</button>
-      <button class="opt" data-v="Rekkehus / tomannsbolig" onclick="pick(this,'q1',2)"><span class="opt-k">B</span>Rekkehus / tomannsbolig</button>
-      <button class="opt" data-v="Enebolig" onclick="pick(this,'q1',2)"><span class="opt-k">C</span>Enebolig</button>
-      <button class="opt" data-v="Hytte / fritidsbolig" onclick="pick(this,'q1',2)"><span class="opt-k">D</span>Hytte / fritidsbolig</button>
+      <button class="opt" data-v="Leilighet" onclick="pick(this,'q1',2)"><span class="opt-k">A</span><span class="opt-text">Leilighet</span></button>
+      <button class="opt" data-v="Rekkehus / tomannsbolig" onclick="pick(this,'q1',2)"><span class="opt-k">B</span><span class="opt-text">Rekkehus / tomannsbolig</span></button>
+      <button class="opt" data-v="Enebolig" onclick="pick(this,'q1',2)"><span class="opt-k">C</span><span class="opt-text">Enebolig</span></button>
+      <button class="opt" data-v="Hytte / fritidsbolig" onclick="pick(this,'q1',2)"><span class="opt-k">D</span><span class="opt-text">Hytte / fritidsbolig</span></button>
     </div>
     <p class="err" id="e1">Velg ett alternativ for å gå videre.</p>
   </div>
 
+  <!-- Q2 -->
   <div class="screen" id="s2">
-    <div class="step-tag">Spørsmål 2 av 12</div>
-    <h2>Hvor stor er boligen?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 2 av 12</div>
+    <h2>Hvor <em>stor</em> er boligen?</h2>
     <p class="screen-sub">Omtrentlig er bra nok.</p>
     <div class="options" id="q2">
-      <button class="opt" data-v="Under 50 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">A</span>Under 50 kvm</button>
-      <button class="opt" data-v="50-100 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">B</span>50–100 kvm</button>
-      <button class="opt" data-v="100-150 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">C</span>100–150 kvm</button>
-      <button class="opt" data-v="Over 150 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">D</span>Over 150 kvm</button>
+      <button class="opt" data-v="Under 50 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">A</span><span class="opt-text">Under 50 kvm</span></button>
+      <button class="opt" data-v="50-100 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">B</span><span class="opt-text">50–100 kvm</span></button>
+      <button class="opt" data-v="100-150 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">C</span><span class="opt-text">100–150 kvm</span></button>
+      <button class="opt" data-v="Over 150 kvm" onclick="pick(this,'q2',3)"><span class="opt-k">D</span><span class="opt-text">Over 150 kvm</span></button>
     </div>
     <p class="err" id="e2">Velg ett alternativ for å gå videre.</p>
   </div>
 
+  <!-- Q3 -->
   <div class="screen" id="s3">
-    <div class="step-tag">Spørsmål 3 av 12</div>
-    <h2>Hva er postnummeret ditt?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 3 av 12</div>
+    <h2>Hva er <em>postnummeret</em> ditt?</h2>
     <p class="screen-sub">Vi bruker dette til å finne ditt prisområde — strømprisene varierer mye mellom nord og sør i Norge.</p>
-    <input type="text" id="q3post" placeholder="F.eks. 0182" maxlength="4" oninput="lookupPostcode(this.value)" />
+    <input type="text" id="q3post" placeholder="F.eks. 0182" maxlength="4" inputmode="numeric" oninput="lookupPostcode(this.value)" />
     <div class="postcode-result" id="postcode-result"></div>
-    <div class="btn-row" style="margin-top:1rem">
-      <button class="btn-main" onclick="reqPost(4)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="btn-row">
+      <button class="btn-main" onclick="reqPost(4)">
+        Neste
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
       <button class="btn-back" onclick="go(2)">Tilbake</button>
     </div>
     <p class="err" id="e3">Skriv inn et gyldig postnummer (4 siffer).</p>
   </div>
 
+  <!-- Q4 -->
   <div class="screen" id="s4">
-    <div class="step-tag">Spørsmål 4 av 12</div>
-    <h2>Hvor mange bor i husstanden?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 4 av 12</div>
+    <h2>Hvor mange bor i <em>husstanden</em>?</h2>
     <p class="screen-sub">Inkluder alle som bor der fast.</p>
     <div class="options" id="q4">
-      <button class="opt" data-v="1 person" onclick="pick(this,'q4',5)"><span class="opt-k">A</span>1 person</button>
-      <button class="opt" data-v="2 personer" onclick="pick(this,'q4',5)"><span class="opt-k">B</span>2 personer</button>
-      <button class="opt" data-v="3-4 personer" onclick="pick(this,'q4',5)"><span class="opt-k">C</span>3–4 personer</button>
-      <button class="opt" data-v="5 eller flere" onclick="pick(this,'q4',5)"><span class="opt-k">D</span>5 eller flere</button>
+      <button class="opt" data-v="1 person" onclick="pick(this,'q4',5)"><span class="opt-k">A</span><span class="opt-text">1 person</span></button>
+      <button class="opt" data-v="2 personer" onclick="pick(this,'q4',5)"><span class="opt-k">B</span><span class="opt-text">2 personer</span></button>
+      <button class="opt" data-v="3-4 personer" onclick="pick(this,'q4',5)"><span class="opt-k">C</span><span class="opt-text">3–4 personer</span></button>
+      <button class="opt" data-v="5 eller flere" onclick="pick(this,'q4',5)"><span class="opt-k">D</span><span class="opt-text">5 eller flere</span></button>
     </div>
     <p class="err" id="e4">Velg ett alternativ for å gå videre.</p>
   </div>
 
+  <!-- Q5 (multi) -->
   <div class="screen" id="s5">
-    <div class="step-tag">Spørsmål 5 av 12</div>
-    <h2>Hva bruker dere til oppvarming?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 5 av 12</div>
+    <h2>Hva bruker dere til <em>oppvarming</em>?</h2>
     <p class="screen-sub">Du kan velge flere.</p>
     <div class="options" id="q5">
-      <button class="opt" data-v="Elektriske panelovner" onclick="multi(this,'q5')"><span class="opt-k">A</span>Elektriske panelovner</button>
-      <button class="opt" data-v="Varmepumpe" onclick="multi(this,'q5')"><span class="opt-k">B</span>Varmepumpe</button>
-      <button class="opt" data-v="Gulvvarme" onclick="multi(this,'q5')"><span class="opt-k">C</span>Gulvvarme</button>
-      <button class="opt" data-v="Vedovn / biovn" onclick="multi(this,'q5')"><span class="opt-k">D</span>Vedovn / biovn</button>
-      <button class="opt" data-v="Fjernvarme" onclick="multi(this,'q5')"><span class="opt-k">E</span>Fjernvarme</button>
+      <button class="opt" data-v="Elektriske panelovner" onclick="multi(this,'q5')"><span class="opt-k">A</span><span class="opt-text">Elektriske panelovner</span></button>
+      <button class="opt" data-v="Varmepumpe" onclick="multi(this,'q5')"><span class="opt-k">B</span><span class="opt-text">Varmepumpe</span></button>
+      <button class="opt" data-v="Gulvvarme" onclick="multi(this,'q5')"><span class="opt-k">C</span><span class="opt-text">Gulvvarme</span></button>
+      <button class="opt" data-v="Vedovn / biovn" onclick="multi(this,'q5')"><span class="opt-k">D</span><span class="opt-text">Vedovn / biovn</span></button>
+      <button class="opt" data-v="Fjernvarme" onclick="multi(this,'q5')"><span class="opt-k">E</span><span class="opt-text">Fjernvarme</span></button>
     </div>
-    <div class="btn-row"><button class="btn-main" onclick="reqMulti('q5',6)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(4)">Tilbake</button></div>
+    <div class="btn-row">
+      <button class="btn-main" onclick="reqMulti('q5',6)">
+        Neste
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="btn-back" onclick="go(4)">Tilbake</button>
+    </div>
     <p class="err" id="e5">Velg minst ett alternativ.</p>
   </div>
 
+  <!-- Q6 -->
   <div class="screen" id="s6">
-    <div class="step-tag">Spørsmål 6 av 12</div>
-    <h2>Omtrent hvor mye strøm bruker dere per måned?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 6 av 12</div>
+    <h2>Omtrent hvor mye <em>strøm</em> bruker dere per måned?</h2>
     <p class="screen-sub">Står på strømregningen som kWh. Vet du ikke er det helt greit.</p>
     <div class="options" id="q6">
-      <button class="opt" data-v="Vet ikke" onclick="pick(this,'q6',7)"><span class="opt-k">A</span>Vet ikke</button>
-      <button class="opt" data-v="Under 500 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">B</span>Under 500 kWh</button>
-      <button class="opt" data-v="500-1000 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">C</span>500–1000 kWh</button>
-      <button class="opt" data-v="1000-2000 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">D</span>1000–2000 kWh</button>
-      <button class="opt" data-v="Over 2000 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">E</span>Over 2000 kWh</button>
+      <button class="opt" data-v="Vet ikke" onclick="pick(this,'q6',7)"><span class="opt-k">A</span><span class="opt-text">Vet ikke</span></button>
+      <button class="opt" data-v="Under 500 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">B</span><span class="opt-text">Under 500 kWh</span></button>
+      <button class="opt" data-v="500-1000 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">C</span><span class="opt-text">500–1000 kWh</span></button>
+      <button class="opt" data-v="1000-2000 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">D</span><span class="opt-text">1000–2000 kWh</span></button>
+      <button class="opt" data-v="Over 2000 kWh" onclick="pick(this,'q6',7)"><span class="opt-k">E</span><span class="opt-text">Over 2000 kWh</span></button>
     </div>
     <p class="err" id="e6">Velg ett alternativ for å gå videre.</p>
   </div>
 
+  <!-- Q7 -->
   <div class="screen" id="s7">
-    <div class="step-tag">Spørsmål 7 av 12</div>
-    <h2>Hvilken type strømavtale har du?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 7 av 12</div>
+    <h2>Hvilken type <em>strømavtale</em> har du?</h2>
     <p class="screen-sub">Avtaletypen påvirker hva du betaler og hva du kan spare.</p>
     <div class="options" id="q7">
-      <button class="opt" data-v="Spotpris" onclick="pick(this,'q7',8)"><span class="opt-k">A</span>Spotpris (følger markedsprisen)</button>
-      <button class="opt" data-v="Norgespris" onclick="pick(this,'q7',8)"><span class="opt-k">B</span>Norgespris</button>
-      <button class="opt" data-v="Fastpris" onclick="pick(this,'q7',8)"><span class="opt-k">C</span>Fastpris</button>
-      <button class="opt" data-v="Vet ikke" onclick="pick(this,'q7',8)"><span class="opt-k">D</span>Vet ikke</button>
+      <button class="opt" data-v="Spotpris" onclick="pick(this,'q7',8)"><span class="opt-k">A</span><span class="opt-text">Spotpris (følger markedsprisen)</span></button>
+      <button class="opt" data-v="Norgespris" onclick="pick(this,'q7',8)"><span class="opt-k">B</span><span class="opt-text">Norgespris</span></button>
+      <button class="opt" data-v="Fastpris" onclick="pick(this,'q7',8)"><span class="opt-k">C</span><span class="opt-text">Fastpris</span></button>
+      <button class="opt" data-v="Vet ikke" onclick="pick(this,'q7',8)"><span class="opt-k">D</span><span class="opt-text">Vet ikke</span></button>
     </div>
     <p class="err" id="e7">Velg ett alternativ for å gå videre.</p>
   </div>
 
+  <!-- Q8 -->
   <div class="screen" id="s8">
-    <div class="step-tag">Spørsmål 8 av 12</div>
-    <h2>Har du solcellepanel?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 8 av 12</div>
+    <h2>Har du <em>solcellepanel</em>?</h2>
     <p class="screen-sub">Dette påvirker hvilke tiltak som er mest relevante for deg.</p>
     <div class="options" id="q8">
-      <button class="opt" data-v="Ja, har solcellepanel" onclick="pick(this,'q8',9)"><span class="opt-k">A</span>Ja, har solcellepanel</button>
-      <button class="opt" data-v="Nei, men vurderer det" onclick="pick(this,'q8',9)"><span class="opt-k">B</span>Nei, men vurderer det</button>
-      <button class="opt" data-v="Nei, ikke aktuelt" onclick="pick(this,'q8',9)"><span class="opt-k">C</span>Nei, ikke aktuelt</button>
+      <button class="opt" data-v="Ja, har solcellepanel" onclick="pick(this,'q8',9)"><span class="opt-k">A</span><span class="opt-text">Ja, har solcellepanel</span></button>
+      <button class="opt" data-v="Nei, men vurderer det" onclick="pick(this,'q8',9)"><span class="opt-k">B</span><span class="opt-text">Nei, men vurderer det</span></button>
+      <button class="opt" data-v="Nei, ikke aktuelt" onclick="pick(this,'q8',9)"><span class="opt-k">C</span><span class="opt-text">Nei, ikke aktuelt</span></button>
     </div>
     <p class="err" id="e8">Velg ett alternativ for å gå videre.</p>
   </div>
 
-  <!-- 9: Elbil -->
+  <!-- Q9 (Elbil) -->
   <div class="screen" id="s9">
-    <div class="step-tag">Spørsmål 9 av 12</div>
-    <h2>Har du elbil?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 9 av 12</div>
+    <h2>Har du <em>elbil</em>?</h2>
     <p class="screen-sub">Elbil er en av de største strømpostene i en husstand — vi tilpasser analysen din deretter.</p>
     <div class="options" id="q9ev">
-      <button class="opt" data-v="Ja, lader hjemme" onclick="pick(this,'q9ev',10)"><span class="opt-k">A</span>Ja, lader hjemme</button>
-      <button class="opt" data-v="Ja, lader ute / på jobb" onclick="pick(this,'q9ev',10)"><span class="opt-k">B</span>Ja, lader primært ute / på jobb</button>
-      <button class="opt" data-v="Nei, men vurderer" onclick="pick(this,'q9ev',10)"><span class="opt-k">C</span>Nei, men vurderer elbil</button>
-      <button class="opt" data-v="Nei" onclick="pick(this,'q9ev',10)"><span class="opt-k">D</span>Nei</button>
+      <button class="opt" data-v="Ja, lader hjemme" onclick="pick(this,'q9ev',10)"><span class="opt-k">A</span><span class="opt-text">Ja, lader hjemme</span></button>
+      <button class="opt" data-v="Ja, lader ute / på jobb" onclick="pick(this,'q9ev',10)"><span class="opt-k">B</span><span class="opt-text">Ja, lader primært ute / på jobb</span></button>
+      <button class="opt" data-v="Nei, men vurderer" onclick="pick(this,'q9ev',10)"><span class="opt-k">C</span><span class="opt-text">Nei, men vurderer elbil</span></button>
+      <button class="opt" data-v="Nei" onclick="pick(this,'q9ev',10)"><span class="opt-k">D</span><span class="opt-text">Nei</span></button>
     </div>
     <p class="err" id="e9ev">Velg ett alternativ for å gå videre.</p>
   </div>
 
+  <!-- Q10 (multi) -->
   <div class="screen" id="s10">
-    <div class="step-tag">Spørsmål 10 av 12</div>
-    <h2>Gjør du allerede noen av disse?</h2>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 10 av 12</div>
+    <h2>Gjør du allerede noen av <em>disse</em>?</h2>
     <p class="screen-sub">Vi gir deg kun tips du ikke allerede har prøvd.</p>
     <div class="options" id="q9">
-      <button class="opt" data-v="Vasker klær om natta" onclick="multi(this,'q9')"><span class="opt-k">A</span>Vasker klær om natta</button>
-      <button class="opt" data-v="Tidsstyring på berederen" onclick="multi(this,'q9')"><span class="opt-k">B</span>Tidsstyring på varmtvannsberederen</button>
-      <button class="opt" data-v="Sammenligner leverandører" onclick="multi(this,'q9')"><span class="opt-k">C</span>Sammenligner leverandører jevnlig</button>
-      <button class="opt" data-v="Ingen av disse" onclick="pickNone(this)"><span class="opt-k">D</span>Ingen av disse</button>
+      <button class="opt" data-v="Vasker klær om natta" onclick="multi(this,'q9')"><span class="opt-k">A</span><span class="opt-text">Vasker klær om natta</span></button>
+      <button class="opt" data-v="Tidsstyring på berederen" onclick="multi(this,'q9')"><span class="opt-k">B</span><span class="opt-text">Tidsstyring på varmtvannsberederen</span></button>
+      <button class="opt" data-v="Sammenligner leverandører" onclick="multi(this,'q9')"><span class="opt-k">C</span><span class="opt-text">Sammenligner leverandører jevnlig</span></button>
+      <button class="opt" data-v="Ingen av disse" onclick="pickNone(this)"><span class="opt-k">D</span><span class="opt-text">Ingen av disse</span></button>
     </div>
-    <div class="btn-row"><button class="btn-main" onclick="go(11)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(8)">Tilbake</button></div>
+    <div class="btn-row">
+      <button class="btn-main" onclick="go(11)">
+        Neste
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="btn-back" onclick="go(8)">Tilbake</button>
+    </div>
   </div>
 
+  <!-- Q11 (kun AI-chat — smart oppfølgingsspørsmål med quick-replies) -->
   <div class="screen" id="s11">
-    <div class="step-tag">Spørsmål 10 av 11</div>
-    <h2>Noe spesielt du lurer på?</h2>
-    <p class="screen-sub">Jo mer du forteller, jo mer personlig blir analysen. Nevn gjerne spesielle forhold ved boligen, hva som overrasker deg på regningen, eller hva du lurer på.</p>
-    <textarea id="q10txt" placeholder="F.eks: Regningen er høyere om vinteren enn sommeren. Har nylig installert elbil. Lurer på om solceller lønner seg for meg..."></textarea>
+    <div class="step-tag"><span class="dot"></span>Spørsmål 11 av 12</div>
+    <h2>Er det noe <em>spesifikt</em> du vil vi skal vite?</h2>
+    <p class="screen-sub">Vår AI har sett svarene dine og har ett spørsmål til deg. Du kan svare med en hurtigknapp, skrive selv, eller bare hoppe videre — alt funker.</p>
 
-        <div id="mini-chat-box" style="display:none;background:#fff;border:1px solid rgba(28,28,26,.1);border-radius:14px;overflow:hidden;margin-bottom:1.25rem">
-      <div style="background:#1c1c1a;padding:.75rem 1rem;display:flex;align-items:center;gap:8px">
-        <div style="width:24px;height:24px;border-radius:7px;background:#2d6a4f;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 1L2 7h4l-1 4 5-6H6L7 1z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span style="font-size:13px;font-weight:400;color:rgba(247,244,239,.9)">SparWatt AI</span>
-        <span style="margin-left:auto;font-size:11px;color:rgba(247,244,239,.4);display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:#3dd68c;animation:pulse 2s infinite"></span>Live</span>
-      </div>
-      <div id="mini-msgs" style="padding:.85rem;display:flex;flex-direction:column;gap:.6rem;max-height:220px;overflow-y:auto">
-        <div style="display:flex;gap:7px;align-items:flex-start">
-          <div style="width:22px;height:22px;border-radius:6px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;font-size:10px;color:#2d6a4f;flex-shrink:0">SW</div>
-          <div style="background:#fafaf8;padding:8px 12px;border-radius:4px 10px 10px 10px;font-size:13px;color:#1c1c1a;line-height:1.6">Hei! Jeg kan hjelpe deg å gi oss mer info slik at analysen din blir så presis som mulig. Hva er den største utfordringen din med strøm akkurat nå?</div>
+    <div class="mini-chat">
+      <div class="mini-chat-hdr">
+        <div class="mini-chat-ico">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <path d="M8 1L3 8h4l-1 5 5-7H7L8 1z" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
+        <span class="mini-chat-name">SparWatt AI</span>
+        <span class="mini-chat-live"><span class="mini-chat-live-dot"></span>Live</span>
       </div>
-      <div style="display:flex;gap:7px;padding:.75rem;border-top:1px solid rgba(28,28,26,.1);background:#fafaf8">
-        <input type="text" id="miniChatInput" placeholder="Skriv her..." style="flex:1;border-radius:99px;padding:8px 14px;font-size:13px;margin-bottom:0" onkeydown="if(event.key==='Enter')sendMiniChat()"/>
-        <button onclick="sendMiniChat()" style="width:34px;height:34px;border-radius:50%;background:#1c1c1a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="mini-msgs" id="mini-msgs">
+        <!-- Smart oppfølgingsspørsmål bygges av JS -->
       </div>
-    </div>
-
-    <div class="btn-row"><button class="btn-main" onclick="go(12)">Neste <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(10)">Tilbake</button></div>
-    <p class="hint">Valgfritt, men anbefalt.</p>
-  </div>
-
-  <!-- 11: Leverandør -->
-  <div class="screen" id="s12">
-    <div class="step-tag">Spørsmål 11 av 12</div>
-    <h2>Hva er strømavtalen din?</h2>
-    <p class="screen-sub">Vi sjekker om du kan spare ved å bytte leverandør — og viser deg konkret hva du kan spare.</p>
-
-    <div style="background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:10px;padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;gap:10px;align-items:flex-start">
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink:0;margin-top:2px"><path d="M7.5 2l1.4 2.8 3.1.45-2.25 2.2.53 3.1L7.5 9l-2.78 1.55.53-3.1L3 5.25l3.1-.45z" stroke="#1b4332" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span style="font-size:12.5px;color:#1b4332;line-height:1.6">Alle felt er valgfrie. Vet du ikke nøyaktig, skriv hva du husker — vi gjør vårt beste.</span>
-    </div>
-
-    <div style="margin-bottom:1rem">
-      <label style="font-size:13px;color:rgba(28,28,26,.6);display:block;margin-bottom:5px">Hvem er leverandøren din?</label>
-      <input type="text" id="q11provider" placeholder="F.eks. Tibber, Fortum, Fjordkraft, Lyse..." style="margin-bottom:0"/>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem">
-      <div>
-        <label style="font-size:13px;color:rgba(28,28,26,.6);display:block;margin-bottom:5px">Påslag (øre/kWh)</label>
-        <input type="text" id="q11markup" placeholder="F.eks. 3.9" style="margin-bottom:0"/>
-        <div style="font-size:11px;color:rgba(28,28,26,.6);margin-top:4px">Finn på strømregningen</div>
+      <div class="quick-replies" id="quick-replies" style="display:none">
+        <!-- Quick replies bygges av JS -->
       </div>
-      <div>
-        <label style="font-size:13px;color:rgba(28,28,26,.6);display:block;margin-bottom:5px">Månedsgebyr (kr)</label>
-        <input type="text" id="q11fee" placeholder="F.eks. 49" style="margin-bottom:0"/>
-        <div style="font-size:11px;color:rgba(28,28,26,.6);margin-top:4px">Fast kostnad per mnd</div>
+      <div class="mini-chat-input-row">
+        <input type="text" id="miniChatInput" class="mini-chat-input" placeholder="…eller skriv ditt eget svar" onkeydown="if(event.key==='Enter')sendMiniChat()"/>
+        <button class="mini-chat-send" onclick="sendMiniChat()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7h9M7.5 3l3.5 3.5L7.5 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </div>
 
     <div class="btn-row">
-      <button class="btn-main" onclick="goToResult()">Få analysen min <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="btn-main" onclick="go(12)">
+        Neste
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="btn-back" onclick="go(10)">Tilbake</button>
+    </div>
+    <p class="hint">Helt valgfritt — hopp over hvis du ikke har noe å legge til</p>
+  </div>
+
+  <!-- Q12 (leverandør) -->
+  <div class="screen" id="s12">
+    <div class="step-tag"><span class="dot"></span>Spørsmål 12 av 12</div>
+    <h2>Hva er din <em>strømavtale</em>?</h2>
+    <p class="screen-sub">Vi sjekker om du kan spare ved å bytte leverandør — og viser deg konkret hva du kan spare.</p>
+    <div class="info-callout">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 2l1.5 3 3.3.5-2.4 2.3.6 3.3L8 9.5l-3 1.6.6-3.3L3.2 5.5l3.3-.5z" stroke="#1b4332" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Alle felt er valgfrie. Vet du ikke nøyaktig, skriv hva du husker — vi gjør vårt beste.</span>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Hvem er leverandøren din?</label>
+      <input type="text" id="q11provider" placeholder="F.eks. Tibber, Fortum, Fjordkraft, Lyse..."/>
+    </div>
+
+    <div class="input-row-2">
+      <div>
+        <label class="input-label">Påslag (øre/kWh)</label>
+        <input type="text" id="q11markup" placeholder="F.eks. 3.9" inputmode="decimal"/>
+        <div class="input-help">Finn på strømregningen</div>
+      </div>
+      <div>
+        <label class="input-label">Månedsgebyr (kr)</label>
+        <input type="text" id="q11fee" placeholder="F.eks. 49" inputmode="numeric"/>
+        <div class="input-help">Fast kostnad per mnd</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-main" onclick="goToResult()">
+        Få analysen min
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
       <button class="btn-back" onclick="go(11)">Tilbake</button>
     </div>
     <p class="hint">Alle felt valgfrie · Hopp over og klikk "Få analysen min" hvis du vil.</p>
   </div>
 
+  <!-- RESULT (s13) -->
   <div class="screen" id="s13">
-    <div class="step-tag">Din personlige analyse</div>
-    <div style="background:#e8f5ee;border:1px solid rgba(45,106,79,.2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
-      <div>
-        <div style="font-size:11px;color:#1b4332;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Estimert sparing</div>
-        <div id="r-total" style="font-family:"Cormorant Garamond",Georgia,serif;font-size:1.8rem;color:#1c1c1a;line-height:1"></div>
+    <div class="step-tag"><span class="dot"></span>Din personlige analyse</div>
+
+    <div class="result-banner">
+      <div style="position:relative;z-index:1;">
+        <div class="result-banner-label">Estimert sparing</div>
+        <div class="result-banner-value" id="r-total">—</div>
       </div>
-      <div style="font-size:12px;color:rgba(28,28,26,.6);text-align:right">per måned<br>med full rapport</div>
+      <div class="result-banner-context">
+        per måned<br>med full rapport
+      </div>
     </div>
+
     <p class="result-intro" id="r-intro"></p>
+
     <div class="r-grid" id="r-grid"></div>
+
     <div class="r-tips" id="r-tips"></div>
+
     <div id="r-leverandor"></div>
+
     <div class="r-locked">
-      <div style="font-size:13px;font-weight:400;color:#1c1c1a;margin-bottom:.4rem">Mer er låst</div>
-      <p>Full tilgang inkluderer alle sparetiltak, komplett leverandøranalyse med bytteanbefalinger, strømregningen forklart og din personlige AI-rådgiver med live priser.</p>
-      <div style="font-size:12px;color:rgba(28,28,26,.6);margin:.75rem 0 1rem">49 kr/mnd · ingen bindingstid · avslutt når du vil</div>
-      <div class="btn-row" style="justify-content:center"><button class="btn-main" onclick="goToStripe()">Lås opp full tilgang — 49 kr/mnd <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div class="r-locked-title">Lås opp full analyse</div>
+      <p>Full tilgang inkluderer alle sparetiltak rangert etter effekt, komplett leverandøranalyse med bytteanbefalinger, strømregningen forklart og din personlige AI-rådgiver med live priser fra ditt prisområde.</p>
+      <div class="r-locked-meta">49 kr/mnd · ingen bindingstid · avslutt når du vil</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn-main" onclick="goToStripe()">
+          Lås opp full tilgang — 49 kr/mnd
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 
+  <!-- EMAIL (s14) -->
   <div class="screen" id="s14">
-    <div class="w-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#1b4332" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="18" height="13" rx="2"/><path d="M2 9l9 5 9-5"/></svg></div>
-    <h2>Nesten der!</h2>
+    <div class="email-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b4332" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2"/>
+        <path d="M2 9l10 5 10-5"/>
+      </svg>
+    </div>
+    <h2>Nesten <em>der</em>!</h2>
     <p class="screen-sub">Legg igjen e-posten din så sender vi deg den fulle rapporten med alle sparetiltak og din personlige AI-rådgiver.</p>
     <input type="email" id="emailVal" placeholder="din@epost.no"/>
     <p class="err" id="e12">Skriv inn en gyldig e-postadresse.</p>
-    <div class="btn-row"><button class="btn-main" onclick="submitEmail()">Send meg rapporten <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="btn-back" onclick="go(13)">Tilbake</button></div>
+    <div class="btn-row">
+      <button class="btn-main" onclick="submitEmail()">
+        Send meg rapporten
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="btn-back" onclick="go(13)">Tilbake</button>
+    </div>
     <p class="hint">Ingen spam · Avslutt når som helst · Vi selger ikke e-posten din</p>
   </div>
 
+  <!-- DONE (s15) -->
   <div class="screen" id="s15">
-    <div class="final-ico"><svg viewBox="0 0 22 22" fill="none" stroke="#1b4332" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5V11a9 9 0 11-5.34-8.23"/><polyline points="20 4 11 13 8 10"/></svg></div>
-    <h1 class="done">Du er i gang!</h1>
+    <div class="done-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1b4332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.5V12a10 10 0 11-5.93-9.14"/>
+        <polyline points="22 4 12 14 9 11"/>
+      </svg>
+    </div>
+    <h1 class="done">Du er <em>i gang</em>!</h1>
     <p class="screen-sub">Vi har mottatt svarene dine og sender deg den fulle rapporten innen 24 timer. Mange SparWatt-brukere sparer over 300 kr allerede første måned.</p>
     <p class="done-email" id="done-email"></p>
   </div>
 
 </div>
+
 <script>
-const a={q1:'',q2:'',q3post:'',q3zone:'',q4:'',q5:[],q6:'',q7:'',q8:'',q9ev:'',q9:[],q10:'',q11provider:'',q11markup:'',q11fee:''};
-const TOTAL=12;
-const zoneNames={'NO1':'Oslo og Øst-Norge','NO2':'Sørvest-Norge','NO3':'Midt-Norge','NO4':'Nord-Norge','NO5':'Vest-Norge'};
-
-function postcodeToPlace(p){
-  var n=parseInt(p);
-  if(n<1000)return'Oslo';
-  if(n<2000)return'Akershus';
-  if(n<3000)return'Innlandet';
-  if(n<4000)return'Telemark / Vestfold';
-  if(n<5000)return'Agder / Rogaland';
-  if(n<5500)return'Vestland';
-  if(n<6000)return'Rogaland';
-  if(n<7000)return'Møre og Romsdal';
-  if(n<8000)return'Trøndelag';
-  if(n<9000)return'Nordland';
-  return'Troms og Finnmark';
-}
-
-function lookupPostcode(val){
-  const res=document.getElementById('postcode-result');
-  if(val.length===4){
-    const f=val[0];
-    let z='NO1';
-    if(f==='5'){z=parseInt(val)<5500?'NO5':'NO2';}
-    else if(f==='4'){z='NO2';}
-    else if(f==='6'||f==='7'){z='NO3';}
-    else if(f==='8'||f==='9'){z='NO4';}
-    a.q3post=val;a.q3zone=z;
-    const place=postcodeToPlace(val);
-    res.textContent='Område: '+place+' ('+z+')';
-  } else {a.q3post='';a.q3zone='';res.textContent='';}
-}
-
-function reqPost(next){
-  if(a.q3post.length!==4){document.getElementById('e3').style.display='block';return;}
-  document.getElementById('e3').style.display='none';
-  go(next);
-}
-
-function go(n){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('s'+n).classList.add('active');
-  const pct=n===0?0:Math.round((Math.min(n,TOTAL)/TOTAL)*100);
-  document.getElementById('pbar').style.width=pct+'%';
-  document.getElementById('counter').textContent=(n>0&&n<=TOTAL)?n+' / '+TOTAL:'';
-  if(n===12)buildResult();
-  window.scrollTo(0,0);
-}
-
-function pick(el,g,next){
-  document.querySelectorAll('#'+g+' .opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  a[g]=el.dataset.v;
-  const e=document.getElementById('e'+g.replace('q',''));
-  if(e)e.style.display='none';
-  if(next!==undefined){setTimeout(()=>go(next),260);}
-}
-
-function multi(el,g){
-  if(!Array.isArray(a[g]))a[g]=[];
-  el.classList.toggle('multi-on');
-  const v=el.dataset.v;
-  if(el.classList.contains('multi-on')){if(!a[g].includes(v))a[g].push(v);}
-  else{a[g]=a[g].filter(x=>x!==v);}
-}
-
-function pickNone(el){
-  document.querySelectorAll('#q9 .opt').forEach(o=>o.classList.remove('multi-on','selected'));
-  el.classList.add('selected');
-  a.q9=['Ingen av disse'];
-  setTimeout(()=>go(11),260);
-}
-
-function reqMulti(g,next){
-  if(!a[g]||!a[g].length){document.getElementById('e'+g.replace('q','')).style.display='block';return;}
-  go(next);
-}
-
-function getTip(a){
-  const panel=Array.isArray(a.q5)&&a.q5.includes('Elektriske panelovner');
-  const pump=Array.isArray(a.q5)&&a.q5.includes('Varmepumpe');
-  const many=a.q4==='3-4 personer'||a.q4==='5 eller flere';
-  const high=a.q6==='1000-2000 kWh'||a.q6==='Over 2000 kWh';
-  const hytte=a.q1==='Hytte / fritidsbolig';
-  const solar=a.q8==='Nei, men vurderer det';
-  const norgespris=a.q7==='Norgespris';
-  const fastpris=a.q7==='Fastpris';
-  const doneNight=Array.isArray(a.q9)&&a.q9.includes('Vasker klær om natta');
-  const doneBereder=Array.isArray(a.q9)&&a.q9.includes('Tidsstyring på berederen');
-  if(panel&&!pump)return{t:'Bytt panelovner til varmepumpe',d:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En varmepumpe bruker 3x mindre strøm for samme varme.',s:'Estimert sparing: 400–800 kr/mnd',c:'#1b4332',total:'opptil 800 kr/mnd'};
-  if(norgespris||fastpris)return{t:'Bytt til spotprisavtale',d:'Du har '+a.q7.toLowerCase()+', som over tid er dyrere enn spotpris for de fleste norske husstander. Tibber eller Vibb er gode alternativer.',s:'Estimert sparing: 100–300 kr/mnd',c:'#1b4332',total:'opptil 500 kr/mnd'};
-  if(high&&many&&!doneBereder)return{t:'Tidsstyring på varmtvannsberederen',d:'Med '+a.q4+' i husstanden er berederen trolig en stor utgiftspost. Skru ned 23:00–05:00 — du merker ingen forskjell.',s:'Estimert sparing: 150–280 kr/mnd',c:'#f0a06a',total:'opptil 640 kr/mnd'};
-  if(hytte)return{t:'Smartplugg på varmesystemet',d:'Hytta bruker strøm på oppvarming når du ikke er der. En smartplugg (300 kr) lar deg styre varmen fra mobilen.',s:'Estimert sparing: 200–450 kr/mnd',c:'#1b4332',total:'opptil 450 kr/mnd'};
-  if(solar)return{t:'Solcellepanel kan lønne seg for deg',d:'Med din boligtype er solceller et reelt alternativ. I prisområde '+a.q3zone+' er investeringen typisk tjent inn på 8–12 år.',s:'Estimert sparing: 200–500 kr/mnd',c:'#f0a06a',total:'opptil 500 kr/mnd'};
-  if(!doneNight)return{t:'Unngå strøm i høypristimene 17–21',d:'I prisområde '+a.q3zone+' er strømprisene typisk 2–4x høyere mellom kl. 17 og 21. Flytt vaskemaskin og oppvask til kveld.',s:'Estimert sparing: 60–150 kr/mnd',c:'#f0a06a',total:'opptil 380 kr/mnd'};
-  return{t:'Reduser effekttopper i nettleien',d:'Nettleien din øker når mange apparater er på samtidig. Unngå å bruke ovn, vaskemaskin og varmepumpe på en gang.',s:'Estimert sparing: 50–120 kr/mnd',c:'#f0a06a',total:'opptil 300 kr/mnd'};
-}
-
-function buildResult(){
-  a.q10=document.getElementById('q10txt').value;
-  const tip=getTip(a);
-  const place=a.q3post?postcodeToPlace(a.q3post):(zoneNames[a.q3zone]||'Norge');
-
-  // Calculate total savings including potential leverandør switch
-  const markup=parseFloat(a.q11markup)||0;
-  const fee=parseFloat(a.q11fee)||0;
-  const monthlyKwh=a.q6==='Over 2000 kWh'?2000:a.q6==='1000-2000 kWh'?1500:a.q6==='500-1000 kWh'?750:400;
-  const currentTotal=((markup/100)*monthlyKwh*100)+fee;
-  const cheapestTotal=19; // Jærkraft 0 påslag + 19 kr
-  const leverandorSaving=Math.max(0,Math.round(currentTotal-cheapestTotal));
-
-  // Build total savings text
-  let totalText = tip.total;
-  if(leverandorSaving>50){
-    totalText = 'opptil '+(parseInt(tip.total.replace(/\D/g,''))+leverandorSaving)+' kr/mnd';
-  }
-  document.getElementById('r-total').textContent=totalText;
-
-  document.getElementById('r-intro').textContent='Basert på svarene dine har vi analysert din '+(a.q1||'bolig').toLowerCase()+' i '+place+' ('+(a.q2||'').toLowerCase()+', '+(a.q4||'').toLowerCase()+').';
-
-  document.getElementById('r-grid').innerHTML=`
-    <div class="r-metric"><div class="r-ml">Boligtype</div><div class="r-mv">${a.q1||'—'}</div></div>
-    <div class="r-metric"><div class="r-ml">Område</div><div class="r-mv">${place}</div></div>
-    <div class="r-metric"><div class="r-ml">Avtale</div><div class="r-mv">${a.q7||'—'}</div></div>
-    <div class="r-metric"><div class="r-ml">Leverandør</div><div class="r-mv">${a.q11provider||'Ukjent'}</div></div>`;
-
-  document.getElementById('r-tips').innerHTML=`
-    <div class="r-tip">
-      <div class="r-dot" style="background:${tip.c}"></div>
-      <div><div class="r-tt">${tip.t}</div><div class="r-td">${tip.d}</div><div class="r-ts">${tip.s}</div></div>
-    </div>`;
-
-  // Show leverandør savings teaser if applicable
-  const leverandorEl=document.getElementById('r-leverandor');
-  if(a.q11markup&&leverandorSaving>50){
-    leverandorEl.innerHTML=`
-      <div class="r-tip" style="border-color:rgba(45,106,79,.3);background:#e8f5ee">
-        <div class="r-dot" style="background:#1b4332"></div>
-        <div>
-          <div class="r-tt" style="color:#1b4332">Du kan spare ~${leverandorSaving} kr/mnd ved å bytte leverandør</div>
-          <div class="r-td">${a.q11provider?'Du er på '+a.q11provider+' med '+a.q11markup+' øre/kWh påslag':'Basert på påslaget ditt'}. Full rapport viser deg nøyaktig hvilken avtale som passer best for deg.</div>
-        </div>
-      </div>`;
-  } else if(a.q11provider&&!a.q11markup){
-    leverandorEl.innerHTML=`
-      <div class="r-tip" style="border-color:rgba(45,106,79,.2);background:#e8f5ee">
-        <div class="r-dot" style="background:#1b4332"></div>
-        <div>
-          <div class="r-tt" style="color:#1b4332">Leverandøranalyse inkludert i full rapport</div>
-          <div class="r-td">Full rapport viser om ${a.q11provider} er et godt valg for din husstand, og hvilke alternativer som kan spare deg penger.</div>
-        </div>
-      </div>`;
-  } else {
-    leverandorEl.innerHTML='';
-  }
-}
-
-function goToResult(){
-  a.q11provider = document.getElementById('q11provider').value.trim();
-  a.q11markup = document.getElementById('q11markup').value.trim();
-  a.q11fee = document.getElementById('q11fee').value.trim();
-  go(13);
-}
-
-function goToStripe(){
-  // Pack all answers into a compact object
-  var profile = {
-    q1:a.q1, q2:a.q2, q3post:a.q3post, q3zone:a.q3zone,
-    q4:a.q4, q5:Array.isArray(a.q5)?a.q5.join(','):'',
-    q6:a.q6, q7:a.q7, q8:a.q8, q9ev:a.q9ev||'',
-    q9:Array.isArray(a.q9)?a.q9.join(','):'',
-    q10:a.q10, q11p:a.q11provider||'',
-    q11m:a.q11markup||'', q11f:a.q11fee||''
+  // === STATE ===
+  const a = {
+    q1:'', q2:'', q3post:'', q3zone:'', q4:'', q5:[],
+    q6:'', q7:'', q8:'', q9ev:'', q9:[], q10:'',
+    q11provider:'', q11markup:'', q11fee:''
   };
-  // Save to sessionStorage as backup
-  Object.keys(profile).forEach(function(k){ sessionStorage.setItem('sw_'+k, profile[k]); });
-  // Also save to localStorage so it survives Stripe redirect
-  localStorage.setItem('sw_profile', JSON.stringify(profile));
-  localStorage.setItem('sw_profile_ts', Date.now().toString());
-  // Redirect to Stripe
-  window.location.href = 'https://buy.stripe.com/9B6bIT5947Ma6Ece8m1kA00';
-}
+  const TOTAL = 12;
+  const zoneNames = {'NO1':'Oslo og Øst-Norge','NO2':'Sørvest-Norge','NO3':'Midt-Norge','NO4':'Nord-Norge','NO5':'Vest-Norge'};
 
-function goFullReport(){
-  sessionStorage.setItem('sw_q1',a.q1);
-  sessionStorage.setItem('sw_q2',a.q2);
-  sessionStorage.setItem('sw_q3post',a.q3post);
-  sessionStorage.setItem('sw_q3zone',a.q3zone);
-  sessionStorage.setItem('sw_q4',a.q4);
-  sessionStorage.setItem('sw_q5',Array.isArray(a.q5)?a.q5.join(','):'');
-  sessionStorage.setItem('sw_q6',a.q6);
-  sessionStorage.setItem('sw_q7',a.q7);
-  sessionStorage.setItem('sw_q8',a.q8);
-  sessionStorage.setItem('sw_q9ev',a.q9ev||'');
-  sessionStorage.setItem('sw_q9',Array.isArray(a.q9)?a.q9.join(','):'');
-  sessionStorage.setItem('sw_q10',a.q10);
-  sessionStorage.setItem('sw_q11provider',a.q11provider||'');
-  sessionStorage.setItem('sw_q11markup',a.q11markup||'');
-  sessionStorage.setItem('sw_q11fee',a.q11fee||'');
-  window.location.href='full-rapport.html';
-}
+  function postcodeToPlace(p) {
+    var n = parseInt(p);
+    if (n < 1000) return 'Oslo';
+    if (n < 2000) return 'Akershus';
+    if (n < 3000) return 'Innlandet';
+    if (n < 4000) return 'Telemark / Vestfold';
+    if (n < 5000) return 'Agder / Rogaland';
+    if (n < 5500) return 'Vestland';
+    if (n < 6000) return 'Rogaland';
+    if (n < 7000) return 'Møre og Romsdal';
+    if (n < 8000) return 'Trøndelag';
+    if (n < 9000) return 'Nordland';
+    return 'Troms og Finnmark';
+  }
+
+  function lookupPostcode(val) {
+    const res = document.getElementById('postcode-result');
+    if (val.length === 4) {
+      const f = val[0];
+      let z = 'NO1';
+      if (f === '5') { z = parseInt(val) < 5500 ? 'NO5' : 'NO2'; }
+      else if (f === '4') { z = 'NO2'; }
+      else if (f === '6' || f === '7') { z = 'NO3'; }
+      else if (f === '8' || f === '9') { z = 'NO4'; }
+      a.q3post = val; a.q3zone = z;
+      const place = postcodeToPlace(val);
+      res.textContent = '✓ ' + place + ' (' + z + ')';
+      res.classList.add('has-data');
+    } else {
+      a.q3post = ''; a.q3zone = '';
+      res.textContent = '';
+      res.classList.remove('has-data');
+    }
+  }
+
+  function reqPost(next) {
+    if (a.q3post.length !== 4) {
+      document.getElementById('e3').style.display = 'block';
+      return;
+    }
+    document.getElementById('e3').style.display = 'none';
+    go(next);
+  }
+
+  function go(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s' + n).classList.add('active');
+    const pct = n === 0 ? 0 : Math.round((Math.min(n, TOTAL) / TOTAL) * 100);
+    document.getElementById('pbar').style.width = pct + '%';
+    const counter = document.getElementById('counter');
+    if (n > 0 && n <= TOTAL) {
+      counter.innerHTML = '<strong>' + n + '</strong> / ' + TOTAL;
+    } else {
+      counter.textContent = '';
+    }
+    if (n === 11) buildSmartFollowup();
+    if (n === 13) buildResult();
+    window.scrollTo(0, 0);
+  }
+
+  // Smart oppfølgingsspørsmål — tilpasset basert på svarene så langt
+  function buildSmartFollowup() {
+    const msgs = document.getElementById('mini-msgs');
+    if (!msgs || msgs.dataset.built === '1') return;
+    msgs.dataset.built = '1';
+
+    const followup = pickFollowupQuestion();
+    const place = a.q3post ? postcodeToPlace(a.q3post) : 'din region';
+
+    // Steg 1: Vis "skriver..." indikator
+    showTyping();
+
+    // Steg 2: Etter 900ms — vis intro som referer til svarene (bygger tillit)
+    setTimeout(() => {
+      hideTyping();
+      const intro = 'Hei! Jeg har sett gjennom svarene dine — ' + (a.q1 || 'bolig').toLowerCase() + ' på ' + (a.q2 || '').toLowerCase() + ' i ' + place + '. Takk for at du tok deg tid 👋';
+      appendBotMessage(intro);
+
+      // Steg 3: Etter 1.4s mer — vis "skriver" igjen, så følgespørsmål
+      setTimeout(() => {
+        showTyping();
+        setTimeout(() => {
+          hideTyping();
+          appendBotMessage(followup.q);
+          // Vis quick-replies hvis vi har dem
+          if (followup.replies && followup.replies.length) {
+            showQuickReplies(followup.replies);
+          }
+        }, 1100);
+      }, 1400);
+    }, 900);
+  }
+
+  function pickFollowupQuestion() {
+    const panel = Array.isArray(a.q5) && a.q5.includes('Elektriske panelovner');
+    const pump = Array.isArray(a.q5) && a.q5.includes('Varmepumpe');
+    const ved = Array.isArray(a.q5) && a.q5.includes('Vedovn / biovn');
+    const high = a.q6 === '1000-2000 kWh' || a.q6 === 'Over 2000 kWh';
+    const dontKnow = a.q6 === 'Vet ikke';
+    const hytte = a.q1 === 'Hytte / fritidsbolig';
+    const norgespris = a.q7 === 'Norgespris';
+    const fastpris = a.q7 === 'Fastpris';
+    const ukjentAvtale = a.q7 === 'Vet ikke';
+    const elbilHjemme = a.q9ev === 'Ja, lader hjemme';
+    const solarVurderer = a.q8 === 'Nei, men vurderer det';
+    const stor = a.q2 === 'Over 150 kvm';
+
+    // Smartere spørsmål med tilhørende quick-reply-forslag
+    if (panel && !pump) {
+      return {
+        q: 'Du har panelovner — ofte den dyreste oppvarmingen. Hva er ditt største spørsmål rundt strøm akkurat nå?',
+        replies: ['Lønner varmepumpe seg?', 'Hvorfor er regningen så høy?', 'Bare gi meg tipsene 🔥']
+      };
+    }
+    if (hytte) {
+      return {
+        q: 'Hytter står ofte og bruker strøm uten at man tenker på det. Hva lurer du mest på?',
+        replies: ['Hvordan kutte strøm når jeg ikke er der?', 'Lønner smart-styring seg?', 'Bare gi meg tipsene']
+      };
+    }
+    if (elbilHjemme) {
+      return {
+        q: 'Du lader elbilen hjemme — det er en av de største strømpostene. Hva er viktigst for deg?',
+        replies: ['Når er det billigst å lade?', 'Bør jeg bytte til Tibber?', 'Bare gi meg tipsene']
+      };
+    }
+    if (norgespris || fastpris) {
+      return {
+        q: 'Du har ' + a.q7.toLowerCase() + '. Mange er usikre på om dette lønner seg. Hva tenker du?',
+        replies: ['Lønner det seg fortsatt?', 'Bør jeg bytte til spotpris?', 'Bare gi meg tipsene']
+      };
+    }
+    if (ukjentAvtale) {
+      return {
+        q: 'Mange vet ikke hvilken avtale de har — helt vanlig! Hva lurer du på?',
+        replies: ['Hvordan finner jeg ut?', 'Hva er forskjellen?', 'Bare gi meg tipsene']
+      };
+    }
+    if (high && !pump) {
+      return {
+        q: 'Du har ganske høyt forbruk. Er det noe spesifikt som driver det?',
+        replies: ['Stort hus / mange rom', 'Mye baking og matlaging', 'Vet ikke — bare høy regning']
+      };
+    }
+    if (dontKnow) {
+      return {
+        q: 'Helt OK at du ikke vet forbruket. Hva er det viktigste for deg å få ut av analysen?',
+        replies: ['Forstå regningen min', 'Konkrete sparetiltak', 'Bare gi meg tipsene']
+      };
+    }
+    if (solarVurderer) {
+      return {
+        q: 'Du vurderer solceller — spennende! Hva er du mest usikker på?',
+        replies: ['Lønner det seg for meg?', 'Hva koster det?', 'Bare gi meg tipsene']
+      };
+    }
+    if (stor && ved) {
+      return {
+        q: 'Stort hus med vedovn. Hva er ditt største spørsmål?',
+        replies: ['Hvordan kutte strømregningen?', 'Lønner varmepumpe i tillegg?', 'Bare gi meg tipsene']
+      };
+    }
+    return {
+      q: 'Er det noe spesifikt du vil legge til, eller noe du lurer på?',
+      replies: ['Hvordan kan jeg spare mest?', 'Hvorfor er regningen min høy?', 'Bare gi meg tipsene']
+    };
+  }
+
+  function appendBotMessage(text) {
+    const msgs = document.getElementById('mini-msgs');
+    const div = document.createElement('div');
+    div.className = 'mini-msg bot';
+    div.innerHTML = '<div class="mini-msg-av">SW</div><div class="mini-msg-bubble">' + text + '</div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function appendUserMessage(text) {
+    const msgs = document.getElementById('mini-msgs');
+    const div = document.createElement('div');
+    div.className = 'mini-msg user';
+    div.innerHTML = '<div class="mini-msg-av">Du</div><div class="mini-msg-bubble">' + text + '</div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function showTyping() {
+    const msgs = document.getElementById('mini-msgs');
+    const div = document.createElement('div');
+    div.className = 'mini-msg bot';
+    div.id = 'typing-msg';
+    div.innerHTML = '<div class="mini-msg-av">SW</div><div class="typing-bubble"><span></span><span></span><span></span></div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function hideTyping() {
+    const t = document.getElementById('typing-msg');
+    if (t) t.remove();
+  }
+
+  function showQuickReplies(replies) {
+    const container = document.getElementById('quick-replies');
+    container.innerHTML = '';
+    replies.forEach(r => {
+      const btn = document.createElement('button');
+      btn.className = 'quick-reply';
+      btn.textContent = r;
+      btn.onclick = () => {
+        hideQuickReplies();
+        sendChatText(r);
+      };
+      container.appendChild(btn);
+    });
+    container.style.display = 'flex';
+  }
+
+  function hideQuickReplies() {
+    const container = document.getElementById('quick-replies');
+    container.style.display = 'none';
+    container.innerHTML = '';
+  }
+
+  function pick(el, g, next) {
+    document.querySelectorAll('#' + g + ' .opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    a[g] = el.dataset.v;
+    const e = document.getElementById('e' + g.replace('q', ''));
+    if (e) e.style.display = 'none';
+    if (next !== undefined) {
+      setTimeout(() => go(next), 300);
+    }
+  }
+
+  function multi(el, g) {
+    if (!Array.isArray(a[g])) a[g] = [];
+    el.classList.toggle('multi-on');
+    const v = el.dataset.v;
+    if (el.classList.contains('multi-on')) {
+      if (!a[g].includes(v)) a[g].push(v);
+    } else {
+      a[g] = a[g].filter(x => x !== v);
+    }
+  }
+
+  function pickNone(el) {
+    document.querySelectorAll('#q9 .opt').forEach(o => o.classList.remove('multi-on', 'selected'));
+    el.classList.add('selected');
+    a.q9 = ['Ingen av disse'];
+    setTimeout(() => go(11), 300);
+  }
+
+  function reqMulti(g, next) {
+    if (!a[g] || !a[g].length) {
+      document.getElementById('e' + g.replace('q', '')).style.display = 'block';
+      return;
+    }
+    go(next);
+  }
+
+  // Felles sender — brukes av både input-feltet og quick-replies
+  function sendChatText(txt) {
+    if (!txt || !txt.trim()) return;
+    txt = txt.trim();
+    appendUserMessage(txt);
+    a.q10 = (a.q10 ? a.q10 + '\n' : '') + txt;
+
+    // Smart bot-ack — varierer etter innhold og antall svar
+    const userMsgCount = document.querySelectorAll('.mini-msg.user').length;
+    const lower = txt.toLowerCase();
+
+    let ack;
+    // Spesifikk ack basert på hva brukeren skrev
+    if (lower.includes('bare gi meg') || lower.includes('hopp over')) {
+      ack = 'Skjønner — jeg har det jeg trenger. Klikk «Neste» så går vi videre 👇';
+    } else if (lower.includes('lønner') || lower.includes('lonner')) {
+      ack = 'Bra spørsmål — det er nettopp slike svar du får i full rapport. Klikk «Neste» for å se din analyse.';
+    } else if (lower.includes('regning') || lower.includes('høy') || lower.includes('hoy')) {
+      ack = 'Notert — vi går gjennom akkurat dette i analysen din. Klikk «Neste» når du er klar.';
+    } else if (userMsgCount === 1) {
+      ack = 'Takk! Det hjelper analysen. Vil du legge til noe mer, eller klikk «Neste» når du er klar 👇';
+    } else if (userMsgCount === 2) {
+      ack = 'Bra info — for hver detalj blir analysen mer treffsikker. Klikk «Neste» når du er klar.';
+    } else {
+      ack = 'Notert! Vi har det vi trenger nå. Klikk «Neste» for å fortsette.';
+    }
+
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      appendBotMessage(ack);
+    }, 700);
+  }
+
+  // Input-felt sender til sendChatText
+  function sendMiniChat() {
+    const inp = document.getElementById('miniChatInput');
+    const txt = inp.value.trim();
+    if (!txt) return;
+    inp.value = '';
+    hideQuickReplies();
+    sendChatText(txt);
+  }
+
+  // === RESULT BUILDER ===
+  function getTip(a) {
+    const panel = Array.isArray(a.q5) && a.q5.includes('Elektriske panelovner');
+    const pump = Array.isArray(a.q5) && a.q5.includes('Varmepumpe');
+    const many = a.q4 === '3-4 personer' || a.q4 === '5 eller flere';
+    const high = a.q6 === '1000-2000 kWh' || a.q6 === 'Over 2000 kWh';
+    const hytte = a.q1 === 'Hytte / fritidsbolig';
+    const solar = a.q8 === 'Nei, men vurderer det';
+    const norgespris = a.q7 === 'Norgespris';
+    const fastpris = a.q7 === 'Fastpris';
+    const doneNight = Array.isArray(a.q9) && a.q9.includes('Vasker klær om natta');
+    const doneBereder = Array.isArray(a.q9) && a.q9.includes('Tidsstyring på berederen');
+
+    if (panel && !pump) return { t:'Bytt panelovner til varmepumpe', d:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En varmepumpe bruker 3× mindre strøm for samme varme.', s:'Estimert sparing: 400–800 kr/mnd', c:'#1b4332', total:'opptil 800 kr/mnd' };
+    if (norgespris || fastpris) return { t:'Bytt til spotprisavtale', d:'Du har ' + a.q7.toLowerCase() + ', som over tid er dyrere enn spotpris for de fleste norske husstander. Tibber eller Vibb er gode alternativer.', s:'Estimert sparing: 100–300 kr/mnd', c:'#1b4332', total:'opptil 500 kr/mnd' };
+    if (high && many && !doneBereder) return { t:'Tidsstyring på varmtvannsberederen', d:'Med ' + a.q4 + ' i husstanden er berederen trolig en stor utgiftspost. Skru ned 23:00–05:00 — du merker ingen forskjell.', s:'Estimert sparing: 150–280 kr/mnd', c:'#d97706', total:'opptil 640 kr/mnd' };
+    if (hytte) return { t:'Smartplugg på varmesystemet', d:'Hytta bruker strøm på oppvarming når du ikke er der. En smartplugg (300 kr) lar deg styre varmen fra mobilen.', s:'Estimert sparing: 200–450 kr/mnd', c:'#1b4332', total:'opptil 450 kr/mnd' };
+    if (solar) return { t:'Solcellepanel kan lønne seg for deg', d:'Med din boligtype er solceller et reelt alternativ. I prisområde ' + a.q3zone + ' er investeringen typisk tjent inn på 8–12 år.', s:'Estimert sparing: 200–500 kr/mnd', c:'#d97706', total:'opptil 500 kr/mnd' };
+    if (!doneNight) return { t:'Unngå strøm i høypristimene 17–21', d:'I prisområde ' + a.q3zone + ' er strømprisene typisk 2–4× høyere mellom kl. 17 og 21. Flytt vaskemaskin og oppvask til kveld.', s:'Estimert sparing: 60–150 kr/mnd', c:'#d97706', total:'opptil 380 kr/mnd' };
+    return { t:'Reduser effekttopper i nettleien', d:'Nettleien din øker når mange apparater er på samtidig. Unngå å bruke ovn, vaskemaskin og varmepumpe på en gang.', s:'Estimert sparing: 50–120 kr/mnd', c:'#d97706', total:'opptil 300 kr/mnd' };
+  }
+
+  function buildResult() {
+    // a.q10 er allerede satt fra chat-meldingene
+    const tip = getTip(a);
+    const place = a.q3post ? postcodeToPlace(a.q3post) : (zoneNames[a.q3zone] || 'Norge');
+
+    const markup = parseFloat(a.q11markup) || 0;
+    const fee = parseFloat(a.q11fee) || 0;
+    const monthlyKwh = a.q6 === 'Over 2000 kWh' ? 2000 : a.q6 === '1000-2000 kWh' ? 1500 : a.q6 === '500-1000 kWh' ? 750 : 400;
+    const currentTotal = ((markup / 100) * monthlyKwh * 100) + fee;
+    const cheapestTotal = 19;
+    const leverandorSaving = Math.max(0, Math.round(currentTotal - cheapestTotal));
+
+    let totalText = tip.total;
+    if (leverandorSaving > 50) {
+      totalText = 'opptil ' + (parseInt(tip.total.replace(/\D/g, '')) + leverandorSaving) + ' kr/mnd';
+    }
+
+    document.getElementById('r-total').textContent = totalText;
+    document.getElementById('r-intro').textContent = 'Basert på svarene dine har vi analysert din ' + (a.q1 || 'bolig').toLowerCase() + ' i ' + place + ' (' + (a.q2 || '').toLowerCase() + ', ' + (a.q4 || '').toLowerCase() + ').';
+
+    document.getElementById('r-grid').innerHTML =
+      '<div class="r-metric"><div class="r-ml">Boligtype</div><div class="r-mv">' + (a.q1 || '—') + '</div></div>' +
+      '<div class="r-metric"><div class="r-ml">Område</div><div class="r-mv">' + place + '</div></div>' +
+      '<div class="r-metric"><div class="r-ml">Avtale</div><div class="r-mv">' + (a.q7 || '—') + '</div></div>' +
+      '<div class="r-metric"><div class="r-ml">Leverandør</div><div class="r-mv">' + (a.q11provider || 'Ukjent') + '</div></div>';
+
+    document.getElementById('r-tips').innerHTML =
+      '<div class="r-tip">' +
+      '<div class="r-dot" style="background:' + tip.c + '"></div>' +
+      '<div><div class="r-tt">' + tip.t + '</div><div class="r-td">' + tip.d + '</div><div class="r-ts">' + tip.s + '</div></div>' +
+      '</div>';
+
+    const leverandorEl = document.getElementById('r-leverandor');
+    if (a.q11markup && leverandorSaving > 50) {
+      leverandorEl.innerHTML =
+        '<div class="r-tip" style="border-color:rgba(45,106,79,.3);background:#e8f5ee">' +
+        '<div class="r-dot" style="background:#1b4332"></div>' +
+        '<div>' +
+        '<div class="r-tt" style="color:#1b4332">Du kan spare ~' + leverandorSaving + ' kr/mnd ved å bytte leverandør</div>' +
+        '<div class="r-td">' + (a.q11provider ? 'Du er på ' + a.q11provider + ' med ' + a.q11markup + ' øre/kWh påslag' : 'Basert på påslaget ditt') + '. Full rapport viser deg nøyaktig hvilken avtale som passer best for deg.</div>' +
+        '</div>' +
+        '</div>';
+    } else if (a.q11provider && !a.q11markup) {
+      leverandorEl.innerHTML =
+        '<div class="r-tip" style="border-color:rgba(45,106,79,.2);background:#e8f5ee">' +
+        '<div class="r-dot" style="background:#1b4332"></div>' +
+        '<div>' +
+        '<div class="r-tt" style="color:#1b4332">Leverandøranalyse inkludert i full rapport</div>' +
+        '<div class="r-td">Full rapport viser om ' + a.q11provider + ' er et godt valg for din husstand, og hvilke alternativer som kan spare deg penger.</div>' +
+        '</div>' +
+        '</div>';
+    } else {
+      leverandorEl.innerHTML = '';
+    }
+  }
+
+  function goToResult() {
+    a.q11provider = document.getElementById('q11provider').value.trim();
+    a.q11markup = document.getElementById('q11markup').value.trim();
+    a.q11fee = document.getElementById('q11fee').value.trim();
+    go(13);
+  }
+
+  function goToStripe() {
+    var profile = {
+      q1: a.q1, q2: a.q2, q3post: a.q3post, q3zone: a.q3zone,
+      q4: a.q4, q5: Array.isArray(a.q5) ? a.q5.join(',') : '',
+      q6: a.q6, q7: a.q7, q8: a.q8, q9ev: a.q9ev || '',
+      q9: Array.isArray(a.q9) ? a.q9.join(',') : '',
+      q10: a.q10, q11p: a.q11provider || '',
+      q11m: a.q11markup || '', q11f: a.q11fee || ''
+    };
+    Object.keys(profile).forEach(function(k) { sessionStorage.setItem('sw_' + k, profile[k]); });
+    localStorage.setItem('sw_profile', JSON.stringify(profile));
+    localStorage.setItem('sw_profile_ts', Date.now().toString());
+    window.location.href = 'https://buy.stripe.com/9B6bIT5947Ma6Ece8m1kA00';
+  }
+
+  function submitEmail() {
+    const v = document.getElementById('emailVal').value.trim();
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    if (!ok) {
+      document.getElementById('e12').style.display = 'block';
+      return;
+    }
+    document.getElementById('e12').style.display = 'none';
+    document.getElementById('done-email').textContent = '✓ Sendt til ' + v;
+    go(15);
+  }
 </script>
+
 </body>
 </html>
