@@ -1548,37 +1548,69 @@
   }
 
   // Felles sender — brukes av både input-feltet og quick-replies
-  function sendChatText(txt) {
+  async function sendChatText(txt) {
     if (!txt || !txt.trim()) return;
     txt = txt.trim();
     appendUserMessage(txt);
     a.q10 = (a.q10 ? a.q10 + '\n' : '') + txt;
 
-    // Smart bot-ack — varierer etter innhold og antall svar
-    const userMsgCount = document.querySelectorAll('.mini-msg.user').length;
-    const lower = txt.toLowerCase();
-
-    let ack;
-    // Spesifikk ack basert på hva brukeren skrev
-    if (lower.includes('bare gi meg') || lower.includes('hopp over')) {
-      ack = 'Skjønner — jeg har det jeg trenger. Klikk «Neste» så går vi videre 👇';
-    } else if (lower.includes('lønner') || lower.includes('lonner')) {
-      ack = 'Bra spørsmål — det er nettopp slike svar du får i full rapport. Klikk «Neste» for å se din analyse.';
-    } else if (lower.includes('regning') || lower.includes('høy') || lower.includes('hoy')) {
-      ack = 'Notert — vi går gjennom akkurat dette i analysen din. Klikk «Neste» når du er klar.';
-    } else if (userMsgCount === 1) {
-      ack = 'Takk! Det hjelper analysen. Vil du legge til noe mer, eller klikk «Neste» når du er klar 👇';
-    } else if (userMsgCount === 2) {
-      ack = 'Bra info — for hver detalj blir analysen mer treffsikker. Klikk «Neste» når du er klar.';
-    } else {
-      ack = 'Notert! Vi har det vi trenger nå. Klikk «Neste» for å fortsette.';
-    }
-
     showTyping();
-    setTimeout(() => {
+
+    // Bygg en kompakt profil for AI-en så den kan gi personlige svar
+    const profileForAI = {
+      bolig: a.q1 || 'ukjent',
+      størrelse: a.q2 || 'ukjent',
+      område: a.q3post ? postcodeToPlace(a.q3post) + ' (' + (a.q3zone || 'NO1') + ')' : 'ukjent',
+      husstand: a.q4 || 'ukjent',
+      oppvarming: Array.isArray(a.q5) ? a.q5.join(', ') : 'ukjent',
+      forbruk: a.q6 || 'ukjent',
+      avtale: a.q7 || 'ukjent',
+      solceller: a.q8 || 'ukjent',
+      elbil: a.q9ev || 'ukjent'
+    };
+
+    try {
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: txt,
+          profile: profileForAI,
+          context: 'analyse-skjema',
+          systemHint: 'Du er en kort, hjelpsom strømrådgiver i et skjema. Brukeren er midt i en analyse. Svar kort (1-3 setninger), konkret og personlig basert på profilen. Ikke ber dem klikke "Neste" - bare svar på spørsmålet deres.'
+        })
+      });
+      const data = await r.json();
       hideTyping();
-      appendBotMessage(ack);
-    }, 700);
+      const reply = data.reply || data.message || data.text;
+      if (reply) {
+        appendBotMessage(reply);
+      } else {
+        appendBotMessage('Hmm, jeg fikk ikke et godt svar denne gangen. Prøv å spørre på en annen måte, eller klikk «Neste» for å fortsette analysen.');
+      }
+    } catch (e) {
+      hideTyping();
+      // Fallback hvis API-kallet feiler — gi i det minste et nyttig svar
+      appendBotMessage(getFallbackReply(txt));
+    }
+  }
+
+  // Fallback-svar hvis Groq er nede — bedre enn "klikk Neste"
+  function getFallbackReply(txt) {
+    const lower = txt.toLowerCase();
+    if (lower.includes('hvordan finner jeg') || lower.includes('hvor finner jeg') || lower.includes('hvor står')) {
+      return 'Du finner det øverst på strømregningen din — typisk under "Avtaletype" eller "Produkt". Ofte står det også i appen til strømleverandøren.';
+    }
+    if (lower.includes('vet ikke') || lower.includes('usikker')) {
+      return 'Helt OK — det er nettopp derfor du gjør denne analysen. Vi tilpasser anbefalingene basert på det du vet.';
+    }
+    if (lower.includes('lønner') || lower.includes('lonner') || lower.includes('verdt')) {
+      return 'Det avhenger av din spesifikke situasjon. I full rapport får du et konkret regnestykke for akkurat din bolig — det er det vi spesialiserer oss på.';
+    }
+    if (lower.includes('regning') || lower.includes('betaler')) {
+      return 'Notert — vi går gjennom akkurat dette i analysen din basert på din boligprofil og prisområde.';
+    }
+    return 'Takk for innspillet — det hjelper analysen din.';
   }
 
   // Input-felt sender til sendChatText
