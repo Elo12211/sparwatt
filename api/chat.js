@@ -1,95 +1,148 @@
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+// /api/chat.js — SparWatt AI-rådgiver
+// Bruker Groqs Llama 3.3 70B Versatile for høyeste kvalitet på norsk
 
-  const { messages, profile } = req.body;
+export default async function handler(req, res) {
+  // CORS for testing
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!messages || !profile) {
-    return res.status(400).json({ error: 'Missing messages or profile' });
-  }
-
-  let priceInfo = 'Live priser utilgjengelig akkurat nå.';
   try {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const priceRes = await fetch(
-      `https://www.hvakosterstrommen.no/api/v1/prices/${year}/${month}-${day}_NO1.json`
-    );
-    if (priceRes.ok) {
-      const prices = await priceRes.json();
-      const now = today.getHours();
-      const currentPrice = prices[now] && prices[now].NOK_per_kWh;
-      const minPrice = Math.min(...prices.map(function(p){ return p.NOK_per_kWh; }));
-      const maxPrice = Math.max(...prices.map(function(p){ return p.NOK_per_kWh; }));
-      const cheapHours = prices
-        .filter(function(p){ return p.NOK_per_kWh <= minPrice * 1.2; })
-        .map(function(p){ return new Date(p.time_start).getHours() + ':00'; })
-        .join(', ');
-      priceInfo = 'Live strompris akkurat na: ' + (currentPrice * 100).toFixed(1) + ' ore/kWh. Billigste timer i dag: ' + cheapHours + '. Dyreste pris: ' + (maxPrice * 100).toFixed(1) + ' ore/kWh.';
+    const { message, profile = {}, context = 'rapport', systemHint = '' } = req.body || {};
+
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ error: 'Mangler "message" i forespørselen' });
     }
-  } catch (e) {
-    priceInfo = 'Live priser utilgjengelig akkurat na.';
-  }
 
-  const place = profile.placeName || profile.q3 || 'Norge';
-
-  // If _systemOverride is provided (used for AI tips generation), use it directly
-  if(profile._systemOverride) {
+    // Hent live strømpriser for brukerens prisområde
+    const zone = profile.q3zone || profile.zone || 'NO1';
+    let livePrices = '';
     try {
-      const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'llama-3.1-8b-instant',
-          messages: [
-            { role: 'system', content: profile._systemOverride },
-            ...messages
-          ],
-          max_tokens: 800,
-          temperature: 0.7
-        })
-      });
-      if(groqRes.ok) {
-        const data = await groqRes.json();
-        const reply = data.choices[0].message.content;
-        return res.status(200).json({ reply });
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, '0');
+      const d = String(today.getDate()).padStart(2, '0');
+      const url = `https://www.hvakosterstrommen.no/api/v1/prices/${y}/${m}-${d}_${zone}.json`;
+      const r = await fetch(url);
+      if (r.ok) {
+        const data = await r.json();
+        const currentHour = new Date().getHours();
+        const prices = data.map(p => p.NOK_per_kWh * 100);
+        const nowPrice = prices[currentHour]?.toFixed(1) || '—';
+        const avgPrice = (prices.reduce((a, b) => a + b, 0) / prices.length).toFixed(1);
+        const minPrice = Math.min(...prices).toFixed(1);
+        const maxPrice = Math.max(...prices).toFixed(1);
+        const minHour = prices.indexOf(Math.min(...prices));
+        const maxHour = prices.indexOf(Math.max(...prices));
+        livePrices = `\nLIVE STRØMPRISER I ${zone} I DAG:
+- Pris akkurat nå (kl ${currentHour}): ${nowPrice} øre/kWh
+- Snitt i dag: ${avgPrice} øre/kWh
+- Billigst i dag: ${minPrice} øre kl ${minHour}
+- Dyrest i dag: ${maxPrice} øre kl ${maxHour}`;
       }
-    } catch(e) {}
-  }
+    } catch (e) {
+      // Hvis priser ikke kan hentes, fortsett uten
+    }
 
-  const systemPrompt = 'Du er SparWatt-assistenten — en vennlig og kunnskapsrik norsk stromradgiver. Du hjelper denne spesifikke brukeren med a spare penger pa strom basert pa deres bolig og situasjon.\n\nBRUKERPROFIL:\n- Boligtype: ' + (profile.q1||'') + '\n- Storrelse: ' + (profile.q2||'') + '\n- Antall i husstanden: ' + (profile.q4||profile.q3||'') + '\n- Oppvarming: ' + (profile.q5||profile.q4||'') + '\n- Manedlig forbruk: ' + (profile.q6||profile.q5||'') + '\n- Stromavtale: ' + (profile.q7||'') + '\n- Leverandor: ' + (profile.q11provider||'ukjent') + '\n- Paslag: ' + (profile.q11markup ? profile.q11markup + ' ore/kWh' : 'ukjent') + '\n- Sted: ' + place + '\n- Ekstra info: ' + (profile.q10||profile.q6extra||profile.q6||'Ingen') + '\n\nLIVE STROMPRISINFORMASJON:\n' + priceInfo + '\n\nINSTRUKSJONER:\n- Svar alltid pa norsk, kort og konkret\n- Bruk brukerens profil aktivt — ikke gi generiske rad\n- Referer til live-priser og stedet nar relevant\n- Gi konkrete kronebel\u00f8p og estimater nar mulig\n- Vennlig men direkte — ingen unodvendig fluff\n- Maks 3-4 setninger per svar med mindre brukeren ber om mer';
+    // Bygg profil-tekst basert på det vi vet om brukeren
+    const profileLines = [];
+    if (profile.bolig || profile.q1) profileLines.push(`Boligtype: ${profile.bolig || profile.q1}`);
+    if (profile.størrelse || profile.q2) profileLines.push(`Størrelse: ${profile.størrelse || profile.q2}`);
+    if (profile.område || profile.q3post) profileLines.push(`Område: ${profile.område || profile.q3post}`);
+    if (profile.husstand || profile.q4) profileLines.push(`Husstand: ${profile.husstand || profile.q4}`);
+    if (profile.oppvarming || profile.q5) profileLines.push(`Oppvarming: ${profile.oppvarming || profile.q5}`);
+    if (profile.forbruk || profile.q6) profileLines.push(`Strømforbruk: ${profile.forbruk || profile.q6}`);
+    if (profile.avtale || profile.q7) profileLines.push(`Strømavtale: ${profile.avtale || profile.q7}`);
+    if (profile.solceller || profile.q8) profileLines.push(`Solceller: ${profile.solceller || profile.q8}`);
+    if (profile.elbil || profile.q9ev) profileLines.push(`Elbil: ${profile.elbil || profile.q9ev}`);
+    const profileText = profileLines.length ? '\nBRUKERENS PROFIL:\n' + profileLines.join('\n') : '';
 
-  try {
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    // System-prompt — tilpasset etter context
+    let systemPrompt;
+    if (context === 'analyse-skjema') {
+      // Bruker er midt i skjemaet — kort, hjelpsom, ingen "klikk Neste"-mas
+      systemPrompt = `Du er SparWatt AI, en norsk strømrådgiver. Brukeren er midt i en analyse og har spurt deg et spørsmål. 
+
+Regler:
+- Svar KORT (1-3 setninger maks)
+- Svar KONKRET og NORSK
+- Bruk profilen til å gi personlig svar når relevant
+- IKKE be brukeren klikke "Neste" - bare svar på spørsmålet
+- IKKE introduser deg selv eller si "Som strømrådgiver..."
+- Vær varm og direkte, som en kunnskapsrik venn
+
+${profileText}
+${livePrices}
+${systemHint ? '\nEKSTRA INSTRUKS: ' + systemHint : ''}`;
+    } else {
+      // Rapport-kontekst — kan være mer utdypende
+      systemPrompt = `Du er SparWatt AI, en personlig norsk strømrådgiver. Brukeren har betalt for full rapport og forventer kvalitetssvar.
+
+Regler:
+- Svar på NORSK
+- Bruk brukerens profil til å gi PERSONLIGE råd (ikke generelle)
+- Hold svarene konkrete - 2-5 setninger typisk
+- Bruk live-prisene når relevant
+- Bruk markdown-fet (med stjerner) for å fremheve viktige tall og begreper
+- Ikke gjenta hele profilen tilbake - vis at du forstår den ved å gi spesifikke råd
+- Vær varm, direkte og hjelpsom
+
+${profileText}
+${livePrices}`;
+    }
+
+    // Kall Groq API
+    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'system', content: systemPrompt }].concat(messages),
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.7,
         max_tokens: 400,
-        temperature: 0.7
+        top_p: 0.9
       })
     });
 
-    if (!groqRes.ok) {
-      const err = await groqRes.text();
-      return res.status(500).json({ error: 'Groq error', details: err });
+    if (!groqResponse.ok) {
+      const errorText = await groqResponse.text();
+      console.error('Groq API error:', groqResponse.status, errorText);
+      return res.status(500).json({
+        error: 'AI-tjenesten er midlertidig utilgjengelig',
+        reply: 'Beklager — jeg er litt treig akkurat nå. Prøv igjen om et øyeblikk.'
+      });
     }
 
-    const data = await groqRes.json();
-    const reply = data.choices[0].message.content;
-    return res.status(200).json({ reply: reply });
+    const data = await groqResponse.json();
+    const reply = data.choices?.[0]?.message?.content?.trim();
 
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
+    if (!reply) {
+      return res.status(500).json({
+        error: 'Tomt svar fra AI',
+        reply: 'Hmm, jeg fikk ikke formulert et godt svar denne gangen. Prøv å spørre på en annen måte.'
+      });
+    }
+
+    return res.status(200).json({
+      reply,
+      message: reply,
+      text: reply,
+      model: 'llama-3.3-70b-versatile'
+    });
+
+  } catch (error) {
+    console.error('Chat error:', error);
+    return res.status(500).json({
+      error: error.message || 'Ukjent feil',
+      reply: 'Beklager — det oppsto en feil. Prøv igjen om litt.'
+    });
   }
-};
+}
