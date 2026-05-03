@@ -1068,6 +1068,11 @@
     color: var(--ink-soft);
     line-height: 1.65;
     font-size: 15px;
+    animation: faq-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes faq-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* ===== FINAL CTA ===== */

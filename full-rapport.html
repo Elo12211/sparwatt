@@ -161,15 +161,28 @@
     color: var(--green-deep);
     font-weight: 600;
   }
-  .tab.active::after {
+  .tab::after {
     content: '';
     position: absolute;
     bottom: -1px; left: 18px; right: 18px;
     height: 2px;
     background: var(--green-deep);
     border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .tab svg { width: 16px; height: 16px; }
+  .tab.active::after {
+    transform: scaleX(1);
+  }
+  .tab svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+  .tab:hover svg {
+    transform: scale(1.1);
+  }
 
   /* ===== CONTAINER ===== */
   .container {
@@ -187,6 +200,19 @@
     animation: panel-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   @keyframes panel-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .panel.active .section {
+    animation: section-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .panel.active .section:nth-child(1) { animation-delay: 0s; }
+  .panel.active .section:nth-child(2) { animation-delay: 0.06s; }
+  .panel.active .section:nth-child(3) { animation-delay: 0.12s; }
+  .panel.active .section:nth-child(4) { animation-delay: 0.18s; }
+  .panel.active .section:nth-child(5) { animation-delay: 0.22s; }
+  .panel.active .section:nth-child(n+6) { animation-delay: 0.26s; }
+  @keyframes section-in {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
@@ -375,28 +401,75 @@
     display: grid;
     grid-template-columns: repeat(24, 1fr);
     gap: 2px;
-    height: 100px;
+    height: 110px;
     align-items: end;
     margin-bottom: 10px;
+    position: relative;
   }
   .price-bar {
     background: var(--green-light);
-    border-radius: 2px 2px 0 0;
+    border-radius: 3px 3px 0 0;
     transform: scaleY(0);
     transform-origin: bottom;
     opacity: 0;
     animation: bar-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
   }
-  .price-bar.cheap { background: var(--green-glow); }
-  .price-bar.mid { background: #f4d03f; }
-  .price-bar.expensive { background: #e67e22; }
+  .price-bar:hover {
+    filter: brightness(1.15);
+    transform: scaleY(1.02);
+  }
+  .price-bar.cheap { background: linear-gradient(to top, var(--green-glow), #6fc99a); }
+  .price-bar.mid { background: linear-gradient(to top, #f4d03f, #f7dc6f); }
+  .price-bar.expensive { background: linear-gradient(to top, #e67e22, #f39c12); }
   .price-bar.now {
-    background: var(--green-deep);
+    background: linear-gradient(to top, var(--green-deep), var(--green-mid)) !important;
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--green-deep);
+    animation: bar-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, now-pulse 2.5s 1s ease-in-out infinite;
+  }
+  .price-bar.now::after {
+    content: '↓';
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--green-deep);
+    font-weight: 700;
+    animation: bounce-arrow 1.5s ease-in-out infinite;
+  }
+  @keyframes now-pulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--green-deep); }
+    50% { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--green-glow); }
+  }
+  @keyframes bounce-arrow {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(3px); }
   }
   @keyframes bar-grow {
     to { transform: scaleY(1); opacity: 1; }
+  }
+  .price-bar-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: var(--ink);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-variant-numeric: tabular-nums;
+    z-index: 10;
+  }
+  .price-bar:hover .price-bar-tooltip {
+    opacity: 1;
   }
   .price-hours {
     display: flex;
@@ -404,7 +477,33 @@
     font-size: 11px;
     color: var(--ink-muted);
     font-variant-numeric: tabular-nums;
+    padding: 0 2px;
   }
+  /* Legend under prisbildet */
+  .price-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+  .price-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .price-legend-dot {
+    width: 9px; height: 9px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .price-legend-dot.cheap { background: var(--green-glow); }
+  .price-legend-dot.mid { background: #f4d03f; }
+  .price-legend-dot.expensive { background: #e67e22; }
+  .price-legend-dot.now { background: var(--green-deep); }
   .price-insight {
     margin-top: 16px;
     padding-top: 16px;
@@ -541,6 +640,59 @@
     color: var(--green-deep);
     font-weight: 600;
   }
+  .daily-insight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .insight-ai-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green-deep);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .insight-ai-btn:hover {
+    background: var(--green-deep);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
+  }
+  .insight-ai-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .insight-ai-btn.loading svg {
+    animation: insight-spin 0.8s linear infinite;
+  }
+  @keyframes insight-spin {
+    to { transform: rotate(360deg); }
+  }
+  .daily-insight.refreshing .daily-insight-title,
+  .daily-insight.refreshing .daily-insight-text {
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+  }
+  .daily-insight-label.ai-generated {
+    color: var(--green-deep);
+  }
+  .daily-insight-label.ai-generated::after {
+    content: ' ✨ AI';
+    font-size: 10px;
+  }
 
   /* ===== PROGRESS CARD (Din fremgang) ===== */
   .progress-card {
@@ -605,6 +757,112 @@
   }
 
   /* ===== TIPS LIST ===== */
+  .tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .tips-header .sec-title { margin-bottom: 4px; }
+  .tips-header .sec-sub { margin-bottom: 0; }
+  .refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+  }
+  .refresh-btn:hover {
+    border-color: var(--green-deep);
+    color: var(--green-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .refresh-btn svg {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .refresh-btn.spinning svg {
+    animation: refresh-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes refresh-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .tips-context {
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 1px solid rgba(45, 106, 79, 0.18);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    animation: ctx-fade 0.4s ease;
+  }
+  .tips-context.hidden { display: none; }
+  @keyframes ctx-fade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .tips-context-icon {
+    color: var(--green-deep);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tips-context strong {
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+
+  .tips-updated {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  /* Tip-element animasjon ved re-render */
+  .tip {
+    animation: tip-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .tip:nth-child(1) { animation-delay: 0.05s; }
+  .tip:nth-child(2) { animation-delay: 0.10s; }
+  .tip:nth-child(3) { animation-delay: 0.15s; }
+  .tip:nth-child(4) { animation-delay: 0.20s; }
+  .tip:nth-child(5) { animation-delay: 0.25s; }
+  .tip:nth-child(6) { animation-delay: 0.30s; }
+  .tip:nth-child(7) { animation-delay: 0.35s; }
+  .tip:nth-child(8) { animation-delay: 0.40s; }
+  @keyframes tip-slide-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* "Akkurat nå"-tag for tids-relevante tiltak */
+  .tip-tag.now {
+    background: var(--green-deep);
+    color: white;
+    font-weight: 600;
+  }
+  .tip-tag.now::before {
+    content: '⚡';
+    margin-right: 4px;
+  }
   .tips-list {
     display: flex;
     flex-direction: column;
@@ -702,18 +960,96 @@
 
   /* ===== CHECKLIST ===== */
   .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .check-summary {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    color: white;
+    border-radius: 16px;
+    padding: 20px 22px;
+  }
+  .check-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 16px;
+  }
+  .check-summary-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .check-summary-value {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .check-summary-value.green {
+    color: var(--green-glow);
+  }
+  .check-summary-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .check-summary-fill {
+    height: 100%;
+    background: var(--green-glow);
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .check-group {
     background: white;
     border: 1px solid var(--line);
     border-radius: 16px;
-    padding: 6px;
+    overflow: hidden;
   }
-  .check-item {
+  .check-group-header {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     padding: 14px 18px;
+    background: var(--bg-warm);
+    border-bottom: 1px solid var(--line);
+  }
+  .check-group-icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+  .check-group-title {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .check-group-progress {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .check-group-items {
+    padding: 6px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 14px;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 10px;
     transition: background 0.2s ease;
   }
   .check-item:hover {
@@ -728,6 +1064,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.25s ease;
+    margin-top: 1px;
   }
   .check-item.done .check-box {
     background: var(--green-deep);
@@ -750,17 +1087,154 @@
     from { opacity: 0; transform: scale(0.4); }
     to { opacity: 1; transform: scale(1); }
   }
+  .check-content { flex: 1; min-width: 0; }
   .check-text {
     font-size: 14px;
     color: var(--ink);
-    flex: 1;
+    line-height: 1.4;
   }
   .check-item.done .check-text {
     color: var(--ink-muted);
     text-decoration: line-through;
   }
+  .check-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+  }
+  .check-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: var(--bg-warm);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .check-meta-pill.save {
+    background: rgba(82, 183, 136, 0.15);
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+  .check-meta-pill.time {
+    background: rgba(201, 169, 97, 0.15);
+    color: #8a7a45;
+  }
+  .check-meta-pill.cost {
+    background: rgba(217, 119, 6, 0.1);
+    color: var(--warn);
+  }
+  .check-meta-pill.note {
+    background: rgba(45, 106, 79, 0.08);
+    color: var(--green-mid);
+    font-style: italic;
+  }
+  .check-link {
+    color: var(--green-deep);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .check-link:hover {
+    background: var(--green-light);
+    transform: translateX(2px);
+  }
 
   /* ===== BILL BREAKDOWN ===== */
+  .bill-donut-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px 22px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .bill-donut-wrap {
+    position: relative;
+    width: 160px; height: 160px;
+    flex-shrink: 0;
+  }
+  .bill-donut {
+    width: 100%; height: 100%;
+    transform: rotate(0deg);
+  }
+  .bill-donut-seg {
+    transition: stroke-width 0.3s ease;
+    stroke-dashoffset: var(--final-offset, 0);
+    animation: donut-draw 1.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .bill-donut-seg:hover {
+    stroke-width: 16;
+  }
+  @keyframes donut-draw {
+    from { stroke-dasharray: 0 251.33; }
+  }
+  .bill-donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .bill-donut-label {
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .bill-donut-value {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--green-deep);
+    line-height: 1;
+  }
+  .bill-donut-value span {
+    font-size: 18px;
+    color: var(--ink-muted);
+  }
+  .bill-donut-legend {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .bill-legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .bill-legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .bill-legend-name {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .bill-legend-pct {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--green-deep);
+    line-height: 1.1;
+  }
+
   .bill-list {
     background: white;
     border: 1px solid var(--line);
@@ -1094,6 +1568,436 @@
     border-color: var(--green-deep);
     color: var(--green-deep);
     background: var(--green-light);
+  }
+
+  /* ===== KOSTNADS-KALKULATOR ===== */
+  .calc-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px;
+    overflow: hidden;
+  }
+  .calc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .calc-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .calc-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .calc-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .calc-now-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    background: var(--green-light);
+    color: var(--green-deep);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .calc-now-pill .dot {
+    width: 6px; height: 6px;
+    background: var(--green-glow);
+    border-radius: 50%;
+    animation: live-pulse 2s ease-in-out infinite;
+  }
+  .calc-now-price {
+    font-variant-numeric: tabular-nums;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .calc-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .calc-opt {
+    padding: 14px 10px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+  }
+  .calc-opt:hover {
+    border-color: var(--green-glow);
+    transform: translateY(-1px);
+  }
+  .calc-opt.active {
+    background: var(--green-deep);
+    color: white;
+    border-color: var(--green-deep);
+  }
+  .calc-opt-icon {
+    font-size: 22px;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .calc-opt-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+
+  .calc-result {
+    background: linear-gradient(135deg, var(--ink), #2a2a2a);
+    color: white;
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .calc-result-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .calc-result-amount {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 600;
+    color: white;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    transition: opacity 0.3s ease;
+    animation: amount-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes amount-pop {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .calc-result-amount .currency {
+    font-size: 24px;
+    color: rgba(255,255,255,0.6);
+    margin-right: 4px;
+  }
+  .calc-result-context {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.4;
+  }
+  .calc-result-context strong {
+    color: var(--green-glow);
+    font-weight: 600;
+  }
+
+  .calc-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-warm);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .calc-detail-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .calc-detail-value {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  /* ===== ENOVA-STØTTE ===== */
+  .enova-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .enova-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .enova-card:hover {
+    border-color: var(--green-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  }
+  .enova-card.relevant {
+    border-color: rgba(82, 183, 136, 0.4);
+    background: linear-gradient(135deg, white, rgba(82, 183, 136, 0.03));
+  }
+  .enova-card.relevant:hover {
+    box-shadow: 0 10px 28px rgba(82, 183, 136, 0.12);
+  }
+  .enova-card.relevant::before {
+    content: 'Aktuelt for deg';
+    position: absolute;
+    top: -8px;
+    left: 16px;
+    background: var(--green-deep);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .enova-icon {
+    font-size: 22px;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .enova-body { flex: 1; min-width: 0; }
+  .enova-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .enova-amount {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--green-deep);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .enova-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .enova-footer {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--bg-warm);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .enova-footer strong {
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  /* ===== MILEPÆLER / DINE MÅL ===== */
+  .milestones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .milestone {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .milestone:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+  }
+  .milestone.achieved:hover {
+    box-shadow: 0 8px 24px rgba(82, 183, 136, 0.15);
+  }
+  .milestone.achieved {
+    border-color: rgba(82, 183, 136, 0.5);
+    background: linear-gradient(135deg, white, rgba(82, 183, 136, 0.05));
+  }
+  .milestone.achieved::after {
+    content: '✓';
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green-deep);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    animation: check-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .milestone-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+    line-height: 1;
+  }
+  .milestone-value {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .milestone.achieved .milestone-value {
+    color: var(--green-deep);
+  }
+  .milestone-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.3;
+  }
+
+  /* ===== KONTEKST-VARSEL (kuldebølge etc) ===== */
+  .ctx-alert {
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    animation: ctx-alert-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes ctx-alert-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ctx-alert.warning {
+    background: linear-gradient(135deg, #fef3e2, #fff8eb);
+    border: 1px solid #f4d690;
+    color: #7c5a16;
+  }
+  .ctx-alert.opportunity {
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 1px solid rgba(82, 183, 136, 0.3);
+    color: var(--green-deep);
+  }
+  .ctx-alert-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .ctx-alert-body {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .ctx-alert-body strong {
+    display: block;
+    margin-bottom: 2px;
+    font-weight: 600;
+  }
+
+  /* ===== QUICK SHORTCUT (snarvei til andre tabs) ===== */
+  .quick-shortcut {
+    background: linear-gradient(135deg, white, var(--bg-warm));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .quick-shortcut::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(82, 183, 136, 0.08), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .quick-shortcut:hover {
+    border-color: var(--green-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+  .quick-shortcut:hover::before {
+    transform: translateX(100%);
+  }
+  .qs-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--green-light);
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(45, 106, 79, 0.15);
+  }
+  .qs-content { flex: 1; min-width: 0; }
+  .qs-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .qs-text {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .qs-arrow {
+    font-size: 22px;
+    color: var(--green-deep);
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .quick-shortcut:hover .qs-arrow {
+    transform: translateX(4px);
   }
 
   /* ===== ACCESS BAR (link til rapport) ===== */
@@ -1465,6 +2369,26 @@
     .price-now { font-size: 38px; }
     .lev-input-row { grid-template-columns: 1fr; }
     .cmp-input-grid { grid-template-columns: 1fr; }
+    .tips-header { flex-direction: column; align-items: stretch; gap: 12px; }
+    .refresh-btn { align-self: flex-start; }
+    .bill-donut-card { flex-direction: column; gap: 20px; padding: 22px 18px; }
+    .quick-shortcut { padding: 16px 18px; gap: 14px; }
+    .qs-icon { width: 40px; height: 40px; }
+    .qs-title { font-size: 17px; }
+    .calc-options { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .calc-opt { padding: 12px 8px; }
+    .calc-opt-icon { font-size: 20px; }
+    .calc-opt-name { font-size: 10px; }
+    .calc-result-amount { font-size: 38px; }
+    .calc-result-amount .currency { font-size: 20px; }
+    .calc-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .milestones-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .milestone { padding: 14px 14px; }
+    .milestone-value { font-size: 18px; }
+    .milestone-label { font-size: 11px; }
+    .bill-donut-wrap { width: 140px; height: 140px; }
+    .bill-donut-legend { width: 100%; }
+    .check-summary-row { flex-direction: column; align-items: flex-start; gap: 14px; }
     .cmp-current-amount { font-size: 32px; }
     .cmp-card { padding: 16px; gap: 12px; }
     .cmp-card-name { font-size: 17px; }
@@ -1478,6 +2402,9 @@
     .daily-insight { padding: 18px; gap: 12px; }
     .daily-insight-title { font-size: 18px; }
     .daily-insight-icon { width: 38px; height: 38px; }
+    .daily-insight-header { flex-wrap: wrap; }
+    .insight-ai-btn { padding: 4px 8px; font-size: 10px; }
+    .insight-ai-btn span { display: none; }
     .tip { padding: 16px; }
     .tip-num { width: 28px; height: 28px; font-size: 13px; }
     /* Disable hover-translate på touch */
@@ -1563,6 +2490,11 @@
       </div>
     </div>
 
+    <!-- KONTEKST-VARSEL (kuldebølge / billig nå) — vises kun når relevant -->
+    <div class="section" id="ctx-alert-section" style="display:none;">
+      <div class="ctx-alert" id="ctx-alert"></div>
+    </div>
+
     <!-- Daily insight ("aha"-moment) -->
     <div class="section">
       <div class="daily-insight" id="daily-insight">
@@ -1572,19 +2504,111 @@
           </svg>
         </div>
         <div class="daily-insight-content">
-          <div class="daily-insight-label">Dagens innsikt</div>
+          <div class="daily-insight-header">
+            <div class="daily-insight-label" id="insight-label">Dagens innsikt</div>
+            <button class="insight-ai-btn" onclick="generateAIInsight()" id="insight-ai-btn" title="Få en helt fersk AI-generert innsikt">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                <path d="M12 7v5l3 3"/>
+              </svg>
+              <span>Få ny innsikt</span>
+            </button>
+          </div>
           <div class="daily-insight-title" id="insight-title">Laster...</div>
           <div class="daily-insight-text" id="insight-text"></div>
         </div>
       </div>
     </div>
 
-    <!-- Din fremgang -->
+    <!-- HVA KOSTER DETTE? -->
     <div class="section">
+      <h2 class="sec-title">Hva koster det <em>akkurat nå?</em></h2>
+      <p class="sec-sub">Strømprisen endrer seg hele tiden — her ser du hva forbruket ditt faktisk koster i sanntid</p>
+      <div class="calc-card">
+        <div class="calc-header">
+          <div class="calc-title-row">
+            <div class="calc-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v6m0 8v6m-9-9h6m8 0h6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            </div>
+            <div class="calc-title">Velg en aktivitet</div>
+          </div>
+          <div class="calc-now-pill">
+            <span class="dot"></span>
+            <span>Pris nå:</span>
+            <span class="calc-now-price" id="calc-current-price">— øre/kWh</span>
+          </div>
+        </div>
+
+        <div class="calc-options" id="calc-options">
+          <div class="calc-opt active" data-act="dusj">
+            <div class="calc-opt-icon">🚿</div>
+            <div class="calc-opt-name">Dusj 10 min</div>
+          </div>
+          <div class="calc-opt" data-act="vask">
+            <div class="calc-opt-icon">🧺</div>
+            <div class="calc-opt-name">Vask 60°C</div>
+          </div>
+          <div class="calc-opt" data-act="oppvask">
+            <div class="calc-opt-icon">🍽️</div>
+            <div class="calc-opt-name">Oppvask</div>
+          </div>
+          <div class="calc-opt" data-act="bake">
+            <div class="calc-opt-icon">🍕</div>
+            <div class="calc-opt-name">Stekeovn 1t</div>
+          </div>
+          <div class="calc-opt" data-act="elbil">
+            <div class="calc-opt-icon">🔌</div>
+            <div class="calc-opt-name">Elbil-lading</div>
+          </div>
+          <div class="calc-opt" data-act="varmtvann">
+            <div class="calc-opt-icon">♨️</div>
+            <div class="calc-opt-name">Bereder/døgn</div>
+          </div>
+          <div class="calc-opt" data-act="tv">
+            <div class="calc-opt-icon">📺</div>
+            <div class="calc-opt-name">TV 2 timer</div>
+          </div>
+          <div class="calc-opt" data-act="kaffe">
+            <div class="calc-opt-icon">☕</div>
+            <div class="calc-opt-name">Kaffekanne</div>
+          </div>
+          <div class="calc-opt" data-act="standby">
+            <div class="calc-opt-icon">🔴</div>
+            <div class="calc-opt-name">Standby/døgn</div>
+          </div>
+        </div>
+
+        <div class="calc-result">
+          <div class="calc-result-label" id="calc-act-name">Dusj 10 minutter koster</div>
+          <div class="calc-result-amount" id="calc-amount"><span class="currency">kr</span> —</div>
+          <div class="calc-result-context" id="calc-context">Henter live strømpris...</div>
+        </div>
+
+        <div class="calc-detail">
+          <div class="calc-detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            Forbruk
+          </div>
+          <div class="calc-detail-value" id="calc-kwh">— kWh</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIN FREMGANG (kombinert med milepæler) -->
+    <div class="section">
+      <h2 class="sec-title">Din <em>fremgang</em></h2>
+      <p class="sec-sub">Reelle prestasjoner — basert på hva du faktisk har gjort</p>
+
+      <!-- Hovedkort med progress-ring -->
       <div class="progress-card">
         <div class="progress-card-header">
           <div>
-            <div class="progress-card-label">Din fremgang</div>
+            <div class="progress-card-label">Total fremgang</div>
             <div class="progress-card-title" id="progress-title">Du er i gang!</div>
           </div>
           <div class="progress-ring">
@@ -1599,6 +2623,20 @@
           </div>
         </div>
         <div class="progress-card-text" id="progress-card-text">Huk av tiltak du har gjennomført på Tiltak-tab — så ser du fremgangen din her.</div>
+      </div>
+
+      <!-- Milepæler-grid -->
+      <div class="milestones-grid" id="milestones" style="margin-top:16px;"></div>
+    </div>
+
+    <!-- ENOVA-STØTTE -->
+    <div class="section">
+      <h2 class="sec-title">Du kan få <em>støtte</em></h2>
+      <p class="sec-sub">Statlige støtteordninger fra Enova — filtrert basert på din bolig</p>
+      <div class="enova-list" id="enova-list"></div>
+      <div class="enova-footer">
+        <strong>Slik søker du</strong>
+        Du kan søke direkte på <a href="https://www.enova.no" target="_blank" rel="noopener">enova.no</a>. Beløpene over er maksgrenser — det faktiske beløpet avhenger av tiltakets omfang. SparWatt får ingen provisjon fra Enova og har ingen tilknytning til ordningen.
       </div>
     </div>
 
@@ -1616,6 +2654,12 @@
         <div class="price-bars" id="price-bars"></div>
         <div class="price-hours">
           <span>00</span><span>06</span><span>12</span><span>18</span><span>23</span>
+        </div>
+        <div class="price-legend">
+          <span class="price-legend-item"><span class="price-legend-dot now"></span>Akkurat nå</span>
+          <span class="price-legend-item"><span class="price-legend-dot cheap"></span>Billig</span>
+          <span class="price-legend-item"><span class="price-legend-dot mid"></span>Snitt</span>
+          <span class="price-legend-item"><span class="price-legend-dot expensive"></span>Dyrt</span>
         </div>
         <div class="price-insight" id="price-insight">
           Henter dagens priser...
@@ -1657,33 +2701,140 @@
       </div>
     </div>
 
-    <!-- Leverandør-analyse -->
+    <!-- Snarvei til sammenlign-tab -->
     <div class="section">
-      <h2 class="sec-title">Din <em>strømavtale</em></h2>
-      <p class="sec-sub">Skriv inn hva du betaler — så viser vi om du kan spare ved å bytte</p>
-      <div class="lev-card">
-        <div class="lev-input-row">
-          <div>
-            <label class="lev-label">Påslag (øre/kWh)</label>
-            <input type="text" id="lev-markup" placeholder="F.eks. 3,9" oninput="calcLev()" />
-          </div>
-          <div>
-            <label class="lev-label">Månedsbeløp (kr)</label>
-            <input type="text" id="lev-fee" placeholder="F.eks. 49" oninput="calcLev()" />
-          </div>
+      <div class="quick-shortcut" onclick="switchTab('compare')">
+        <div class="qs-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+          </svg>
         </div>
-        <div class="lev-result" id="lev-result"></div>
-        <div class="btn-row">
-          <a href="https://www.strompris.no" target="_blank" rel="noopener" class="btn btn-primary">Sammenlign avtaler på strompris.no →</a>
-          <a href="https://elhub.no" target="_blank" rel="noopener" class="btn btn-secondary">Bestill Norgespris</a>
+        <div class="qs-content">
+          <div class="qs-title">Sjekk om du betaler for mye</div>
+          <div class="qs-text">Sammenlign din strømavtale mot markedets billigste på sekunder</div>
         </div>
+        <div class="qs-arrow">→</div>
       </div>
     </div>
 
-    <!-- Strømregningen forklart -->
+    <!-- Norgespris info -->
+    <div class="info-box">
+      <div class="info-box-title">Norgespris — slik fungerer det</div>
+      <div class="info-box-text">
+        Med Norgespris betaler du 50 øre/kWh for selve strømmen (40 øre + mva). Per februar 2026 har 60–74 % av husstandene i Sør- og Vest-Norge valgt det. I januar sparte de gjennomsnittlig 900–1000 kr på avtalen. Husk: nettleie og påslag kommer i tillegg. Du må aktivt bestille det på <a href="https://elhub.no" target="_blank" rel="noopener">elhub.no</a> — fritidsboliger får ikke strømstøtte.
+      </div>
+    </div>
+
+    <!-- Access bar -->
+    <div class="access-bar">
+      <div class="access-bar-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b4332" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </div>
+      <div class="access-bar-content">
+        <div class="access-bar-label">Din personlige tilgangslenke — bokmerk denne</div>
+        <div class="access-bar-link" id="access-link">https://sparwatt.no/...</div>
+      </div>
+      <button class="access-bar-btn" onclick="copyLink()" id="copy-btn">Kopier</button>
+    </div>
+
+  </div>
+
+  <!-- ============= TILTAK TAB ============= -->
+  <div class="panel" id="panel-tips">
+    <div class="section">
+      <div class="tips-header">
+        <div>
+          <h2 class="sec-title">Dine <em>sparetiltak</em></h2>
+          <p class="sec-sub">Rangert basert på din bolig og strømprisen akkurat nå</p>
+        </div>
+        <button class="refresh-btn" onclick="refreshTips()" id="refresh-btn" title="Oppdater tiltakene">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Oppdater
+        </button>
+      </div>
+
+      <!-- Kontekst-badge: viser hvorfor tiltakene er rangert som de er -->
+      <div class="tips-context" id="tips-context"></div>
+
+      <div class="tips-list" id="tips-list">
+        <div class="loading">Henter tiltakene dine...</div>
+      </div>
+
+      <div class="tips-updated" id="tips-updated"></div>
+    </div>
+
+    <div class="section">
+      <h2 class="sec-title">Din <em>huskeliste</em></h2>
+      <p class="sec-sub">Huk av når du har gjort det — så ser du fremgangen din på Hjem-sida</p>
+      <div class="checklist" id="checklist"></div>
+    </div>
+
+    <!-- Strømregningen forklart — passer her hvor man lærer -->
     <div class="section">
       <h2 class="sec-title">Strømregningen <em>forklart</em></h2>
       <p class="sec-sub">Slik er regningen din satt sammen — og hvor du faktisk kan kutte kostnader</p>
+
+      <div class="bill-donut-card">
+        <div class="bill-donut-wrap">
+          <svg class="bill-donut" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-warm)" stroke-width="14"/>
+            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--green-deep)" stroke-width="14"
+              stroke-dasharray="87.96 251.33" stroke-dashoffset="0"
+              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
+            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--green-mid)" stroke-width="14"
+              stroke-dasharray="100.53 251.33" stroke-dashoffset="-87.96"
+              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
+            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--green-glow)" stroke-width="14"
+              stroke-dasharray="50.27 251.33" stroke-dashoffset="-188.50"
+              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
+            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--gold)" stroke-width="14"
+              stroke-dasharray="12.57 251.33" stroke-dashoffset="-238.76"
+              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
+          </svg>
+          <div class="bill-donut-center">
+            <div class="bill-donut-label">Av regningen</div>
+            <div class="bill-donut-value">100<span>%</span></div>
+          </div>
+        </div>
+        <div class="bill-donut-legend">
+          <div class="bill-legend-item">
+            <span class="bill-legend-dot" style="background:var(--green-deep)"></span>
+            <div>
+              <div class="bill-legend-name">Strømpris</div>
+              <div class="bill-legend-pct">~35 %</div>
+            </div>
+          </div>
+          <div class="bill-legend-item">
+            <span class="bill-legend-dot" style="background:var(--green-mid)"></span>
+            <div>
+              <div class="bill-legend-name">Nettleie</div>
+              <div class="bill-legend-pct">~40 %</div>
+            </div>
+          </div>
+          <div class="bill-legend-item">
+            <span class="bill-legend-dot" style="background:var(--green-glow)"></span>
+            <div>
+              <div class="bill-legend-name">Avgifter</div>
+              <div class="bill-legend-pct">~20 %</div>
+            </div>
+          </div>
+          <div class="bill-legend-item">
+            <span class="bill-legend-dot" style="background:var(--gold)"></span>
+            <div>
+              <div class="bill-legend-name">Påslag</div>
+              <div class="bill-legend-pct">~5 %</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="bill-list">
         <div class="bill-row">
           <div class="bill-row-top">
@@ -1718,47 +2869,6 @@
           <div class="bill-desc">Det leverandøren tar i fortjeneste — ofte 2–6 øre/kWh + 30–50 kr i månedsbeløp. <strong style="color:var(--green-deep)">Slik sparer du:</strong> de billigste avtalene har 0 i påslag eller minus-påslag. Sammenlign på <a href="https://www.strompris.no" target="_blank" rel="noopener">strompris.no</a>.</div>
         </div>
       </div>
-    </div>
-
-    <!-- Norgespris info -->
-    <div class="info-box">
-      <div class="info-box-title">Norgespris — slik fungerer det</div>
-      <div class="info-box-text">
-        Med Norgespris betaler du 50 øre/kWh for selve strømmen (40 øre + mva). Per februar 2026 har 60–74 % av husstandene i Sør- og Vest-Norge valgt det. I januar sparte de gjennomsnittlig 900–1000 kr på avtalen. Husk: nettleie og påslag kommer i tillegg. Du må aktivt bestille det på <a href="https://elhub.no" target="_blank" rel="noopener">elhub.no</a> — fritidsboliger får ikke strømstøtte.
-      </div>
-    </div>
-
-    <!-- Access bar -->
-    <div class="access-bar">
-      <div class="access-bar-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b4332" stroke-width="2">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-      </div>
-      <div class="access-bar-content">
-        <div class="access-bar-label">Din personlige tilgangslenke — bokmerk denne</div>
-        <div class="access-bar-link" id="access-link">https://sparwatt.no/...</div>
-      </div>
-      <button class="access-bar-btn" onclick="copyLink()" id="copy-btn">Kopier</button>
-    </div>
-
-  </div>
-
-  <!-- ============= TILTAK TAB ============= -->
-  <div class="panel" id="panel-tips">
-    <div class="section">
-      <h2 class="sec-title">Dine <em>sparetiltak</em></h2>
-      <p class="sec-sub">Tilpasset din bolig — det viktigste først</p>
-      <div class="tips-list" id="tips-list">
-        <div class="loading">Henter tiltakene dine...</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2 class="sec-title">Din <em>huskeliste</em></h2>
-      <p class="sec-sub">Huk av når du har gjort det — så ser du fremgangen din på Hjem-sida</p>
-      <div class="checklist" id="checklist"></div>
     </div>
   </div>
 
@@ -2008,6 +3118,12 @@
       window.compareInitialized = true;
       renderCompare();
     }
+    // Smooth scroll til toppen av tabs når bruker bytter
+    const tabs = document.querySelector('.tabs');
+    if (tabs) {
+      const offset = tabs.getBoundingClientRect().top + window.scrollY - 20;
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
   }
 
   // === STATS ===
@@ -2078,20 +3194,592 @@
   }
 
   // === DAILY INSIGHT (aha-moment) ===
+  // === DAGENS INNSIKT — SMART SYSTEM ===
+  // 4 typer: faktum, personlig, sesong/tids-relevant, kontekst-aware (huskeliste)
+
+  function buildAllInsights() {
+    const p = profile;
+    const place = p.q3post ? postcodeToPlace(p.q3post) : 'din region';
+    const zone = p.q3zone || 'NO1';
+    const zoneName = zoneNames[zone] || zone;
+    const panel = (p.q5 || '').includes('Elektriske panelovner');
+    const pump = (p.q5 || '').includes('Varmepumpe');
+    const ved = (p.q5 || '').includes('Vedovn');
+    const norge = p.q7 === 'Norgespris';
+    const fast = p.q7 === 'Fastpris';
+    const spot = p.q7 === 'Spotpris';
+    const elbil = p.q9ev && p.q9ev.includes('Ja, lader hjemme');
+    const hytte = p.q1 === 'Hytte / fritidsbolig';
+    const high = p.q6 === '1000-2000 kWh' || p.q6 === 'Over 2000 kWh';
+    const sorNorge = ['NO1', 'NO2', 'NO5'].includes(zone);
+    const big = p.q4 === '3-4 personer' || p.q4 === '5 eller flere';
+    const month = new Date().getMonth();
+    const winter = month >= 10 || month <= 2;
+    const spring = month >= 3 && month <= 4;
+    const summer = month >= 5 && month <= 7;
+    const autumn = month >= 8 && month <= 9;
+    const checklistDone = Object.values(JSON.parse(localStorage.getItem('sw_checklist') || '{}')).filter(v => v).length;
+
+    const insights = [];
+
+    // ===== TYPE 1: FAKTUM (alltid relevante) =====
+    insights.push({
+      type: 'faktum',
+      label: 'Visste du',
+      t: 'Strømmen er ofte 3–4× billigere om natta enn kl. 17–20',
+      d: 'Setter du <strong>vaskemaskinen på timer</strong> til den starter etter midnatt, kan du spare 60–150 kr i måneden uten å gjøre noe mer.'
+    });
+    insights.push({
+      type: 'faktum',
+      label: 'Visste du',
+      t: 'Apparater i standby koster en husstand 800 kr i året',
+      d: 'TV, lader, kaffemaskin og spillkonsoll trekker strøm hele tiden. <strong>Smartplugg eller sluttkontrollert stikkontakt</strong> stenger det effektivt.'
+    });
+    insights.push({
+      type: 'faktum',
+      label: 'Visste du',
+      t: 'Klesvask på 40 °C bruker halvparten av strømmen som 60 °C',
+      d: 'For hverdagsvask trenger du sjelden mer enn 40 °C. Det blir like rent — og du sparer <strong>40–60 kr i måneden</strong>.'
+    });
+    insights.push({
+      type: 'faktum',
+      label: 'Visste du',
+      t: 'Strømstøtten dekker 90 % over 96,25 øre/kWh',
+      d: 'Alt over terskelverdien blir trukket fra automatisk på nettleien. Du trenger ikke søke. Gjelder ikke fritidsboliger.'
+    });
+    insights.push({
+      type: 'faktum',
+      label: 'Visste du',
+      t: 'Mange apparater samtidig gir høyere nettleie',
+      d: 'Nettleia beregnes etter den timen du bruker mest. Unngå å kjøre <strong>ovn, vaskemaskin og varmepumpe samtidig</strong> — det alene kan kutte 80 kr i måneden.'
+    });
+    insights.push({
+      type: 'faktum',
+      label: 'Visste du',
+      t: 'En varmepumpe gir 3 kWh varme per 1 kWh strøm',
+      d: 'Det er derfor varmepumpe alltid slår panelovner over tid. <strong>Investeringen tjenes inn på 2–3 år</strong> for de fleste eneboliger.'
+    });
+
+    // ===== TYPE 2: PERSONLIG (basert på profil) =====
+    if (panel && !pump && big) {
+      insights.push({
+        type: 'personlig',
+        label: 'For din bolig',
+        t: 'Med ' + p.q4.toLowerCase() + ' og panelovner er oppvarming sannsynligvis 50–60 % av regningen din',
+        d: 'En luft-til-luft varmepumpe ville kuttet det med <strong>3× mindre strøm for samme varme</strong>. Det er typisk 400–800 kr/mnd i sparing.'
+      });
+    }
+    if (norge && sorNorge) {
+      insights.push({
+        type: 'personlig',
+        label: 'For din situasjon',
+        t: 'Du har Norgespris i ' + zoneName,
+        d: 'I januar 2026 sparte du anslagsvis <strong>900–1000 kr</strong> på avtalen. Sjekk regnestykket på nytt mot sommeren — da kan spotpris bli billigere igjen.'
+      });
+    }
+    if (fast) {
+      insights.push({
+        type: 'personlig',
+        label: 'For din avtale',
+        t: 'Du har fastprisavtale',
+        d: 'Forbrukerrådet anbefaler ikke fastpris i 2026. <strong>Norgespris (50 øre/kWh)</strong> eller spotpris med strømstøtte er nesten alltid billigere alternativ.'
+      });
+    }
+    if (elbil) {
+      insights.push({
+        type: 'personlig',
+        label: 'For elbileiere',
+        t: 'En elbil lader 250–450 kWh ekstra i måneden',
+        d: 'Lader du <strong>mellom kl. 23 og 06</strong>, kan du kutte ladekostnaden med 60–70 %. Det utgjør 200–500 kr/mnd for de fleste familier.'
+      });
+    }
+    if (hytte) {
+      insights.push({
+        type: 'personlig',
+        label: 'For hytte-eiere',
+        t: 'Hytter får ikke strømstøtte',
+        d: 'Strømstøtteordningen gjelder bare folkeregistrert bolig. Det betyr at <strong>smart styring av varme</strong> er enda viktigere på hytta — det kan utgjøre 40 % av forbruket.'
+      });
+    }
+    if (high) {
+      insights.push({
+        type: 'personlig',
+        label: 'For ditt forbruk',
+        t: 'Du bruker over snittet — så hvert tiltak gir mer for deg',
+        d: 'Med ' + p.q6 + ' i måneden ligger du over snittet. <strong>Hvert sparetiltak utgjør mer kroner</strong> for deg enn for de fleste.'
+      });
+    }
+
+    // ===== TYPE 3: SESONG/TID-RELEVANT =====
+    if (winter) {
+      insights.push({
+        type: 'sesong',
+        label: 'Denne sesongen',
+        t: 'Det er vinter — varmen er den største kostnaden',
+        d: '60–70 % av strømregningen din i januar går til oppvarming. <strong>1 grad lavere innetemperatur</strong> kutter rundt 5 % av varmekostnaden.'
+      });
+      insights.push({
+        type: 'sesong',
+        label: 'Denne uka',
+        t: 'Tørt og kaldt vær gir typisk høye strømpriser',
+        d: 'I kalde uker kan strømmen koste over <strong>1 kr/kWh</strong> i topplastperioder. Strømstøtten kicker inn over 96,25 øre — bruk de billigste timene mer.'
+      });
+    }
+    if (spring) {
+      insights.push({
+        type: 'sesong',
+        label: 'Denne sesongen',
+        t: 'Vår — snøsmeltinga gir billigere strøm',
+        d: 'Vannmagasinene fylles opp og strømprisen faller typisk 20–40 %. <strong>Godt tidspunkt å vurdere om Norgespris fortsatt lønner seg</strong>.'
+      });
+      insights.push({
+        type: 'sesong',
+        label: 'Denne måneden',
+        t: 'Tid for vårpussing av varmepumpe og bereder',
+        d: 'Et tett varmepumpefilter bruker 10–15 % mer strøm. <strong>5 minutter med støvsugeren</strong> gir gevinst resten av året.'
+      });
+    }
+    if (summer) {
+      insights.push({
+        type: 'sesong',
+        label: 'Denne sesongen',
+        t: 'Sommer — laveste strømpriser i året',
+        d: 'I juli–august er prisen typisk under 30 øre/kWh. <strong>Skal du på ferie?</strong> Skru av berederen helt — du sparer 100–200 kr på en uke.'
+      });
+    }
+    if (autumn) {
+      insights.push({
+        type: 'sesong',
+        label: 'Denne sesongen',
+        t: 'Høst — forbered boligen før vinter',
+        d: 'En typisk bolig har 3–5 luftlekkasjer som koster 50–100 kr/mnd gjennom vinteren. <strong>Tetningslist fra Biltema koster 50 kr</strong> og varer mange år.'
+      });
+    }
+
+    // ===== TYPE 4: KONTEKST-AWARE (basert på huskelisten) =====
+    if (checklistDone === 0) {
+      insights.push({
+        type: 'kontekst',
+        label: 'For din fremgang',
+        t: 'Start med det enkleste først',
+        d: 'Du har ikke huket av noen tiltak ennå. <strong>Begynn med å sette vaskemaskinen på timer</strong> — det tar 2 minutter og merkes på første regning.'
+      });
+    } else if (checklistDone >= 1 && checklistDone <= 3) {
+      insights.push({
+        type: 'kontekst',
+        label: 'For din fremgang',
+        t: 'Du er i gang — fortsett med vanene',
+        d: 'Du har gjort <strong>' + checklistDone + ' tiltak</strong>. Det viktigste nå er å holde de i gang så de blir vaner. Sjekk strømprisen før du kjører ovn eller vaskemaskin.'
+      });
+    } else if (checklistDone >= 4) {
+      insights.push({
+        type: 'kontekst',
+        label: 'For din fremgang',
+        t: 'Du er en av de mest strømsmarte',
+        d: '<strong>' + checklistDone + ' tiltak gjennomført</strong> — få nordmenn er så bevisste som deg. Neste steg er ofte å vurdere de større investeringene som varmepumpe eller solceller.'
+      });
+    }
+
+    return insights;
+  }
+
   function setDailyInsight() {
-    const insights = [
-      { t:'Strømmen er ofte 3–4× billigere om natta enn kl. 17–20', d:'Setter du <strong>vaskemaskinen på timer</strong> til den starter etter midnatt, kan du spare 60–150 kr i måneden uten å gjøre noe mer.' },
-      { t:'Varmtvannsberederen er ofte 20–25 % av strømregningen', d:'En tidsbryter som skrur av berederen mellom 23 og 05 koster lite, men sparer typisk <strong>120–200 kr i måneden</strong>. Du merker ikke noe i hverdagen.' },
-      { t:'Mange apparater på samtidig gir høyere nettleie', d:'Nettleia beregnes etter den timen du bruker mest. Unngå å kjøre <strong>ovn, vaskemaskin og varmepumpe samtidig</strong> — det alene kan kutte 80 kr i måneden.' },
-      { t:'73 % av norske husstander har dårlig strømavtale', d:'De fleste betaler 4–6 øre/kWh i påslag. De billigste avtalene har <strong>0 i påslag</strong> — eller minus-påslag. Det utgjør 500–1000 kr i året.' },
-      { t:'Klesvask på 40 °C bruker halvparten av strømmen som 60 °C', d:'For hverdagsvask trenger du sjelden mer enn 40 °C. Det blir like rent — og du sparer <strong>40–60 kr i måneden</strong>.' },
-      { t:'Apparater i standby koster en husstand 800 kr i året', d:'TV, lader, kaffemaskin og spillkonsoll trekker strøm hele tida. <strong>Smartplugg eller en sluttkontrollert stikkontakt</strong> stenger det effektivt.' },
-      { t:'Norgespris ga 900–1000 kr spart i januar 2026', d:'For husstander i Sør-Norge har Norgespris vært lønnsomt hver måned siden oktober 2025. <strong>Bestill på elhub.no</strong> — det tar fem minutter.' },
-      { t:'Strømstøtten dekker 90 % over 96,25 øre/kWh', d:'Alt over terskelverdien blir trukket fra automatisk på nettleien. Du trenger ikke søke. Gjelder ikke fritidsboliger.' }
+    const insights = buildAllInsights();
+    if (insights.length === 0) return;
+
+    // Smart rotering: bruk dato + dagens time/sesong som seed for "tilfeldig" valg
+    const today = new Date();
+    const dayKey = today.getFullYear() * 1000 + today.getMonth() * 32 + today.getDate();
+    // Ulike type-prioriter på ulike dager (gir variasjon over uka)
+    const dayOfWeek = today.getDay(); // 0=søndag
+
+    let preferredType;
+    if (dayOfWeek === 1) preferredType = 'kontekst';     // Mandag: fokus på fremgang
+    else if (dayOfWeek === 3) preferredType = 'sesong';   // Onsdag: sesong-tema
+    else if (dayOfWeek === 5) preferredType = 'personlig'; // Fredag: personlig
+    else preferredType = 'faktum';                          // Andre dager: faktum
+
+    // Filter på preferert type, men fall tilbake til alle hvis tom
+    let candidates = insights.filter(i => i.type === preferredType);
+    if (candidates.length === 0) candidates = insights;
+
+    // Velg basert på dato slik at det er konsistent gjennom dagen
+    const idx = dayKey % candidates.length;
+    const chosen = candidates[idx];
+
+    renderInsight(chosen, false);
+  }
+
+  function renderInsight(insight, isAI) {
+    const labelEl = document.getElementById('insight-label');
+    const titleEl = document.getElementById('insight-title');
+    const textEl = document.getElementById('insight-text');
+
+    labelEl.textContent = insight.label || 'Dagens innsikt';
+    labelEl.classList.toggle('ai-generated', isAI);
+    titleEl.textContent = insight.t;
+    textEl.innerHTML = insight.d;
+  }
+
+  // AI-generert innsikt — friskt fra Groq
+  async function generateAIInsight() {
+    const btn = document.getElementById('insight-ai-btn');
+    const insightEl = document.getElementById('daily-insight');
+
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.querySelector('span').textContent = 'Tenker...';
+    insightEl.classList.add('refreshing');
+
+    // Bygg en prompt basert på alt vi vet
+    const p = profile;
+    const place = p.q3post ? postcodeToPlace(p.q3post) : 'norsk region';
+    const checklistDone = Object.values(JSON.parse(localStorage.getItem('sw_checklist') || '{}')).filter(v => v).length;
+    const priceContext = window.lastPriceData
+      ? 'Strømprisen akkurat nå er ' + window.lastPriceData.now.toFixed(1) + ' øre/kWh (snitt i dag: ' + window.lastPriceData.avg.toFixed(1) + ').'
+      : '';
+
+    const userMessage = 'Generer EN kort, personlig innsikt for meg om strøm akkurat nå. ' +
+      'Innsikten skal være konkret, handlingsrettet og overrasende. ' +
+      'Format: Først en KORT TITTEL (8-12 ord, fanger oppmerksomhet). ' +
+      'Så TO LINJER beskrivelse (1-2 setninger med konkrete tall, bruk **fet** rundt nøkkeltall). ' +
+      'Skriv på norsk. Ikke gjenta generelle ting, vær spesifikk for min profil.';
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage,
+          profile: p,
+          context: 'rapport',
+          systemHint: 'Du genererer en "Dagens innsikt"-kort. Format STRENGT: ' +
+            'Linje 1: kort fengende tittel (max 12 ord). ' +
+            'Linje 2: blank. ' +
+            'Linje 3-4: 1-2 konkrete setninger, bruk **fet** rundt 1-2 nøkkeltall. ' +
+            'Maks 50 ord totalt. Brukeren har gjort ' + checklistDone + ' tiltak. ' + priceContext
+        })
+      });
+
+      const data = await response.json();
+      const reply = (data.reply || data.message || data.text || '').trim();
+
+      if (!reply) throw new Error('Tomt svar');
+
+      // Parse: første linje = tittel, resten = beskrivelse
+      const lines = reply.split('\n').filter(l => l.trim());
+      const title = lines[0].replace(/^[#\-*]+\s*/, '').replace(/\*\*/g, '');
+      const desc = lines.slice(1).join(' ').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').trim();
+
+      renderInsight({
+        label: 'Fersk innsikt',
+        t: title,
+        d: desc || 'AI-en analyserte din situasjon akkurat nå.'
+      }, true);
+
+    } catch (e) {
+      // Fallback: vis en av de vanlige innsiktene
+      const all = buildAllInsights();
+      const random = all[Math.floor(Math.random() * all.length)];
+      renderInsight(random, false);
+      console.warn('AI-innsikt feilet, viser vanlig innsikt:', e.message);
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.querySelector('span').textContent = 'Få ny innsikt';
+      insightEl.classList.remove('refreshing');
+    }
+  }
+
+  // === KOSTNADS-KALKULATOR ===
+  // Forbruk i kWh for ulike aktiviteter
+  const calcActivities = {
+    dusj:      { name: 'Dusj 10 minutter', kwh: 4.0,  context: 'En dusj på 10 minutter med varmtvann bruker rundt 4 kWh. Dusjer du kortere, sparer du proporsjonalt.' },
+    vask:      { name: 'Klesvask 60°C',    kwh: 1.4,  context: 'En 60°C-vask bruker 1,4 kWh. Vask på 40°C bruker bare 0,7 kWh — halvparten.' },
+    oppvask:   { name: 'Oppvaskmaskin',    kwh: 1.2,  context: 'En full maskin bruker 1,2 kWh. Bruk eco-program og spar 30 %.' },
+    bake:      { name: 'Stekeovn 1 time',  kwh: 2.5,  context: 'En stekeovn på 200°C i én time bruker 2,5 kWh. Slå av 5 minutter før — varmen henger i.' },
+    elbil:     { name: 'Elbil-lading 50 kWh', kwh: 50, context: 'En typisk lading hjemme på 50 kWh. Lader du om natta i stedet, kan du spare 60–70 % av kostnaden.' },
+    varmtvann: { name: 'Varmtvannsbereder/døgn', kwh: 8, context: 'En vanlig bereder bruker rundt 8 kWh i døgnet. Tidsbryter natt kan kutte 40 % av dette.' },
+    tv:        { name: 'TV 2 timer',       kwh: 0.2,  context: 'En moderne LED-TV bruker rundt 100W. På 2 timer blir det 0,2 kWh.' },
+    kaffe:     { name: 'Kaffekanne',       kwh: 0.15, context: 'Å brygge én kanne kaffe bruker 0,15 kWh. Holder du den varm i en time? Legg til 0,5 kWh.' },
+    standby:   { name: 'Standby/døgn',     kwh: 0.6,  context: 'TV, lader, kaffemaskin og småelektronikk i standby trekker 0,6 kWh i døgnet — 220 kWh i året.' }
+  };
+
+  let calcActiveAct = 'dusj';
+
+  function initCalc() {
+    const opts = document.querySelectorAll('.calc-opt');
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        opts.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        calcActiveAct = opt.dataset.act;
+        updateCalc();
+      });
+    });
+    updateCalc();
+  }
+
+  function updateCalc() {
+    const act = calcActivities[calcActiveAct];
+    if (!act) return;
+
+    // Live-pris i kr/kWh (lastPriceData er i øre)
+    let pricePerKwh = 1.0; // fallback hvis vi ikke har data
+    let priceContext = '';
+    if (window.lastPriceData && window.lastPriceData.now) {
+      pricePerKwh = window.lastPriceData.now / 100; // konvertere fra øre til kr
+      const ratio = window.lastPriceData.now / window.lastPriceData.avg;
+      if (ratio < 0.85) priceContext = '<strong>Strømmen er billigere enn vanlig nå</strong> — godt tidspunkt for dette.';
+      else if (ratio > 1.2) priceContext = '<strong>Strømmen er dyrere enn vanlig nå</strong> — vurder å vente til etter kl. 22.';
+    }
+
+    // Total kostnad: forbruk × strømpris + estimert nettleie/avgifter (~50 øre/kWh ekstra)
+    const totalCostPerKwh = pricePerKwh + 0.50;
+    const cost = act.kwh * totalCostPerKwh;
+
+    // Format
+    const costStr = cost < 10
+      ? cost.toFixed(2).replace('.', ',')
+      : cost.toFixed(1).replace('.', ',');
+
+    document.getElementById('calc-act-name').textContent = act.name + ' koster';
+
+    // Trigger re-animasjon ved å fjerne og legge til klassen
+    const amountEl = document.getElementById('calc-amount');
+    amountEl.style.animation = 'none';
+    amountEl.offsetHeight; // force reflow
+    amountEl.style.animation = 'amount-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+    amountEl.innerHTML = '<span class="currency">kr</span> ' + costStr;
+    document.getElementById('calc-context').innerHTML = act.context + (priceContext ? ' ' + priceContext : '');
+    document.getElementById('calc-kwh').textContent = act.kwh + ' kWh';
+
+    // Live-pris-pille
+    const priceEl = document.getElementById('calc-current-price');
+    if (priceEl) {
+      if (window.lastPriceData && window.lastPriceData.now) {
+        priceEl.textContent = window.lastPriceData.now.toFixed(1).replace('.', ',') + ' øre/kWh';
+      } else {
+        priceEl.textContent = 'Henter...';
+      }
+    }
+  }
+
+  // === ENOVA-STØTTE ===
+  // Faktiske støtteordninger fra Enova (per 2026)
+  // Vi viser bare de som er relevante for brukerens profil
+  function buildEnovaList() {
+    const p = profile;
+    const panel = (p.q5 || '').includes('Elektriske panelovner');
+    const pump = (p.q5 || '').includes('Varmepumpe');
+    const har_solar = p.q8 === 'Ja';
+    const vurderer_solar = p.q8 === 'Nei, men vurderer det';
+    const enebolig = p.q1 === 'Enebolig' || p.q1 === 'Rekkehus / tomannsbolig';
+    const hytte = p.q1 === 'Hytte / fritidsbolig';
+
+    const all = [
+      {
+        icon: '🔥',
+        name: 'Væske-til-vann varmepumpe',
+        amount: 'Opptil 25 000 kr',
+        desc: 'For boliger med vannbåren varme. Tar varmen fra bakken eller en brønn — gir 3–4 kWh varme per kWh strøm.',
+        relevant: enebolig && !pump
+      },
+      {
+        icon: '💨',
+        name: 'Luft-til-vann varmepumpe',
+        amount: 'Opptil 10 000 kr',
+        desc: 'For boliger med vannbåren varme. Henter varme fra uteluften — virker selv ned mot −20°C.',
+        relevant: enebolig && !pump
+      },
+      {
+        icon: '☀️',
+        name: 'Solceller',
+        amount: 'Opptil 32 500 kr',
+        desc: 'Fast tilskudd 7 500 kr + 2 000 kr per installerte kWp — opptil 32 500 kr totalt. Dekker også montering.',
+        relevant: vurderer_solar && enebolig
+      },
+      {
+        icon: '🎛️',
+        name: 'Smart strømstyring',
+        amount: 'Opptil 10 000 kr',
+        desc: 'For systemer som styrer strømforbruk basert på pris — typisk i kombinasjon med solceller eller batteri.',
+        relevant: har_solar || vurderer_solar
+      },
+      {
+        icon: '🏠',
+        name: 'Energirådgivning',
+        amount: 'Opptil 5 000 kr',
+        desc: 'En sertifisert energirådgiver kommer hjem til deg, ser på boligen din og lager en plan. Du dekker resten av honoraret.',
+        relevant: enebolig
+      },
+      {
+        icon: '🔋',
+        name: 'Batteri til solceller',
+        amount: 'Opptil 5 000 kr',
+        desc: 'For lagring av strøm fra solcellene dine. Krever at du har solceller installert.',
+        relevant: har_solar
+      },
+      {
+        icon: '🌡️',
+        name: 'Etterisolering',
+        amount: 'Variabelt',
+        desc: 'Som ledd i annet større tiltak (f.eks. ny kledning eller fasaderehabilitering). Søkes via boligens helhetsplan.',
+        relevant: enebolig
+      }
     ];
-    const day = Math.floor((Date.now() / 86400000)) % insights.length;
-    document.getElementById('insight-title').textContent = insights[day].t;
-    document.getElementById('insight-text').innerHTML = insights[day].d;
+
+    // Sortér: relevante først
+    return all.sort((a, b) => (b.relevant ? 1 : 0) - (a.relevant ? 1 : 0));
+  }
+
+  function renderEnova() {
+    const items = buildEnovaList();
+    const container = document.getElementById('enova-list');
+    if (!container) return;
+    container.innerHTML = items.map(it => {
+      const cls = it.relevant ? 'enova-card relevant' : 'enova-card';
+      return '<div class="' + cls + '">' +
+        '<div class="enova-icon">' + it.icon + '</div>' +
+        '<div class="enova-body">' +
+        '<div class="enova-name">' + it.name + '</div>' +
+        '<div class="enova-amount">' + it.amount + '</div>' +
+        '<div class="enova-desc">' + it.desc + '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  // === MILEPÆLER ===
+  function getStreakDays() {
+    // Sporer dager der brukeren har åpnet rapporten
+    const visits = JSON.parse(localStorage.getItem('sw_visits') || '[]');
+    const today = new Date().toDateString();
+    if (!visits.includes(today)) {
+      visits.push(today);
+      // Behold bare siste 30 dager
+      const recent = visits.slice(-30);
+      localStorage.setItem('sw_visits', JSON.stringify(recent));
+    }
+
+    // Beregn streak (dager på rad fra i dag og bakover)
+    const all = JSON.parse(localStorage.getItem('sw_visits') || '[]');
+    let streak = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      if (all.includes(d.toDateString())) streak++;
+      else break;
+    }
+    return { streak, totalDays: all.length };
+  }
+
+  function renderMilestones() {
+    const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
+    const items = buildChecklistItems();
+    const done = items.filter(it => saved[it.id]).length;
+    const totalSave = items.filter(it => saved[it.id]).reduce((s, it) => s + (it.save || 0), 0);
+    const yearlySave = totalSave * 12;
+    const { streak, totalDays } = getStreakDays();
+
+    const milestones = [
+      {
+        icon: '✅',
+        value: done,
+        label: 'Tiltak gjennomført',
+        achieved: done >= 1
+      },
+      {
+        icon: '💰',
+        value: totalSave + ' kr',
+        label: 'Spart per måned (estimat)',
+        achieved: totalSave > 0
+      },
+      {
+        icon: '📅',
+        value: yearlySave.toLocaleString('no-NO') + ' kr',
+        label: 'Spart per år (estimat)',
+        achieved: yearlySave > 0
+      },
+      {
+        icon: '🔥',
+        value: streak + (streak === 1 ? ' dag' : ' dager'),
+        label: 'Sjekket på rad',
+        achieved: streak >= 3
+      }
+    ];
+
+    const container = document.getElementById('milestones');
+    if (!container) return;
+    container.innerHTML = milestones.map(m => {
+      const cls = m.achieved ? 'milestone achieved' : 'milestone';
+      return '<div class="' + cls + '">' +
+        '<span class="milestone-icon">' + m.icon + '</span>' +
+        '<div class="milestone-value">' + m.value + '</div>' +
+        '<div class="milestone-label">' + m.label + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  // === KONTEKST-VARSLER (kuldebølge / billig nå) ===
+  function renderContextAlert() {
+    const section = document.getElementById('ctx-alert-section');
+    const alertEl = document.getElementById('ctx-alert');
+    if (!section || !alertEl) return;
+
+    if (!window.lastPriceData) {
+      section.style.display = 'none';
+      return;
+    }
+
+    const ratio = window.lastPriceData.now / window.lastPriceData.avg;
+    const hour = new Date().getHours();
+    const month = new Date().getMonth();
+    const winter = month >= 10 || month <= 2;
+
+    let alert = null;
+
+    // Topp-prioritet: er prisen unormalt høy eller lav nå?
+    if (ratio > 1.5 && hour >= 16 && hour <= 21) {
+      alert = {
+        type: 'warning',
+        icon: '⚠️',
+        title: 'Strømmen er svært dyr akkurat nå',
+        text: 'Prisen er ' + Math.round((ratio - 1) * 100) + ' % høyere enn dagens snitt. Vent med vask, oppvask og lading til etter kl. 22 — du sparer betydelig.'
+      };
+    } else if (ratio < 0.7) {
+      alert = {
+        type: 'opportunity',
+        icon: '💰',
+        title: 'Strømmen er billig akkurat nå',
+        text: 'Prisen er ' + Math.round((1 - ratio) * 100) + ' % lavere enn dagens snitt. Godt tidspunkt for vask, oppvask, lading og varmtvann.'
+      };
+    } else if (winter && hour >= 7 && hour <= 9) {
+      // Morgentopp i vinter
+      alert = {
+        type: 'warning',
+        icon: '❄️',
+        title: 'Vintermorgen — høyt strømforbruk',
+        text: 'Det er kaldt og folk fyrer opp boligen. Hvis du kan, vent med å bake eller bruke flere store apparater til etter kl. 10.'
+      };
+    } else if (hour >= 22 || hour <= 5) {
+      alert = {
+        type: 'opportunity',
+        icon: '🌙',
+        title: 'Natt — rimelig strøm',
+        text: 'Kjør på! Vaskemaskin, oppvaskmaskin og elbil-lading koster minst nå.'
+      };
+    }
+
+    if (alert) {
+      alertEl.className = 'ctx-alert ' + alert.type;
+      alertEl.innerHTML =
+        '<span class="ctx-alert-icon">' + alert.icon + '</span>' +
+        '<div class="ctx-alert-body"><strong>' + alert.title + '</strong>' + alert.text + '</div>';
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
   }
 
   // === LIVE PRICES ===
@@ -2137,9 +3825,16 @@
         bar.classList.add('now');
         nowPrice = price;
       }
+      // Tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'price-bar-tooltip';
+      tooltip.textContent = String(i).padStart(2, '0') + ':00 · ' + price.toFixed(1).replace('.', ',') + ' øre';
+      bar.appendChild(tooltip);
       bars.appendChild(bar);
     });
     nowEl.textContent = nowPrice.toFixed(1).replace('.', ',');
+    // Lagre for bruk av tips-context
+    window.lastPriceData = { now: nowPrice, avg: avg, min: min, max: max };
     // Insight basert på prisen nå vs snitt
     const cheapHour = prices.indexOf(min);
     const expHour = prices.indexOf(max);
@@ -2356,60 +4051,365 @@
     return tips;
   }
 
+  // === SMART KONTEKST FOR TILTAK ===
+  // Bygger kontekst basert på tid på døgnet, dagens pris, sesong og brukerens fremgang
+  function buildTipsContext() {
+    const now = new Date();
+    const hour = now.getHours();
+    const month = now.getMonth();
+    const ctx = {
+      hour: hour,
+      timeOfDay: '', // 'natt', 'morgen', 'dag', 'kveld', 'topplast'
+      season: '',   // 'vinter', 'vår', 'sommer', 'høst'
+      priceLevel: 'unknown', // 'lav', 'snitt', 'høy', 'svært høy'
+      currentPrice: null,
+      avgPrice: null,
+      checklistDone: 0,
+      message: ''
+    };
+
+    // Tid på døgnet
+    if (hour >= 0 && hour < 6) ctx.timeOfDay = 'natt';
+    else if (hour >= 6 && hour < 10) ctx.timeOfDay = 'morgen';
+    else if (hour >= 10 && hour < 17) ctx.timeOfDay = 'dag';
+    else if (hour >= 17 && hour < 21) ctx.timeOfDay = 'topplast';
+    else ctx.timeOfDay = 'kveld';
+
+    // Sesong
+    if (month >= 10 || month <= 2) ctx.season = 'vinter';
+    else if (month >= 3 && month <= 4) ctx.season = 'vår';
+    else if (month >= 5 && month <= 7) ctx.season = 'sommer';
+    else ctx.season = 'høst';
+
+    // Pris-nivå (hvis vi har live-priser fra loadPrices)
+    if (window.lastPriceData) {
+      ctx.currentPrice = window.lastPriceData.now;
+      ctx.avgPrice = window.lastPriceData.avg;
+      const ratio = ctx.currentPrice / ctx.avgPrice;
+      if (ratio < 0.7) ctx.priceLevel = 'lav';
+      else if (ratio < 1.0) ctx.priceLevel = 'under-snitt';
+      else if (ratio < 1.3) ctx.priceLevel = 'snitt';
+      else if (ratio < 1.7) ctx.priceLevel = 'høy';
+      else ctx.priceLevel = 'svært høy';
+    }
+
+    // Sjekkliste-fremgang
+    const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
+    ctx.checklistDone = Object.values(saved).filter(v => v).length;
+
+    // Bygg kontekst-melding
+    if (ctx.priceLevel === 'svært høy' || ctx.priceLevel === 'høy') {
+      ctx.message = 'Strømmen er <strong>dyrere enn vanlig akkurat nå</strong>. Vi har flyttet tiltak som hjelper deg her og nå øverst.';
+    } else if (ctx.priceLevel === 'lav') {
+      ctx.message = 'Strømmen er <strong>billig akkurat nå</strong> — godt tidspunkt for vask, oppvask og lading.';
+    } else if (ctx.timeOfDay === 'topplast') {
+      ctx.message = 'Det er <strong>topplast nå (kl. 17–21)</strong> — strømmen er typisk dyrest. Tiltak for tidsstyring rangeres høyere.';
+    } else if (ctx.timeOfDay === 'natt') {
+      ctx.message = 'Det er <strong>natt og strømmen er på sitt billigste</strong>. Bruk denne tiden klokt.';
+    } else if (ctx.season === 'vinter') {
+      ctx.message = 'Det er <strong>vinter</strong> — varmetiltak gir størst utslag på regningen din nå.';
+    } else if (ctx.season === 'sommer') {
+      ctx.message = 'Det er <strong>sommer</strong> — fokus på sparing av varmtvann og standby-strøm.';
+    } else {
+      ctx.message = 'Tiltakene er rangert basert på din bolig og hva som gir størst effekt for deg.';
+    }
+
+    return ctx;
+  }
+
+  // Smart rangering: tar hensyn til kontekst og brukerens fremgang
+  function rankTipsByContext(tips, ctx) {
+    const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
+
+    return tips.map(t => {
+      let score = 0;
+
+      // Prio-vekting
+      if (t.prio === 'høy') score += 100;
+      else if (t.prio === 'medium') score += 50;
+      else score += 20;
+
+      // Tilfeldig spread for å unngå at samme tip alltid er først
+      score += Math.random() * 5;
+
+      // Kontekst-boost
+      const titleLower = t.title.toLowerCase();
+      const isNow = false; // markeres senere
+
+      // Topplast (17-21): prioriter tidsstyring
+      if (ctx.timeOfDay === 'topplast') {
+        if (titleLower.includes('vask') || titleLower.includes('lade') ||
+            titleLower.includes('tidsbryter') || titleLower.includes('flytt') ||
+            titleLower.includes('samtidig')) {
+          score += 60;
+          t._nowRelevant = true;
+        }
+      }
+
+      // Natt: prioriter tiltak som drar nytte av billig strøm
+      if (ctx.timeOfDay === 'natt') {
+        if (titleLower.includes('vask') || titleLower.includes('lade')) {
+          score += 50;
+          t._nowRelevant = true;
+        }
+      }
+
+      // Høy pris: prioriter tiltak med stor sparing
+      if (ctx.priceLevel === 'svært høy' || ctx.priceLevel === 'høy') {
+        if (t.minMonthly > 100) score += 30;
+        if (titleLower.includes('flytt') || titleLower.includes('samtidig') || titleLower.includes('vedovn')) {
+          score += 40;
+          t._nowRelevant = true;
+        }
+      }
+
+      // Vinter: varme-tiltak
+      if (ctx.season === 'vinter') {
+        if (titleLower.includes('varmepump') || titleLower.includes('temperatur') ||
+            titleLower.includes('vedovn') || titleLower.includes('luftlek')) {
+          score += 25;
+        }
+      }
+
+      // Sommer: skru av/ned
+      if (ctx.season === 'sommer') {
+        if (titleLower.includes('bereder') || titleLower.includes('standby') ||
+            titleLower.includes('ferie')) {
+          score += 25;
+        }
+      }
+
+      // Sesong-tiltak alltid litt opp
+      if (t.tags.includes('Sesongtiltak')) score += 15;
+
+      // Hvis brukeren har gjort noe relatert, dempe det tipset
+      const checklistKeys = ['avtale', 'vaskemaskin', 'bereder', 'norgespris', 'smartplugg', 'effekt'];
+      checklistKeys.forEach((key, i) => {
+        if (saved[i] && titleLower.includes(key.replace('avtale', 'avtale')
+            .replace('bereder', 'bereder')
+            .replace('norgespris', 'norgespris')
+            .replace('smartplugg', 'smartplugg')
+            .replace('effekt', 'effekt'))) {
+          score -= 30; // dempe tiltak som allerede er gjort
+        }
+      });
+
+      t._score = score;
+      return t;
+    }).sort((a, b) => b._score - a._score);
+  }
+
   function renderTips() {
-    const tips = generateTips(profile);
-    const list = document.getElementById('tips-list');
+    let tips = generateTips(profile);
     if (tips.length === 0) {
-      list.innerHTML = '<div class="loading">Ingen tiltak funnet — du gjør allerede mye riktig!</div>';
+      document.getElementById('tips-list').innerHTML = '<div class="loading">Ingen tiltak funnet — du gjør allerede mye riktig!</div>';
       return;
     }
+
+    const ctx = buildTipsContext();
+    tips = rankTipsByContext(tips, ctx);
+
+    // Vis kontekst-banner
+    const ctxEl = document.getElementById('tips-context');
+    if (ctxEl) {
+      ctxEl.innerHTML = '<span class="tips-context-icon">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>' +
+        '</span><span>' + ctx.message + '</span>';
+      ctxEl.classList.remove('hidden');
+    }
+
+    // Render tiltak
+    const list = document.getElementById('tips-list');
     list.innerHTML = tips.map((t, i) => {
       const tagsHtml = t.tags.map(tag => {
         const cls = tag === 'Sesongtiltak' ? 'tip-tag season' : 'tip-tag';
         return '<span class="' + cls + '">' + tag + '</span>';
       }).join('');
+      const nowTag = t._nowRelevant ? '<span class="tip-tag now">Akkurat nå</span>' : '';
       return '<div class="tip">' +
         '<div class="tip-num">' + (i+1) + '</div>' +
         '<div class="tip-body">' +
         '<div class="tip-title">' + t.title + '</div>' +
         '<div class="tip-desc">' + t.desc + '</div>' +
-        '<div class="tip-meta">' + tagsHtml + '<span class="tip-tag">' + t.minMonthly + '–' + t.maxMonthly + ' kr/mnd</span></div>' +
+        '<div class="tip-meta">' + nowTag + tagsHtml + '<span class="tip-tag">' + t.minMonthly + '–' + t.maxMonthly + ' kr/mnd</span></div>' +
         '</div></div>';
     }).join('');
+
+    // "Sist oppdatert"-tekst
+    const updEl = document.getElementById('tips-updated');
+    if (updEl) {
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      updEl.textContent = 'Tiltakene er oppdatert kl. ' + timeStr + ' basert på dagens situasjon';
+    }
+  }
+
+  // Manuell refresh-knapp
+  function refreshTips() {
+    const btn = document.getElementById('refresh-btn');
+    btn.classList.add('spinning');
+    btn.disabled = true;
+
+    // Re-fetch live-priser så konteksten er ferskest mulig
+    loadPrices().then(() => {
+      // Liten delay for å gi brukeren følelsen av at noe skjer
+      setTimeout(() => {
+        renderTips();
+        btn.classList.remove('spinning');
+        btn.disabled = false;
+      }, 600);
+    }).catch(() => {
+      setTimeout(() => {
+        renderTips();
+        btn.classList.remove('spinning');
+        btn.disabled = false;
+      }, 600);
+    });
+  }
+
+  // === HUSKELISTE ===
+  // Banke av tiltak — flere kategorier, vanskelighetsgrader og personlig relevans
+  function buildChecklistItems() {
+    const p = profile;
+    const panel = (p.q5 || '').includes('Elektriske panelovner');
+    const pump = (p.q5 || '').includes('Varmepumpe');
+    const ved = (p.q5 || '').includes('Vedovn');
+    const high = p.q6 === '1000-2000 kWh' || p.q6 === 'Over 2000 kWh';
+    const hytte = p.q1 === 'Hytte / fritidsbolig';
+    const norge = p.q7 === 'Norgespris';
+    const fast = p.q7 === 'Fastpris';
+    const elbil = p.q9ev && p.q9ev.includes('Ja, lader hjemme');
+    const sorNorge = ['NO1', 'NO2', 'NO5'].includes(p.q3zone);
+
+    const items = [];
+    let id = 0;
+
+    // QUICK WINS (5 min jobb)
+    items.push({ id: id++, cat: 'Rask gevinst', text: 'Sjekk strømavtalen din på strompris.no', save: 100, time: '5 min', link: 'https://www.strompris.no' });
+    items.push({ id: id++, cat: 'Rask gevinst', text: 'Sett vaskemaskinen på timer til etter kl. 22', save: 60, time: '2 min' });
+    items.push({ id: id++, cat: 'Rask gevinst', text: 'Sett oppvaskmaskinen på timer til etter kl. 22', save: 40, time: '2 min' });
+    if (sorNorge && !norge) items.push({ id: id++, cat: 'Rask gevinst', text: 'Bestill Norgespris på elhub.no (vurder først)', save: 200, time: '10 min', link: 'https://elhub.no' });
+
+    // INVESTERINGER (under 1000 kr)
+    items.push({ id: id++, cat: 'Liten investering', text: 'Kjøp tidsbryter til varmtvannsberederen', save: 180, time: 'Halv dag', cost: '300–500 kr' });
+    items.push({ id: id++, cat: 'Liten investering', text: 'Kjøp smartplugg til TV / lader / kaffemaskin', save: 60, time: '15 min', cost: '200–400 kr' });
+    if (panel && !pump) items.push({ id: id++, cat: 'Liten investering', text: 'Kjøp smart termostat til panelovnene', save: 150, time: '1–2 timer', cost: '500–900 kr per ovn' });
+    items.push({ id: id++, cat: 'Liten investering', text: 'Tett luftlekkasjer rundt vinduer og dører', save: 80, time: 'Halv dag', cost: '50–200 kr' });
+
+    // VANER (gratis å gjøre)
+    items.push({ id: id++, cat: 'Endre vane', text: 'Vask klær på 40 °C i stedet for 60 °C', save: 50, time: 'Hver gang' });
+    items.push({ id: id++, cat: 'Endre vane', text: 'Sjekk strømprisen før du kjører ovn eller vaskemaskin', save: 70, time: 'Daglig' });
+    items.push({ id: id++, cat: 'Endre vane', text: 'Sett ned innetemperaturen 1 grad om natta', save: 100, time: 'En gang' });
+    if (ved) items.push({ id: id++, cat: 'Endre vane', text: 'Bruk vedovnen mellom kl. 17 og 21', save: 120, time: 'Daglig' });
+    if (elbil) items.push({ id: id++, cat: 'Endre vane', text: 'Lad elbilen mellom kl. 23 og 06', save: 300, time: 'Daglig' });
+
+    // KONTROLL & OVERSIKT
+    items.push({ id: id++, cat: 'Få oversikt', text: 'Last ned appen til nettselskapet ditt', save: 0, time: '5 min', note: 'Se forbruk og effekttopper' });
+    items.push({ id: id++, cat: 'Få oversikt', text: 'Sjekk hvilket kapasitetstrinn du ligger på', save: 60, time: '10 min', note: 'I app fra nettselskapet' });
+    if (hytte) items.push({ id: id++, cat: 'Få oversikt', text: 'Sett opp varslinger for høye strømpriser', save: 0, time: '5 min', note: 'Mange strømapper har dette' });
+
+    // STORE INVESTERINGER (om relevant)
+    if (panel && !pump) items.push({ id: id++, cat: 'Stor investering', text: 'Vurder å installere varmepumpe', save: 600, time: 'Hent flere tilbud', cost: '20 000–35 000 kr' });
+    if (p.q8 === 'Nei, men vurderer det') items.push({ id: id++, cat: 'Stor investering', text: 'Sjekk taket ditt for solceller', save: 350, time: '1 time', cost: 'Hent tilbud først', link: 'https://www.solsjekk.no' });
+
+    return items;
   }
 
   function renderChecklist() {
-    const items = [
-      'Sjekket strømavtalen min på strompris.no',
-      'Satt vaskemaskinen på timer til etter kl. 22',
-      'Satt tidsbryter på varmtvannsberederen',
-      'Bestilt Norgespris på elhub.no (om relevant)',
-      'Kjøpt smartplugg til TV/lader/elektronikk',
-      'Sjekket effekttoppene i appen til nettselskapet'
-    ];
+    const items = buildChecklistItems();
     const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
     const list = document.getElementById('checklist');
-    list.innerHTML = items.map((item, i) => {
-      const done = saved[i] ? ' done' : '';
-      return '<div class="check-item' + done + '" onclick="toggleCheck(' + i + ')"><div class="check-box"></div><div class="check-text">' + item + '</div></div>';
-    }).join('');
+
+    // Grupper etter kategori
+    const groups = {};
+    items.forEach(item => {
+      if (!groups[item.cat]) groups[item.cat] = [];
+      groups[item.cat].push(item);
+    });
+
+    const catOrder = ['Rask gevinst', 'Endre vane', 'Liten investering', 'Få oversikt', 'Stor investering'];
+    const catIcons = {
+      'Rask gevinst': '⚡',
+      'Endre vane': '🔄',
+      'Liten investering': '🔧',
+      'Få oversikt': '📊',
+      'Stor investering': '🏠'
+    };
+
+    let html = '';
+    catOrder.forEach(cat => {
+      if (!groups[cat]) return;
+      const catItems = groups[cat];
+      const catDone = catItems.filter(it => saved[it.id]).length;
+      html += '<div class="check-group">' +
+        '<div class="check-group-header">' +
+        '<span class="check-group-icon">' + catIcons[cat] + '</span>' +
+        '<span class="check-group-title">' + cat + '</span>' +
+        '<span class="check-group-progress">' + catDone + ' av ' + catItems.length + '</span>' +
+        '</div>' +
+        '<div class="check-group-items">';
+
+      catItems.forEach(item => {
+        const done = saved[item.id] ? ' done' : '';
+        let metaHtml = '';
+        if (item.save > 0) metaHtml += '<span class="check-meta-pill save">~' + item.save + ' kr/mnd</span>';
+        if (item.time) metaHtml += '<span class="check-meta-pill time">' + item.time + '</span>';
+        if (item.cost) metaHtml += '<span class="check-meta-pill cost">' + item.cost + '</span>';
+        if (item.note) metaHtml += '<span class="check-meta-pill note">' + item.note + '</span>';
+
+        const linkHtml = item.link
+          ? '<a href="' + item.link + '" target="_blank" rel="noopener" class="check-link" onclick="event.stopPropagation()">→</a>'
+          : '';
+
+        html += '<div class="check-item' + done + '" onclick="toggleCheckById(' + item.id + ')">' +
+          '<div class="check-box"></div>' +
+          '<div class="check-content">' +
+          '<div class="check-text">' + item.text + '</div>' +
+          (metaHtml ? '<div class="check-meta">' + metaHtml + '</div>' : '') +
+          '</div>' +
+          linkHtml +
+          '</div>';
+      });
+
+      html += '</div></div>';
+    });
+
+    // Total potensiell sparing
+    const totalSave = items.reduce((s, it) => s + (it.save || 0), 0);
+    const doneSave = items.filter(it => saved[it.id]).reduce((s, it) => s + (it.save || 0), 0);
+    html = '<div class="check-summary">' +
+      '<div class="check-summary-row">' +
+      '<div><div class="check-summary-label">Mulig total sparing</div>' +
+      '<div class="check-summary-value">~' + totalSave + ' kr/mnd</div></div>' +
+      '<div><div class="check-summary-label">Du sparer nå</div>' +
+      '<div class="check-summary-value green">~' + doneSave + ' kr/mnd</div></div>' +
+      '</div>' +
+      '<div class="check-summary-bar"><div class="check-summary-fill" style="width:' + (totalSave > 0 ? (doneSave/totalSave*100) : 0) + '%"></div></div>' +
+      '</div>' + html;
+
+    list.innerHTML = html;
   }
-  function toggleCheck(i) {
+
+  function toggleCheckById(id) {
     const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
-    saved[i] = !saved[i];
+    saved[id] = !saved[id];
     localStorage.setItem('sw_checklist', JSON.stringify(saved));
-    // Toggle klasse direkte i stedet for å re-render hele lista (bevarer animasjonen)
-    const items = document.querySelectorAll('.check-item');
-    if (items[i]) items[i].classList.toggle('done');
-    // Oppdater fremgangstelleren hvis den finnes
+    // Re-render hele lista for at summary skal oppdateres
+    renderChecklist();
     updateWeekProgress();
+  }
+
+  // Behold gammel funksjon for bakoverkompatibilitet
+  function toggleCheck(i) {
+    toggleCheckById(i);
   }
 
   // === DIN FREMGANG ===
   function updateWeekProgress() {
     const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
-    const total = 6; // antall sjekkliste-elementer
-    const done = Object.values(saved).filter(v => v).length;
+    const items = buildChecklistItems();
+    const total = items.length;
+    const done = items.filter(it => saved[it.id]).length;
     const ringText = document.getElementById('progress-ring-text');
     const ringFill = document.getElementById('progress-ring-fill');
     const titleEl = document.getElementById('progress-title');
@@ -2421,19 +4421,26 @@
     const offset = circumference - (done / total) * circumference;
     ringFill.style.strokeDashoffset = offset;
 
+    // Beregn månedlig sparing fra gjorte tiltak
+    const savedKr = items.filter(it => saved[it.id]).reduce((s, it) => s + (it.save || 0), 0);
+
     // Tilbakemelding basert på fremgang
+    const pct = total > 0 ? (done / total * 100) : 0;
     if (done === 0) {
       titleEl.textContent = 'Klar til å starte';
       textEl.textContent = 'Huk av tiltakene etter hvert som du gjør dem. Da kan du følge med på din egen fremgang her.';
-    } else if (done < 3) {
+    } else if (pct < 25) {
       titleEl.textContent = 'Bra start';
-      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Selv små grep gjør en merkbar forskjell på regningen.';
-    } else if (done < total) {
+      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong> og sparer rundt <strong style="color:var(--green-deep)">' + savedKr + ' kr i måneden</strong>.';
+    } else if (pct < 60) {
       titleEl.textContent = 'Du er godt i gang';
-      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Bare ' + (total - done) + ' igjen — og du sparer allerede mer enn de fleste norske husstander.';
+      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong> og sparer rundt <strong style="color:var(--green-deep)">' + savedKr + ' kr i måneden</strong>. Det blir ' + (savedKr * 12).toLocaleString('no-NO') + ' kr på et år.';
+    } else if (pct < 100) {
+      titleEl.textContent = 'Veldig godt jobbet';
+      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong> og sparer rundt <strong style="color:var(--green-deep)">' + savedKr + ' kr i måneden</strong>. Få norske husstander er så bevisste som deg.';
     } else {
       titleEl.textContent = 'Alle tiltak gjort';
-      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">alle ' + total + ' tiltakene</strong>. Få norske husstander tar disse grepene — du er en av de som virkelig sparer på strøm.';
+      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">alle ' + total + ' tiltakene</strong> — det betyr rundt <strong style="color:var(--green-deep)">' + savedKr + ' kr i månedlig sparing</strong>. Imponerende.';
     }
   }
 
@@ -2558,10 +4565,19 @@
     if (!ok) return;
     fillStats();
     setDailyInsight();
-    loadPrices();
+
+    // Last priser, og deretter render alt som er prisavhengig
+    loadPrices().then(() => {
+      updateCalc();
+      renderContextAlert();
+    });
+
     loadTomorrowPrices();
     renderTips();
     renderChecklist();
+    renderEnova();
+    renderMilestones();
+    initCalc();
     setAccessLink();
     // Liten delay så ringen animerer fra 0 til riktig verdi
     setTimeout(updateWeekProgress, 300);
