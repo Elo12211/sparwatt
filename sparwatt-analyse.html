@@ -1048,6 +1048,44 @@
     color: var(--ink-muted);
     margin: 12px 0 18px;
   }
+  .r-locked-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 460px;
+    margin: 0 auto 16px;
+    text-align: left;
+  }
+  .r-locked-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height: 1.4;
+    transition: all 0.25s ease;
+  }
+  .r-locked-feature:hover {
+    border-color: var(--green-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+  }
+  .r-lf-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .r-locked-title em {
+    font-style: italic;
+    color: var(--green-deep);
+  }
+  @media (max-width: 600px) {
+    .r-locked-features { grid-template-columns: 1fr; }
+  }
 
   /* ===== EMAIL SCREEN ===== */
   .email-icon {
@@ -1115,6 +1153,47 @@
     .result-banner-context { text-align: left; }
     .opt { padding: 14px 16px; font-size: 14px; }
     h2 { font-size: 26px; }
+  }
+
+  /* ===== EDIT-MODUS BANNER ===== */
+  .edit-mode-banner {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    animation: edit-banner-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes edit-banner-slide {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+  .edit-mode-banner svg {
+    flex-shrink: 0;
+  }
+  .edit-mode-banner span {
+    flex: 1;
+  }
+  .edit-banner-cancel {
+    color: white;
+    text-decoration: underline;
+    font-weight: 600;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s ease;
+  }
+  .edit-banner-cancel:hover {
+    opacity: 0.85;
+  }
+  @media (max-width: 600px) {
+    .edit-mode-banner { padding: 10px 14px; font-size: 12px; gap: 8px; }
+    .edit-mode-banner svg { width: 14px; height: 14px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1393,12 +1472,12 @@
 
     <div class="btn-row">
       <button class="btn-main" onclick="goToResult()">
-        Få analysen min
+        <span id="final-btn-text">Få analysen min</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
       <button class="btn-back" onclick="go(11)">Tilbake</button>
     </div>
-    <p class="hint">Alle felt valgfrie · Hopp over og klikk "Få analysen min" hvis du vil.</p>
+    <p class="hint" id="final-hint">Alle felt valgfrie · Hopp over og klikk "Få analysen min" hvis du vil.</p>
   </div>
 
   <!-- RESULT (s13) -->
@@ -1459,22 +1538,43 @@
 
     <div id="r-leverandor"></div>
 
-    <!-- Sosial bevis -->
-    <div class="r-social-proof" id="r-social-proof">
+    <!-- Personlig sparing-estimat — sterkere hook -->
+    <div class="r-social-proof">
       <div class="r-sp-stat">
-        <div class="r-sp-num" id="r-sp-pct">73%</div>
-        <div class="r-sp-text" id="r-sp-text">av husstander som ligner din sparte penger ved å bytte strømleverandør</div>
+        <div class="r-sp-num" id="r-sp-pct">— kr</div>
+        <div class="r-sp-text" id="r-sp-text">er hva du kan spare i året basert på din analyse — det er <strong id="r-sp-monthly">— kr</strong> hver måned</div>
       </div>
     </div>
 
-    <!-- Lockless paywall - mindre aggressiv -->
+    <!-- Lockless paywall - sterkere hook -->
     <div class="r-locked">
-      <div class="r-locked-title">Få hele bildet</div>
-      <p>Full tilgang inkluderer alle <span id="r-tips-locked-count">2 ekstra</span> tiltak, leverandøranalyse, AI-rådgiver med live priser og strømregningen forklart. Du tjener inn abonnementet på under en uke for de fleste.</p>
-      <div class="r-locked-meta">49 kr/mnd · ingen bindingstid · avslutt når du vil</div>
+      <div class="r-locked-title">Det du har sett er <em>1 av <span id="r-tips-locked-count">3</span> tiltak</em></div>
+      <p>Få full rapport for å se alle dine personlige tiltak, ENOVA-støtteordninger du kan søke på, kostnadskalkulator i sanntid, og din egen AI-rådgiver som kjenner boligen din.</p>
+
+      <!-- Konkret hva som er inkludert -->
+      <div class="r-locked-features">
+        <div class="r-locked-feature">
+          <span class="r-lf-icon">⚡</span>
+          <span>Hva koster det akkurat nå? — live-kalkulator</span>
+        </div>
+        <div class="r-locked-feature">
+          <span class="r-lf-icon">💸</span>
+          <span>ENOVA-støtteordninger — opptil 32 500 kr</span>
+        </div>
+        <div class="r-locked-feature">
+          <span class="r-lf-icon">📊</span>
+          <span>Sammenlign avtalen din mot top 3 i markedet</span>
+        </div>
+        <div class="r-locked-feature">
+          <span class="r-lf-icon">🤖</span>
+          <span>AI-rådgiver med live priser fra ditt prisområde</span>
+        </div>
+      </div>
+
+      <div class="r-locked-meta">49 kr/mnd · ingen bindingstid · avslutt med ett klikk</div>
       <div class="btn-row" style="justify-content:center;">
         <button class="btn-main" onclick="goToStripe()">
-          Lås opp full tilgang — 49 kr/mnd
+          Lås opp full rapport — 49 kr/mnd
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
@@ -1924,7 +2024,7 @@
     // Bygg tiltak: ett synlig + 2 låste teasers
     const lockedTeasers = getLockedTeasers(a);
     document.getElementById('r-tips-count').textContent = '1 av ' + (1 + lockedTeasers.length) + ' viser';
-    document.getElementById('r-tips-locked-count').textContent = lockedTeasers.length + ' ekstra';
+    document.getElementById('r-tips-locked-count').textContent = (1 + lockedTeasers.length);
 
     let tipsHtml =
       '<div class="r-tip">' +
@@ -2044,30 +2144,38 @@
     return 'Profilen din viser flere muligheter for sparing — særlig på <strong>' + (place) + '</strong>-spesifikke tiltak basert på prisområdet ditt.';
   }
 
-  // Sosial bevis — varierer basert på profil
+  // Personlig sparing-hook — viser konkret hva DU kan spare
   function buildSocialProof(a) {
-    const norge = a.q7 === 'Norgespris';
-    const fast = a.q7 === 'Fastpris';
+    // Beregn estimert månedlig sparing fra alle tiltak i profilen
+    const tips = generateAllTips(a);
+    const minMonthly = tips.reduce((s, t) => s + (t.minMonthly || 0), 0);
+    const maxMonthly = tips.reduce((s, t) => s + (t.maxMonthly || 0), 0);
+    const avgMonthly = Math.round((minMonthly + maxMonthly) / 2);
+    const yearly = avgMonthly * 12;
+
+    document.getElementById('r-sp-pct').textContent = yearly.toLocaleString('no-NO') + ' kr';
+    document.getElementById('r-sp-monthly').textContent = avgMonthly + ' kr';
+  }
+
+  // Hjelpefunksjon — generer alle potensielle tiltak (også de som er låst)
+  function generateAllTips(a) {
     const panel = Array.isArray(a.q5) && a.q5.includes('Elektriske panelovner');
+    const pump = Array.isArray(a.q5) && a.q5.includes('Varmepumpe');
+    const fast = a.q7 === 'Fastpris';
+    const norge = a.q7 === 'Norgespris';
     const elbil = a.q9ev && a.q9ev.includes('Ja, lader hjemme');
+    const high = a.q6 === '1000-2000 kWh' || a.q6 === 'Over 2000 kWh';
 
-    let pct = 73, txt = 'av husstander som ligner din sparte penger ved å bytte strømleverandør';
-    if (norge) {
-      pct = 81;
-      txt = 'av Norgespris-kunder vi har analysert kunne spare på spotpris i sommerhalvåret';
-    } else if (fast) {
-      pct = 76;
-      txt = 'av fastpris-kunder ville ha spart penger med spotpris siste 12 måneder';
-    } else if (panel) {
-      pct = 68;
-      txt = 'av husstander med panelovner sparer over 4000 kr/år ved å installere varmepumpe';
-    } else if (elbil) {
-      pct = 89;
-      txt = 'av elbileiere kan kutte ladekostnaden med over 50% ved å lade om natta';
-    }
-
-    document.getElementById('r-sp-pct').textContent = pct + '%';
-    document.getElementById('r-sp-text').textContent = txt;
+    const tips = [];
+    if (panel && !pump) tips.push({ minMonthly: 400, maxMonthly: 800 });
+    if (high) tips.push({ minMonthly: 120, maxMonthly: 280 });
+    if (elbil) tips.push({ minMonthly: 200, maxMonthly: 500 });
+    if (fast) tips.push({ minMonthly: 150, maxMonthly: 350 });
+    if (norge) tips.push({ minMonthly: 80, maxMonthly: 250 });
+    tips.push({ minMonthly: 60, maxMonthly: 150 }); // vask om natta
+    tips.push({ minMonthly: 50, maxMonthly: 120 }); // effekttopper
+    tips.push({ minMonthly: 40, maxMonthly: 90 });  // andre vaner
+    return tips;
   }
 
   // Returnere 2 låste tiltak som teaser — varierer basert på profil
@@ -2091,10 +2199,159 @@
     return all.slice(0, 2);
   }
 
+  // === REDIGERINGSMODUS ===
+  // Hvis brukeren kommer fra rapporten (?edit=1), forhåndsutfyll alle svar
+  function isEditMode() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('edit') === '1';
+  }
+
+  function getEditToken() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('access') || localStorage.getItem('sw_editing_token') || '';
+  }
+
+  function preloadProfileForEdit() {
+    if (!isEditMode()) return;
+
+    let saved = null;
+    try {
+      saved = JSON.parse(localStorage.getItem('sw_profile') || 'null');
+    } catch (e) { saved = null; }
+    if (!saved) return;
+
+    // Mappe profil til 'a' (skjemaets datastruktur)
+    if (saved.q1) a.q1 = saved.q1;
+    if (saved.q2) a.q2 = saved.q2;
+    if (saved.q3post) a.q3post = saved.q3post;
+    if (saved.q3zone) a.q3zone = saved.q3zone;
+    if (saved.q4) a.q4 = saved.q4;
+    if (saved.q5) a.q5 = typeof saved.q5 === 'string' ? saved.q5.split(',').filter(Boolean) : (Array.isArray(saved.q5) ? saved.q5 : []);
+    if (saved.q6) a.q6 = saved.q6;
+    if (saved.q7) a.q7 = saved.q7;
+    if (saved.q8) a.q8 = saved.q8;
+    if (saved.q9ev) a.q9ev = saved.q9ev;
+    if (saved.q9) a.q9 = typeof saved.q9 === 'string' ? saved.q9.split(',').filter(Boolean) : (Array.isArray(saved.q9) ? saved.q9 : []);
+    if (saved.q10) a.q10 = saved.q10;
+    if (saved.q11p) a.q11provider = saved.q11p;
+    if (saved.q11m) a.q11markup = saved.q11m;
+    if (saved.q11f) a.q11fee = saved.q11f;
+
+    // Vis edit-banner øverst
+    showEditModeBanner();
+
+    // Endre tekst på siste-knappen
+    const btnText = document.getElementById('final-btn-text');
+    const hint = document.getElementById('final-hint');
+    if (btnText) btnText.textContent = 'Lagre endringer';
+    if (hint) hint.textContent = 'Endringer oppdaterer rapporten din umiddelbart.';
+
+    // Marker valgte alternativer i UI for hver enkelt-spørsmål
+    setTimeout(markPreselectedOptions, 100);
+  }
+
+  function showEditModeBanner() {
+    const banner = document.createElement('div');
+    banner.className = 'edit-mode-banner';
+    banner.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
+        '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>' +
+        '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>' +
+      '</svg>' +
+      '<span>Du redigerer profilen din — endringer oppdaterer rapporten</span>' +
+      '<a href="#" onclick="cancelEdit(event)" class="edit-banner-cancel">Avbryt</a>';
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+
+  function cancelEdit(e) {
+    if (e) e.preventDefault();
+    const token = getEditToken();
+    localStorage.removeItem('sw_editing_token');
+    localStorage.removeItem('sw_editing_started');
+    window.location.href = '/full-rapport.html' + (token ? '?access=' + encodeURIComponent(token) : '');
+  }
+
+  function markPreselectedOptions() {
+    // Single-select-spørsmål
+    const singles = ['q1', 'q2', 'q4', 'q6', 'q7', 'q8', 'q9ev'];
+    singles.forEach(key => {
+      const value = a[key];
+      if (!value) return;
+      document.querySelectorAll('[data-v]').forEach(el => {
+        if (el.dataset.v === value && el.closest('#' + key)) {
+          el.classList.add('selected');
+        }
+      });
+    });
+
+    // Multi-select-spørsmål (q5 og q9 er den samme i UI)
+    if (Array.isArray(a.q5)) {
+      a.q5.forEach(val => {
+        document.querySelectorAll('#q5 [data-v]').forEach(el => {
+          if (el.dataset.v === val) el.classList.add('multi-on');
+        });
+      });
+    }
+    if (Array.isArray(a.q9)) {
+      a.q9.forEach(val => {
+        document.querySelectorAll('#q9 [data-v]').forEach(el => {
+          if (el.dataset.v === val) el.classList.add('multi-on');
+        });
+      });
+    }
+
+    // Tekst-felter
+    if (a.q3post) {
+      const el = document.getElementById('q3post');
+      if (el) el.value = a.q3post;
+    }
+    if (a.q10) {
+      const el = document.getElementById('q10');
+      if (el) el.value = a.q10;
+    }
+    if (a.q11provider) {
+      const el = document.getElementById('q11provider');
+      if (el) el.value = a.q11provider;
+    }
+    if (a.q11markup) {
+      const el = document.getElementById('q11markup');
+      if (el) el.value = a.q11markup;
+    }
+    if (a.q11fee) {
+      const el = document.getElementById('q11fee');
+      if (el) el.value = a.q11fee;
+    }
+  }
+
+  // I redigeringsmodus — oppdater profil og send tilbake til rapport
+  function saveEditedProfile() {
+    var profile = {
+      q1: a.q1, q2: a.q2, q3post: a.q3post, q3zone: a.q3zone,
+      q4: a.q4, q5: Array.isArray(a.q5) ? a.q5.join(',') : '',
+      q6: a.q6, q7: a.q7, q8: a.q8, q9ev: a.q9ev || '',
+      q9: Array.isArray(a.q9) ? a.q9.join(',') : '',
+      q10: a.q10, q11p: a.q11provider || '',
+      q11m: a.q11markup || '', q11f: a.q11fee || ''
+    };
+    localStorage.setItem('sw_profile', JSON.stringify(profile));
+    localStorage.setItem('sw_profile_ts', Date.now().toString());
+    localStorage.removeItem('sw_editing_token');
+    localStorage.removeItem('sw_editing_started');
+
+    const token = getEditToken();
+    window.location.href = '/full-rapport.html?updated=1' + (token ? '&access=' + encodeURIComponent(token) : '');
+  }
+
   function goToResult() {
     a.q11provider = document.getElementById('q11provider').value.trim();
     a.q11markup = document.getElementById('q11markup').value.trim();
     a.q11fee = document.getElementById('q11fee').value.trim();
+
+    // Hvis i edit-modus — gå tilbake til rapport, ikke til resultat-siden
+    if (isEditMode()) {
+      saveEditedProfile();
+      return;
+    }
     go(13);
   }
 
@@ -2123,6 +2380,14 @@
     document.getElementById('e12').style.display = 'none';
     document.getElementById('done-email').textContent = '✓ Sendt til ' + v;
     go(15);
+  }
+
+  // === INIT ===
+  // Sjekk om vi er i redigeringsmodus og forhåndsutfyll skjemaet
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', preloadProfileForEdit);
+  } else {
+    preloadProfileForEdit();
   }
 </script>
 

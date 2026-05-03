@@ -120,10 +120,91 @@
   .nav-greeting {
     font-size: 13px;
     color: var(--ink-muted);
+    margin-left: auto;
+    margin-right: 16px;
   }
   .nav-greeting strong {
     color: var(--ink);
     font-weight: 600;
+  }
+  .nav-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+  }
+  .nav-edit-btn:hover {
+    border-color: var(--green-deep);
+    color: var(--green-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .nav-edit-btn svg {
+    transition: transform 0.3s ease;
+  }
+  .nav-edit-btn:hover svg {
+    transform: rotate(-12deg);
+  }
+
+  /* ===== PROFIL OPPDATERT-BANNER ===== */
+  .profile-updated-banner {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    color: white;
+    padding: 12px 16px 12px 18px;
+    border-radius: 999px;
+    box-shadow: 0 8px 28px rgba(27, 67, 50, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    font-size: 13px;
+    font-weight: 500;
+    max-width: calc(100vw - 32px);
+    animation: banner-slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes banner-slide-in {
+    from { transform: translateX(-50%) translateY(-16px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+  .profile-updated-banner.fade-out {
+    animation: banner-slide-out 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  @keyframes banner-slide-out {
+    to { transform: translateX(-50%) translateY(-16px); opacity: 0; }
+  }
+  .profile-updated-banner svg {
+    flex-shrink: 0;
+  }
+  .banner-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    transition: background 0.2s ease;
+  }
+  .banner-close:hover {
+    background: rgba(255,255,255,0.35);
   }
 
   /* ===== TABS ===== */
@@ -1570,6 +1651,75 @@
     background: var(--green-light);
   }
 
+  /* ===== STREAK STRIPE — prominent under hero ===== */
+  .streak-stripe {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+  }
+  .streak-stripe:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    transform: translateY(-1px);
+  }
+  .streak-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    justify-content: center;
+  }
+  .streak-icon {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .streak-data {
+    display: flex;
+    flex-direction: column;
+  }
+  .streak-value {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--green-deep);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .streak-label {
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+    line-height: 1;
+  }
+  .streak-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--line);
+    flex-shrink: 0;
+  }
+  .streak-item.hot .streak-icon {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    animation: hot-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes hot-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(255, 107, 53, 0); }
+  }
+
   /* ===== KOSTNADS-KALKULATOR ===== */
   .calc-card {
     background: white;
@@ -1734,6 +1884,97 @@
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
+  }
+
+  /* Custom-mode på kalkulator */
+  .calc-custom {
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .calc-custom-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-deep);
+    transition: color 0.2s ease;
+  }
+  .calc-custom-toggle:hover { color: var(--green-mid); }
+  .calc-custom-toggle svg { transition: transform 0.3s ease; }
+  .calc-custom.open #calc-custom-arrow { transform: rotate(180deg); }
+  .calc-custom-body {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--bg-warm);
+    border-radius: 12px;
+  }
+  .calc-custom.open .calc-custom-body {
+    display: block;
+    animation: faq-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .calc-custom-help {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .calc-custom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .calc-custom-label {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .calc-custom-grid input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: var(--sans);
+    background: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .calc-custom-grid input:focus {
+    outline: none;
+    border-color: var(--green-glow);
+    box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.12);
+  }
+  .calc-custom-hint {
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .calc-custom-result {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.5;
+    display: none;
+  }
+  .calc-custom-result.visible { display: block; }
+  .calc-custom-result strong {
+    color: var(--green-deep);
+    font-weight: 600;
+    font-family: var(--serif);
+    font-size: 17px;
   }
 
   /* ===== ENOVA-STØTTE ===== */
@@ -2201,6 +2442,39 @@
   .cmp-card-2::before { background: var(--green-mid); }
   .cmp-card-3::before { background: var(--green-glow); }
 
+  /* Markering av "beste valg for deg" */
+  .cmp-card-best {
+    border: 2px solid var(--green-deep) !important;
+    box-shadow: 0 8px 24px rgba(27, 67, 50, 0.12);
+    background: linear-gradient(135deg, white, var(--green-light));
+  }
+  .cmp-card-best::after {
+    content: 'Beste for deg';
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    background: var(--green-deep);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.2);
+    animation: best-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes best-pop {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .cmp-saving-arrow {
+    display: inline-block;
+    color: var(--green-deep);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
   .cmp-rank {
     width: 38px; height: 38px;
     border-radius: 12px;
@@ -2359,6 +2633,8 @@
       padding: 12px 18px;
     }
     .nav-greeting { display: none; }
+    .nav-edit-btn { padding: 8px 10px; }
+    .nav-edit-btn span { display: none; }
     .container { padding: 20px 18px 30px; }
     .hero-banner { padding: 22px; }
     .hero-banner-value { font-size: 36px; }
@@ -2376,6 +2652,12 @@
     .qs-icon { width: 40px; height: 40px; }
     .qs-title { font-size: 17px; }
     .calc-options { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .streak-stripe { padding: 12px; gap: 6px; }
+    .streak-item { gap: 6px; }
+    .streak-icon { width: 28px; height: 28px; font-size: 13px; }
+    .streak-value { font-size: 14px; }
+    .streak-label { font-size: 9px; }
+    .streak-divider { height: 24px; }
     .calc-opt { padding: 12px 8px; }
     .calc-opt-icon { font-size: 20px; }
     .calc-opt-name { font-size: 10px; }
@@ -2430,6 +2712,13 @@
     SparWatt
   </a>
   <div class="nav-greeting" id="nav-greeting">Velkommen tilbake</div>
+  <button class="nav-edit-btn" onclick="editProfile()" title="Rediger profilen din">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    <span>Rediger profil</span>
+  </button>
 </nav>
 
 <!-- TABS -->
@@ -2471,6 +2760,33 @@
       </div>
       <div class="hero-banner-context" id="banner-context">
         Estimat basert på din bolig og hvilke tiltak du kan ta. Faktisk sparing avhenger av forbruk og hvor mange tiltak du gjennomfører.
+      </div>
+    </div>
+
+    <!-- STREAK-STRIPE — viser fremgang prominent -->
+    <div class="streak-stripe" id="streak-stripe">
+      <div class="streak-item" id="streak-tiltak">
+        <div class="streak-icon">✓</div>
+        <div class="streak-data">
+          <div class="streak-value">0</div>
+          <div class="streak-label">Tiltak gjort</div>
+        </div>
+      </div>
+      <div class="streak-divider"></div>
+      <div class="streak-item" id="streak-saving">
+        <div class="streak-icon">💰</div>
+        <div class="streak-data">
+          <div class="streak-value">0 kr</div>
+          <div class="streak-label">Sparer/mnd</div>
+        </div>
+      </div>
+      <div class="streak-divider"></div>
+      <div class="streak-item" id="streak-days">
+        <div class="streak-icon">🔥</div>
+        <div class="streak-data">
+          <div class="streak-value">1</div>
+          <div class="streak-label">Dag på rad</div>
+        </div>
       </div>
     </div>
 
@@ -2595,6 +2911,32 @@
             Forbruk
           </div>
           <div class="calc-detail-value" id="calc-kwh">— kWh</div>
+        </div>
+
+        <!-- Custom-mode: regn ut din egen aktivitet -->
+        <div class="calc-custom">
+          <div class="calc-custom-toggle" onclick="toggleCalcCustom()">
+            <span>Tilpass for ditt forbruk</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="calc-custom-arrow">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="calc-custom-body" id="calc-custom-body">
+            <p class="calc-custom-help">Skriv inn dine egne tall — for eksempel "min dusj tar 6 minutter" eller "elbilen min lader 80 kWh per uke".</p>
+            <div class="calc-custom-grid">
+              <div>
+                <label class="calc-custom-label">Effekt (watt)</label>
+                <input type="text" id="calc-custom-w" placeholder="F.eks. 2000" inputmode="numeric" oninput="updateCalcCustom()" />
+                <div class="calc-custom-hint">Stå på apparatet — typisk 1000–3000 W</div>
+              </div>
+              <div>
+                <label class="calc-custom-label">Tid (minutter)</label>
+                <input type="text" id="calc-custom-min" placeholder="F.eks. 10" inputmode="numeric" oninput="updateCalcCustom()" />
+                <div class="calc-custom-hint">Hvor lenge står det på</div>
+              </div>
+            </div>
+            <div class="calc-custom-result" id="calc-custom-result"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -3566,6 +3908,45 @@
     }
   }
 
+  function toggleCalcCustom() {
+    const wrap = document.querySelector('.calc-custom');
+    if (wrap) wrap.classList.toggle('open');
+  }
+
+  function updateCalcCustom() {
+    const w = parseFloat(document.getElementById('calc-custom-w').value) || 0;
+    const min = parseFloat(document.getElementById('calc-custom-min').value) || 0;
+    const result = document.getElementById('calc-custom-result');
+
+    if (w === 0 || min === 0) {
+      result.classList.remove('visible');
+      result.innerHTML = '';
+      return;
+    }
+
+    // Forbruk = (W × min/60) / 1000 = kWh
+    const kwh = (w * min / 60) / 1000;
+    let pricePerKwh = 1.0;
+    if (window.lastPriceData && window.lastPriceData.now) {
+      pricePerKwh = window.lastPriceData.now / 100;
+    }
+    const totalCostPerKwh = pricePerKwh + 0.50;
+    const cost = kwh * totalCostPerKwh;
+    const costStr = cost < 10
+      ? cost.toFixed(2).replace('.', ',')
+      : cost.toFixed(1).replace('.', ',');
+
+    // Kostnad i året hvis dette gjøres daglig
+    const yearly = cost * 365;
+    const yearlyStr = yearly < 100
+      ? Math.round(yearly) + ' kr'
+      : Math.round(yearly).toLocaleString('no-NO') + ' kr';
+
+    result.innerHTML = 'Det koster <strong>' + costStr + ' kr</strong> nå (' + kwh.toFixed(2).replace('.', ',') + ' kWh). ' +
+      'Hvis du gjør dette hver dag i et år: ca. <strong>' + yearlyStr + '</strong>.';
+    result.classList.add('visible');
+  }
+
   // === ENOVA-STØTTE ===
   // Faktiske støtteordninger fra Enova (per 2026)
   // Vi viser bare de som er relevante for brukerens profil
@@ -3680,7 +4061,10 @@
     const done = items.filter(it => saved[it.id]).length;
     const totalSave = items.filter(it => saved[it.id]).reduce((s, it) => s + (it.save || 0), 0);
     const yearlySave = totalSave * 12;
-    const { streak, totalDays } = getStreakDays();
+    const { streak } = getStreakDays();
+
+    // Render streak-stripe (prominent øverst)
+    renderStreakStripe(done, totalSave, streak);
 
     const milestones = [
       {
@@ -3719,6 +4103,25 @@
         '<div class="milestone-label">' + m.label + '</div>' +
         '</div>';
     }).join('');
+  }
+
+  function renderStreakStripe(done, totalSave, streak) {
+    const tiltakEl = document.getElementById('streak-tiltak');
+    const savingEl = document.getElementById('streak-saving');
+    const daysEl = document.getElementById('streak-days');
+
+    if (tiltakEl) {
+      tiltakEl.querySelector('.streak-value').textContent = done;
+      if (done >= 3) tiltakEl.classList.add('hot');
+    }
+    if (savingEl) {
+      savingEl.querySelector('.streak-value').textContent = totalSave + ' kr';
+      if (totalSave >= 100) savingEl.classList.add('hot');
+    }
+    if (daysEl) {
+      daysEl.querySelector('.streak-value').textContent = streak + (streak === 1 ? ' dag' : ' dgr');
+      if (streak >= 3) daysEl.classList.add('hot');
+    }
   }
 
   // === KONTEKST-VARSLER (kuldebølge / billig nå) ===
@@ -3953,24 +4356,28 @@
   function renderCompare() {
     const markup = parseFloat((document.getElementById('cmp-markup').value || '').replace(',', '.')) || 0;
     const fee = parseFloat((document.getElementById('cmp-fee').value || '').replace(',', '.')) || 0;
+    const hasInput = markup !== 0 || fee !== 0;
 
     // Forbruk: bruk profil eller anta 1500 kWh/mnd som norsk gjennomsnitt
     const monthlyKwh = profile.q6 === 'Over 2000 kWh' ? 2000 : profile.q6 === '1000-2000 kWh' ? 1500 : profile.q6 === '500-1000 kWh' ? 750 : 1500;
 
     // Vis "Du betaler"-kort hvis bruker har skrevet inn noe
     const currentEl = document.getElementById('cmp-current');
-    if (markup === 0 && fee === 0) {
+    let currentMonthly = 0;
+    if (!hasInput) {
       currentEl.style.display = 'none';
     } else {
       currentEl.style.display = 'block';
-      const currentMonthly = (markup * monthlyKwh / 100) + fee; // markup er i øre, deler på 100 for kr
+      currentMonthly = (markup * monthlyKwh / 100) + fee;
       document.getElementById('cmp-current-amount').textContent = Math.round(currentMonthly) + ' kr/mnd';
       document.getElementById('cmp-current-context').textContent =
         'i påslag og månedsbeløp ved ' + monthlyKwh + ' kWh/mnd' +
         (profile.q6 ? '' : ' (norsk snitt)');
     }
 
-    // Beregn for hver av top 3
+    // Beregn for hver av top 3 og finn beste
+    let bestIdx = -1;
+    let bestSaving = 0;
     cmpProviders.forEach((p, i) => {
       const idx = i + 1;
       const theirMonthly = (p.markup * monthlyKwh / 100) + p.fee;
@@ -3978,24 +4385,34 @@
       document.getElementById('cmp-' + idx + '-price').textContent = theirMonthlyDisplay + ' kr/mnd';
 
       const savingEl = document.getElementById('cmp-' + idx + '-saving');
-      if (markup === 0 && fee === 0) {
-        savingEl.textContent = 'Skriv inn din avtale for å se sparing';
+      if (!hasInput) {
+        savingEl.innerHTML = 'Skriv inn din avtale ovenfor for å se hvor mye du kan spare';
         savingEl.classList.add('zero');
+        return;
+      }
+      const saving = Math.round(currentMonthly - theirMonthly);
+      if (saving > bestSaving) {
+        bestSaving = saving;
+        bestIdx = idx;
+      }
+      if (saving > 5) {
+        const yearly = (saving * 12).toLocaleString('no-NO');
+        savingEl.innerHTML = '<span class="cmp-saving-arrow">↓</span> Du sparer <strong>' + saving + ' kr/mnd</strong> &middot; <strong>' + yearly + ' kr/år</strong>';
+        savingEl.classList.remove('zero');
+      } else if (saving > 0) {
+        savingEl.textContent = 'Marginal sparing — ca. ' + saving + ' kr/mnd';
+        savingEl.classList.remove('zero');
       } else {
-        const currentMonthly = (markup * monthlyKwh / 100) + fee;
-        const saving = Math.round(currentMonthly - theirMonthly);
-        if (saving > 5) {
-          savingEl.innerHTML = '↓ Sparer ' + saving + ' kr/mnd · ' + (saving * 12).toLocaleString('no-NO') + ' kr/år';
-          savingEl.classList.remove('zero');
-        } else if (saving > 0) {
-          savingEl.textContent = 'Litt billigere — ca. ' + saving + ' kr/mnd';
-          savingEl.classList.remove('zero');
-        } else {
-          savingEl.textContent = 'Du har allerede en god avtale';
-          savingEl.classList.add('zero');
-        }
+        savingEl.textContent = 'Du har allerede en god avtale';
+        savingEl.classList.add('zero');
       }
     });
+
+    // Highlight beste valg
+    document.querySelectorAll('.cmp-card').forEach(c => c.classList.remove('cmp-card-best'));
+    if (hasInput && bestIdx > 0 && bestSaving > 5) {
+      document.querySelector('.cmp-card-' + bestIdx).classList.add('cmp-card-best');
+    }
   }
 
   // === TIPS ===
@@ -4461,6 +4878,60 @@
     });
   }
 
+  // === REDIGER PROFIL ===
+  // Sender brukeren tilbake til skjemaet med profilen forhåndsutfylt og tokenet bevart
+  function editProfile() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('access');
+
+    // Marker at vi er i redigeringsmodus — slik at skjemaet vet det
+    localStorage.setItem('sw_editing_token', token || '');
+    localStorage.setItem('sw_editing_started', Date.now().toString());
+
+    // Naviger til skjemaet
+    window.location.href = '/sparwatt-analyse.html?edit=1' + (token ? '&access=' + encodeURIComponent(token) : '');
+  }
+
+  // Vis "profil oppdatert"-banner hvis brukeren akkurat kom tilbake fra redigering
+  function showEditedBanner() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('updated') === '1') {
+      // Lag og vis banner
+      const banner = document.createElement('div');
+      banner.className = 'profile-updated-banner';
+      banner.innerHTML =
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+          '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>' +
+          '<polyline points="22 4 12 14.01 9 11.01"/>' +
+        '</svg>' +
+        '<span>Profilen din er oppdatert — tiltakene er regnet på nytt</span>' +
+        '<button onclick="dismissBanner()" class="banner-close" aria-label="Lukk">✕</button>';
+      document.body.appendChild(banner);
+
+      // Auto-dismiss etter 6 sekunder
+      setTimeout(() => {
+        if (banner.parentNode) {
+          banner.classList.add('fade-out');
+          setTimeout(() => banner.remove(), 400);
+        }
+      }, 6000);
+
+      // Fjern parameter fra URL (uten å laste siden på nytt)
+      params.delete('updated');
+      const newSearch = params.toString();
+      const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash;
+      history.replaceState(null, '', newUrl);
+    }
+  }
+
+  function dismissBanner() {
+    const banner = document.querySelector('.profile-updated-banner');
+    if (banner) {
+      banner.classList.add('fade-out');
+      setTimeout(() => banner.remove(), 400);
+    }
+  }
+
   // === CHAT ===
   function initChat() {
     if (window.chatInitialized) return;
@@ -4579,6 +5050,7 @@
     renderMilestones();
     initCalc();
     setAccessLink();
+    showEditedBanner();
     // Liten delay så ringen animerer fra 0 til riktig verdi
     setTimeout(updateWeekProgress, 300);
   })();
