@@ -7,8 +7,8 @@
 <meta name="supported-color-schemes" content="light">
 <meta name="color-scheme" content="light only">
 <meta name="theme-color" content="#fafaf8">
-<title>SparWatt — Finn ut hva du betaler for mye på strøm</title>
-<meta name="description" content="Norsk AI-drevet strømanalyse. Svar på 12 spørsmål og få konkrete tiltak basert på din bolig, ditt prisområde og live strømpriser.">
+<title>SparWatt — Slutt å overbetale strøm. Gratis AI-analyse på 3 minutter.</title>
+<meta name="description" content="Norsk AI-drevet strømanalyse. Få vite hva som driver din strømregning og konkrete tiltak for å spare penger. Gratis, ingen registrering, tar 3 minutter.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -203,13 +203,10 @@
     animation: fadeUp 0.9s both;
   }
   .hero h1 .word:nth-child(1) { animation-delay: 0.1s; }
-  .hero h1 .word:nth-child(2) { animation-delay: 0.18s; }
-  .hero h1 .word:nth-child(3) { animation-delay: 0.26s; }
-  .hero h1 .word:nth-child(4) { animation-delay: 0.34s; }
-  .hero h1 .word:nth-child(5) { animation-delay: 0.42s; }
-  .hero h1 .word:nth-child(6) { animation-delay: 0.5s; }
-  .hero h1 .word:nth-child(7) { animation-delay: 0.58s; }
-  .hero h1 .word:nth-child(8) { animation-delay: 0.66s; }
+  .hero h1 .word:nth-child(2) { animation-delay: 0.2s; }
+  .hero h1 .word:nth-child(3) { animation-delay: 0.3s; }
+  .hero h1 .word:nth-child(4) { animation-delay: 0.4s; }
+  .hero h1 .word:nth-child(5) { animation-delay: 0.55s; }
 
   .hero h1 em {
     font-style: italic;
@@ -390,9 +387,14 @@
   .price-bar.now {
     background: var(--green-deep);
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--green-deep);
+    animation: bar-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, now-pulse 2.5s 2s ease-in-out infinite;
   }
   @keyframes bar-grow {
     to { transform: scaleY(1); opacity: 1; }
+  }
+  @keyframes now-pulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--green-deep); }
+    50% { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--green-glow); }
   }
 
   .price-hours {
@@ -406,14 +408,29 @@
   .insight-chip {
     position: absolute;
     z-index: 10;
+    animation: chip-fade-in 0.8s 1s both;
   }
   .insight-chip-1 {
-    top: -56px;
+    top: -28px;
     left: 0;
+    animation: chip-fade-in 0.8s 1s both, float-soft-1 6s 1.8s ease-in-out infinite;
   }
   .insight-chip-2 {
-    bottom: -56px;
+    bottom: -28px;
     right: 0;
+    animation: chip-fade-in 0.8s 1.2s both, float-soft-2 6s 2s ease-in-out infinite;
+  }
+  @keyframes chip-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float-soft-1 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  @keyframes float-soft-2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
   }
   .insight-chip-inner {
     background: white;
@@ -424,6 +441,11 @@
     display: flex; align-items: center; gap: 10px;
     font-size: 13px;
     font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .insight-chip:hover .insight-chip-inner {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
   }
   .insight-chip .icon {
     width: 32px; height: 32px;
@@ -514,8 +536,9 @@
   /* Reveal on scroll */
   .reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
   }
   .reveal.visible {
     opacity: 1;
@@ -523,15 +546,16 @@
   }
   .reveal-stagger > * {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(14px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
   }
-  .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
-  .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.15s; }
-  .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.25s; }
-  .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.35s; }
-  .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.45s; }
-  .reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.55s; }
+  .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.04s; }
+  .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.12s; }
+  .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.20s; }
+  .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.28s; }
+  .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.36s; }
+  .reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.44s; }
   .reveal-stagger.visible > * {
     opacity: 1;
     transform: translateY(0);
@@ -861,6 +885,17 @@
     font-size: 14px;
     margin-bottom: 16px;
     letter-spacing: 2px;
+  }
+  .example-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--green-light);
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    border: 1px solid rgba(45, 106, 79, 0.15);
   }
   .testimonial-quote {
     font-family: var(--serif);
@@ -1212,24 +1247,21 @@
   <div class="hero-content">
     <div class="hero-eyebrow">
       <span class="dot"></span>
-      Norsk strømanalyse · AI-drevet
+      Norsk strømanalyse · drevet av AI
     </div>
     <h1>
-      <span class="word">De</span>
-      <span class="word">fleste</span>
-      <span class="word">betaler</span>
-      <span class="word">mer</span>
-      <span class="word">enn</span>
-      <span class="word">de</span>
-      <span class="word">må.</span>
-      <span class="word"><em>Finn ut hva du kan gjøre.</em></span>
+      <span class="word">Slutt</span>
+      <span class="word">å</span>
+      <span class="word">overbetale</span>
+      <span class="word">strøm.</span>
+      <span class="word"><em>Få svaret på 3 minutter.</em></span>
     </h1>
     <p class="hero-sub">
-      Svar på 12 spørsmål og få en personlig analyse av hva som driver strømregningen din — og konkrete tiltak du faktisk kan gjøre noe med.
+      Få en personlig analyse av strømregningen din — basert på boligen din, prisområdet ditt og avtalen du har i dag. Konkrete tiltak, ingen tomme løfter.
     </p>
     <div class="hero-cta-row">
       <a href="/sparwatt-analyse.html" class="btn-primary">
-        Start gratis analyse
+        Prøv gratis
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M5 12h14M13 6l6 6-6 6"/>
         </svg>
@@ -1237,9 +1269,9 @@
       <a href="#how" class="btn-secondary">Slik fungerer det</a>
     </div>
     <div class="hero-meta">
-      <span>Under 3 minutter</span>
+      <span>Tar 3 minutter</span>
       <span>Ingen registrering</span>
-      <span>Live strømpriser</span>
+      <span>Helt gratis</span>
     </div>
   </div>
 
@@ -1285,19 +1317,17 @@
 <div class="trust-strip">
   <div class="marquee-track">
     <div class="marquee-group">
-      <div class="marquee-item">100% norskbasert</div>
-      <div class="marquee-item">Ingen binding</div>
-      <div class="marquee-item">Live strømpriser</div>
-      <div class="marquee-item">AI-drevet rådgiver</div>
-      <div class="marquee-item">Personlig analyse</div>
+      <div class="marquee-item">Live priser fra alle fem prisområder</div>
+      <div class="marquee-item">Tilpasset norske strømregler og ordninger</div>
+      <div class="marquee-item">Norgespris og strømstøtte forklart</div>
+      <div class="marquee-item">Ingen binding — avslutt når du vil</div>
       <div class="marquee-item">Bygd i Norge</div>
     </div>
     <div class="marquee-group" aria-hidden="true">
-      <div class="marquee-item">100% norskbasert</div>
-      <div class="marquee-item">Ingen binding</div>
-      <div class="marquee-item">Live strømpriser</div>
-      <div class="marquee-item">AI-drevet rådgiver</div>
-      <div class="marquee-item">Personlig analyse</div>
+      <div class="marquee-item">Live priser fra alle fem prisområder</div>
+      <div class="marquee-item">Tilpasset norske strømregler og ordninger</div>
+      <div class="marquee-item">Norgespris og strømstøtte forklart</div>
+      <div class="marquee-item">Ingen binding — avslutt når du vil</div>
       <div class="marquee-item">Bygd i Norge</div>
     </div>
   </div>
@@ -1307,31 +1337,31 @@
 <section class="problem">
   <div class="container">
     <div class="reveal">
-      <div class="section-eyebrow">Hva vi løser</div>
-      <h2 class="section-title">Strømregningen er <em>komplisert med vilje</em></h2>
-      <p class="section-intro">Nettleie, påslag, effektledd, spotpris, avgifter — de færreste vet hva de betaler for. Og det er dyrt å ikke vite.</p>
+      <div class="section-eyebrow">Derfor betaler du for mye</div>
+      <h2 class="section-title">Strømregningen er <em>laget komplisert</em></h2>
+      <p class="section-intro">Spotpris, nettleie, kapasitetstrinn, påslag, månedsbeløp, avgifter — strømregningen består av seks-syv ulike kostnader. De fleste vet ikke hvor de kan kutte. Vi viser deg hvor.</p>
     </div>
     <div class="problem-grid reveal-stagger">
       <div class="problem-card">
         <div class="problem-stat">
-          1<span class="problem-stat-unit">år+</span>
+          4<span class="problem-stat-x">×</span>
         </div>
-        <h3>Siden du sjekket leverandør</h3>
-        <p>De fleste norske husstander har ikke sjekket strømleverandøren sin på over ett år. Bytte tar 5 minutter og kan spare 100–300 kr/mnd.</p>
+        <h3>Dyrere mellom 17 og 21</h3>
+        <p>Strømmen er ofte fire ganger dyrere på ettermiddagen enn om natta. Å sette vaskemaskinen på timer koster ingenting — og merkes på regningen med en gang.</p>
       </div>
       <div class="problem-card">
         <div class="problem-stat">
-          3<span class="problem-stat-x">×</span>
+          50<span class="problem-stat-unit">øre</span>
         </div>
-        <h3>Dyrere panelovner</h3>
-        <p>Elektriske panelovner koster 3× mer enn varmepumpe for samme varme. Investeringen er tjent inn på 2–3 år.</p>
+        <h3>Norgespris du kanskje glemte</h3>
+        <p>Norgespris gir deg fast strømpris på 50 øre/kWh ut 2026. I januar 2026 sparte gjennomsnittsfamilien i Sør-Norge 900–1000 kr på avtalen. Du må bestille selv.</p>
       </div>
       <div class="problem-card">
         <div class="problem-stat">
-          17<span class="problem-stat-unit">–21</span>
+          800<span class="problem-stat-unit">kr</span>
         </div>
-        <h3>Når strømmen er dyrest</h3>
-        <p>Strømprisene er 2–4× høyere mellom kl. 17–21. Å flytte vaskemaskin til natt koster ingenting — og kutter regningen.</p>
+        <h3>Standby-strøm hvert år</h3>
+        <p>TV-er, ladere og småelektronikk som står på standby koster en vanlig husstand rundt 800 kr i året. De fleste vet ikke at de betaler for det.</p>
       </div>
     </div>
   </div>
@@ -1342,28 +1372,28 @@
   <div class="container">
     <div class="reveal">
       <div class="section-eyebrow">Slik fungerer det</div>
-      <h2 class="section-title">Fra spørsmål til <em>analyse</em> på under 3 minutter</h2>
+      <h2 class="section-title">Fra spørsmål til <em>klar analyse</em> på 3 minutter</h2>
     </div>
     <div class="steps reveal-stagger">
       <div class="step">
         <div class="step-num">01</div>
         <h3>Svar på 12 spørsmål</h3>
-        <p>Boligtype, størrelse, oppvarming, forbruk og leverandør. Ingen teknisk kunnskap nødvendig.</p>
+        <p>Boligtype, oppvarming, hvor du bor, hvilken strømavtale du har. Ingen tekniske detaljer — bare det du allerede vet.</p>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <h3>Vi analyserer deg</h3>
-        <p>Tar hensyn til ditt prisområde, din avtale og hva du allerede gjør.</p>
+        <h3>AI-en analyserer deg</h3>
+        <p>Vi henter live strømpriser fra ditt prisområde og sammenligner med din avtale, din bolig og dine vaner.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
-        <h3>Få ditt viktigste tiltak</h3>
-        <p>Gratis — konkret, personlig og rangert etter hva som vil utgjøre størst forskjell.</p>
+        <h3>Få ditt viktigste tiltak gratis</h3>
+        <p>Du får se hovedgrunnen til at du betaler for mye — og hva du kan gjøre med det. Helt gratis, ingen e-post nødvendig.</p>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <h3>Vil du ha mer?</h3>
-        <p>49 kr/mnd: alle tiltak, leverandøranalyse og AI-rådgiver. Avslutt når du vil.</p>
+        <p>For 49 kr i måneden får du alle tiltak rangert, AI-rådgiver med live priser, og full leverandøranalyse. Avslutt når du vil.</p>
       </div>
     </div>
 
@@ -1371,9 +1401,9 @@
     <div class="preview reveal">
       <div class="preview-grid">
         <div>
-          <div class="section-eyebrow" style="color: var(--green-glow);">Smakebit · prøv gratis</div>
-          <h2>Sjekk ditt prisområde nå</h2>
-          <p>Skriv inn postnummeret ditt — så viser vi deg ditt strømprisområde og live spotpris akkurat nå. Helt gratis, ingen registrering.</p>
+          <div class="section-eyebrow" style="color: var(--green-glow);">Prøv gratis nå</div>
+          <h2>Se strømprisen din akkurat nå</h2>
+          <p>Skriv inn postnummeret — så ser du ditt prisområde og hva strømmen koster i sanntid. Du trenger ikke registrere deg.</p>
           <div class="postnummer-input">
             <input type="text" id="postnummer" placeholder="F.eks. 0150" maxlength="4" inputmode="numeric">
             <button onclick="lookupPostnummer()">Sjekk</button>
@@ -1403,7 +1433,7 @@
   <div class="container">
     <div class="reveal">
       <div class="section-eyebrow">Full rapport</div>
-      <h2 class="section-title">Alt du trenger for å <em>ta kontroll</em> over strømregningen</h2>
+      <h2 class="section-title">Alt du trenger for å <em>kutte strømregningen</em></h2>
     </div>
     <div class="features-grid reveal-stagger">
       <div class="feature-card">
@@ -1411,77 +1441,85 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l4-4 4 4 5-5"/></svg>
         </div>
         <h3>Tiltak rangert etter effekt</h3>
-        <p>Prioritert etter hva som vil utgjøre størst forskjell for din spesifikke bolig og situasjon.</p>
+        <p>De største besparelsene først. Tilpasset din bolig, oppvarming og strømvaner — ikke generelle råd.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
         <h3>AI-rådgiver med live priser</h3>
-        <p>Still spørsmål om din situasjon og få svar basert på din profil og dagens priser.</p>
+        <p>Still spørsmål om din situasjon og få svar tilpasset din bolig, ditt prisområde og strømprisen akkurat nå.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         </div>
         <h3>Strømregningen forklart</h3>
-        <p>Nettleie, spotpris og påslag forklart på norsk — ikke fagsjargong ingen forstår.</p>
+        <p>Spotpris, nettleie, påslag, kapasitetstrinn og avgifter — forklart på vanlig norsk uten faguttrykk.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
         </div>
-        <h3>Leverandøranalyse</h3>
-        <p>Sjekker om du har en god strømavtale og viser konkret hva du kan spare ved å bytte.</p>
+        <h3>Sjekk av strømavtalen din</h3>
+        <p>Skriv inn påslag og månedsbeløp — vi viser deg konkret hva du kan spare ved å bytte avtale.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <h3>Sammenligning mot snitt</h3>
-        <p>Se om du bruker mer eller mindre strøm enn tilsvarende boliger i ditt område.</p>
+        <h3>Norgespris og strømstøtte</h3>
+        <p>Vi forklarer hva som lønner seg for nettopp deg — og hjelper deg å bestille det riktige.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
         </div>
         <h3>Ingen binding</h3>
-        <p>Avslutt abonnementet med ett klikk når du vil. Ingen skjulte kostnader.</p>
+        <p>Avslutt abonnementet med ett klikk når du vil. Ingen skjulte kostnader, ingen oppsigelsestid.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
+<!-- WHAT YOU GET -->
 <section class="testimonials">
   <div class="container">
     <div class="reveal">
-      <div class="section-eyebrow">Hva brukere sier</div>
-      <h2 class="section-title">Tidlige <em>tilbakemeldinger</em></h2>
+      <div class="section-eyebrow">Hva du får</div>
+      <h2 class="section-title">Slik ser <em>analysen din ut</em></h2>
+      <p class="section-intro">Du får ikke en generell strømguide. Du får din egen rapport — bygd opp av svarene dine, prisområdet ditt og live strømpriser.</p>
     </div>
     <div class="testimonial-grid reveal-stagger">
       <div class="testimonial">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-quote">«Hadde Fortum med 4,9 øre påslag i årevis uten å tenke på det. SparWatt sa jeg burde bytte — byttet til Tibber og sparer rundt 180 kr i måneden. Tok fem minutter.»</p>
+        <div class="example-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l4-4 4 4 5-5"/></svg>
+        </div>
+        <p class="testimonial-quote">«I din enebolig på 150 kvm med panelovner kan en luft-til-luft varmepumpe kutte 400–800 kr i måneden — og være tjent inn på 2–3 år.»</p>
         <div class="testimonial-author">
-          <strong>Kjetil R.</strong>
-          Enebolig i Akershus · byttet leverandør
+          <strong>Eksempel: Tiltak rangert etter effekt</strong>
+          Du får alle tiltak — det viktigste først
         </div>
       </div>
       <div class="testimonial">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-quote">«Visste ikke hva nettleie egentlig var før jeg brukte dette. Nå skjønner jeg endelig hva jeg betaler for — og jeg har satt vaskemaskinen til å kjøre om natta.»</p>
+        <div class="example-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <p class="testimonial-quote">«Ja, Norgespris lønner seg fortsatt for deg. I januar sparte du anslagsvis 950 kr. Sjekk igjen i mai når sommerprisene starter.»</p>
         <div class="testimonial-author">
-          <strong>Marianne S.</strong>
-          Leilighet i Oslo · 2 i husstanden
+          <strong>Eksempel: AI-rådgiver</strong>
+          Still spørsmål om din situasjon
         </div>
       </div>
       <div class="testimonial">
-        <div class="testimonial-stars">★★★★☆</div>
-        <p class="testimonial-quote">«Hytta vår sto og dro strøm hele vinteren selv om vi ikke var der. Etter analysen installerte vi smartplugg og sparte godt over 300 kr første måneden.»</p>
+        <div class="example-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <p class="testimonial-quote">«Strømmen i NO1 er billigst kl. 03 i dag (24,1 øre) og dyrest kl. 18 (89,4 øre). Sett vaskemaskinen på timer.»</p>
         <div class="testimonial-author">
-          <strong>Tor-Erik B.</strong>
-          Hytte i Numedal · pensjonist
+          <strong>Eksempel: Live priser</strong>
+          Time-for-time fra ditt prisområde
         </div>
       </div>
     </div>
@@ -1492,12 +1530,12 @@
 <section class="honesty">
   <div class="container">
     <div class="reveal">
-      <div class="section-eyebrow">Ærlighet først</div>
-      <h2 class="section-title">Vi lover ikke <em>mirakelbesparelser</em></h2>
+      <div class="section-eyebrow">Vår posisjon</div>
+      <h2 class="section-title">Vi <em>selger ikke strøm</em>. Vi gir ærlige råd.</h2>
     </div>
     <div class="reveal">
-      <p>Mange strømtjenester lover deg «tusenvis i sparing» uten å vite noe om boligen din. Det gjør ikke vi.</p>
-      <p>SparWatt gir deg en <strong style="color:white;">ærlig analyse</strong> basert på din faktiske situasjon. Noen vil spare mye, andre mindre — det avhenger av hva du allerede gjør. Det vi kan love er konkret, relevant informasjon — ikke vage løfter.</p>
+      <p>De fleste tjenester som "hjelper deg å spare strøm" tjener på å sende deg videre til en bestemt strømleverandør. Det gjør ikke vi.</p>
+      <p>SparWatt er en <strong style="color:white;">nøytral analysetjeneste</strong>. Du betaler 49 kr i måneden, og vi gir deg ærlige råd basert på din situasjon — uansett hvilken leverandør, varmepumpe eller ladeløsning du velger. Vi tjener ikke en krone på hva du gjør med rådene.</p>
     </div>
   </div>
 </section>
@@ -1507,37 +1545,37 @@
   <div class="container">
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Priser</div>
-      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Enkelt og <em>transparent</em></h2>
-      <p class="section-intro" style="margin-left:auto;margin-right:auto;">Start gratis — oppgrader hvis du vil ha full tilgang.</p>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Mindre enn <em>én kaffekopp</em> i uken</h2>
+      <p class="section-intro" style="margin-left:auto;margin-right:auto;">Start gratis. Oppgrader om du vil ha mer. Du bestemmer.</p>
     </div>
     <div class="pricing-grid">
       <div class="price-plan reveal">
-        <div class="price-plan-label">Gratis · alltid</div>
+        <div class="price-plan-label">Gratis</div>
         <div class="price-plan-amount">0<sub> kr</sub></div>
-        <div class="price-plan-tag">Kom i gang uten kostnad</div>
+        <div class="price-plan-tag">Helt uten registrering</div>
         <div class="price-plan-name">Gratis analyse</div>
         <ul>
           <li>Ditt viktigste sparetiltak</li>
-          <li>Estimert potensiell besparelse</li>
-          <li>Leverandørteaser</li>
-          <li>Ingen registrering</li>
+          <li>Estimert besparelse for din bolig</li>
+          <li>Live strømpriser fra ditt prisområde</li>
+          <li>Ingen e-post, ingen kortinformasjon</li>
         </ul>
-        <a href="/sparwatt-analyse.html" class="btn-primary" style="background: var(--ink);">Start analysen →</a>
+        <a href="/sparwatt-analyse.html" class="btn-primary" style="background: var(--ink);">Start gratis →</a>
       </div>
       <div class="price-plan featured reveal">
-        <div class="price-plan-label">Full tilgang · 49 kr/mnd</div>
+        <div class="price-plan-label">Full tilgang</div>
         <div class="price-plan-amount">49<sub> kr/mnd</sub></div>
-        <div class="price-plan-tag">Ingen bindingstid · avslutt når du vil</div>
+        <div class="price-plan-tag">Avslutt når du vil — ingen binding</div>
         <div class="price-plan-name">Full rapport + AI-rådgiver</div>
         <ul>
-          <li>Alle tiltak rangert etter effekt</li>
-          <li>AI-rådgiver med live priser</li>
-          <li>Leverandøranalyse + bytte-anbefaling</li>
-          <li>Strømregningen forklart</li>
-          <li>Sammenligning mot gjennomsnittet</li>
-          <li>Avslutt når du vil</li>
+          <li>Alle tiltak — rangert etter besparelse</li>
+          <li>AI-rådgiver med live priser fra ditt område</li>
+          <li>Sjekk av strømavtalen din</li>
+          <li>Strømregningen forklart på vanlig norsk</li>
+          <li>Daglige innsikter og prognose for i morgen</li>
+          <li>Norgespris og strømstøtte forklart</li>
         </ul>
-        <a href="/sparwatt-analyse.html" class="btn-primary">Start gratis →</a>
+        <a href="/sparwatt-analyse.html" class="btn-primary">Prøv gratis først →</a>
       </div>
     </div>
   </div>
@@ -1547,24 +1585,30 @@
 <section style="background:var(--bg-warm);border-top:1px solid var(--line);">
   <div class="container">
     <div class="reveal" style="text-align:center;">
-      <div class="section-eyebrow">FAQ</div>
-      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Vanlige <em>spørsmål</em></h2>
+      <div class="section-eyebrow">Vanlige spørsmål</div>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto;">Det folk <em>ofte lurer på</em></h2>
     </div>
     <div class="faq">
+      <details class="faq-item"><summary class="faq-q">Selger dere strøm eller tjener dere på leverandører?</summary>
+        <p class="faq-a">Nei. Vi tjener bare på abonnementet på 49 kr i måneden. Vi får ingen provisjon eller betaling fra strømleverandører, varmepumpefirmaer eller andre. Det er hele poenget — du får råd fra noen som ikke har en agenda.</p>
+      </details>
       <details class="faq-item"><summary class="faq-q">Trenger jeg strømregningen for hånden?</summary>
-        <p class="faq-a">Nei. Vi spør om omtrentlig forbruk — og det er valgfritt. Du kan svare «vet ikke» og fortsatt få en nyttig analyse.</p>
+        <p class="faq-a">Nei. Du kan gjennomføre analysen uten regningen. Hvis du har den lett tilgjengelig blir analysen mer presis, men vi kan også gi deg gode råd basert på antatt forbruk for tilsvarende boliger.</p>
       </details>
-      <details class="faq-item"><summary class="faq-q">Hva menes med «potensiell besparelse»?</summary>
-        <p class="faq-a">Det er et estimat basert på din boligsituasjon og typiske besparelser for tilsvarende husstander — ikke en garanti. Din faktiske sparing avhenger av mange faktorer vi ikke kan kontrollere.</p>
+      <details class="faq-item"><summary class="faq-q">Hva betyr egentlig "estimert besparelse"?</summary>
+        <p class="faq-a">Det er et estimat basert på din bolig, oppvarming, prisområde og hvilke tiltak du kan ta. Det er ingen garanti. Faktisk sparing avhenger av hvor mange tiltak du faktisk gjennomfører og ditt eget strømforbruk.</p>
       </details>
-      <details class="faq-item"><summary class="faq-q">Hva gjør dere med informasjonen min?</summary>
-        <p class="faq-a">Vi bruker svarene dine utelukkende til å generere analysen. Vi selger ikke data til tredjeparter og deler ikke informasjon med strømleverandører.</p>
+      <details class="faq-item"><summary class="faq-q">Hva gjør dere med informasjonen jeg gir?</summary>
+        <p class="faq-a">Vi bruker svarene dine kun til å lage analysen din. Vi selger ikke data, vi deler ikke noe med strømleverandører, og vi sender deg ikke spam. Du trenger heller ikke registrere deg eller gi oss e-postadressen din for gratis-analysen.</p>
       </details>
-      <details class="faq-item"><summary class="faq-q">Fungerer dette for hytte?</summary>
-        <p class="faq-a">Ja. Velg «Hytte / fritidsbolig» i analysen — tiltakene tilpasses hyttebruk og periodisk forbruksmønster.</p>
+      <details class="faq-item"><summary class="faq-q">Fungerer dette for hytte og fritidsbolig?</summary>
+        <p class="faq-a">Ja. Velg "Hytte / fritidsbolig" i analysen, så tilpasses tiltakene hyttebruk. Husk at fritidsboliger ikke får strømstøtte — det forklarer vi i rapporten.</p>
       </details>
-      <details class="faq-item"><summary class="faq-q">Kan jeg avslutte når jeg vil?</summary>
-        <p class="faq-a">Ja. Ingen bindingstid. Avslutt med ett klikk inne i Stripe når du vil — du beholder tilgangen ut perioden du har betalt for.</p>
+      <details class="faq-item"><summary class="faq-q">Kan jeg avslutte abonnementet når jeg vil?</summary>
+        <p class="faq-a">Ja. Ingen binding, ingen oppsigelsestid. Avslutt med ett klikk når du vil — du beholder tilgangen ut perioden du har betalt for.</p>
+      </details>
+      <details class="faq-item"><summary class="faq-q">Hvem står bak SparWatt?</summary>
+        <p class="faq-a">SparWatt er et lite norsk teknologiselskap som ønsker å gjøre strømmarkedet enklere å forstå for vanlige folk. Vi bruker AI for å gi personlig rådgivning som tidligere kun har vært tilgjengelig for de som ansatte energirådgivere.</p>
       </details>
     </div>
   </div>
@@ -1573,8 +1617,8 @@
 <!-- FINAL CTA -->
 <section class="final-cta">
   <div class="container reveal">
-    <h2>Finn ut hva du betaler<br><em>for mye på</em> — i dag</h2>
-    <p>Gratis, tar under 3 minutter, ingen registrering nødvendig.</p>
+    <h2>Slutt å gjette. <em>Få svaret på 3 minutter.</em></h2>
+    <p>Gratis. Ingen registrering. Ingen kortinformasjon. Bare ærlige svar om din strømsituasjon.</p>
     <a href="/sparwatt-analyse.html" class="btn-primary">
       Start gratis analyse
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1589,11 +1633,11 @@
   <div class="container">
     <div>
       <div class="logo"><span class="logo-mark"></span> SparWatt</div>
-      <p>Norsk AI-drevet strømanalyse for privatpersoner. Vi hjelper deg å forstå strømregningen og kutte kostnader basert på din spesifikke situasjon.</p>
+      <p>Norsk AI-drevet strømrådgivning. Vi hjelper vanlige nordmenn å forstå strømregningen og kutte unødvendige kostnader. Vi selger ikke strøm — vi gir nøytrale råd.</p>
     </div>
     <div>
       <h4>Produkt</h4>
-      <a href="/sparwatt-analyse.html">Start analyse</a>
+      <a href="/sparwatt-analyse.html">Start gratis analyse</a>
       <a href="#how">Slik fungerer det</a>
       <a href="#">Priser</a>
     </div>

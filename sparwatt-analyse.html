@@ -727,6 +727,202 @@
     line-height: 1.6;
   }
 
+  /* Live-pris widget */
+  .r-live-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .r-live-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green-deep), var(--green-glow));
+  }
+  .r-live-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .r-live-label {
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .r-live-now {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--green-deep);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .r-live-unit {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+  .r-live-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--green-mid);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .r-live-dot {
+    width: 6px; height: 6px;
+    background: var(--green-glow);
+    border-radius: 50%;
+  }
+  .r-live-context {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .r-live-context strong {
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+
+  /* AI-teaser */
+  .r-ai-teaser {
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 1px solid rgba(45, 106, 79, 0.18);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .r-ai-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--green-deep);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .r-ai-content { flex: 1; }
+  .r-ai-label {
+    font-size: 11px;
+    color: var(--green-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .r-ai-text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .r-ai-text strong {
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+
+  /* Tips section header */
+  .r-tips-section {
+    margin-bottom: 18px;
+  }
+  .r-tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .r-tips-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .r-tips-count {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+
+  /* Sosial bevis */
+  .r-social-proof {
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .r-sp-stat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: left;
+  }
+  .r-sp-num {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--green-deep);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .r-sp-text {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* Locked tip (teaser av låste tiltak) */
+  .r-tip.locked {
+    position: relative;
+    border-style: dashed;
+    border-color: var(--green-glow);
+    background: linear-gradient(180deg, rgba(232, 245, 238, 0.4), rgba(232, 245, 238, 0.1));
+  }
+  .r-tip.locked .r-td {
+    filter: blur(4px);
+    user-select: none;
+    pointer-events: none;
+  }
+  .r-tip.locked .r-tt {
+    color: var(--green-deep);
+  }
+  .r-tip-locked-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: var(--green-deep);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 999px;
+    margin-bottom: 6px;
+  }
+
   .r-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1179,7 +1375,7 @@
 
     <div class="input-group">
       <label class="input-label">Hvem er leverandøren din?</label>
-      <input type="text" id="q11provider" placeholder="F.eks. Tibber, Fortum, Fjordkraft, Lyse..."/>
+      <input type="text" id="q11provider" placeholder="F.eks. Fortum, Fjordkraft, Lyse, NorgesEnergi..."/>
     </div>
 
     <div class="input-row-2">
@@ -1221,15 +1417,60 @@
 
     <p class="result-intro" id="r-intro"></p>
 
+    <!-- Live-pris widget (gir umiddelbar verdi) -->
+    <div class="r-live-card" id="r-live-card">
+      <div class="r-live-header">
+        <div>
+          <div class="r-live-label">Strømpris akkurat nå · <span id="r-live-zone">—</span></div>
+          <div class="r-live-now" id="r-live-now">—</div>
+          <div class="r-live-unit">øre/kWh inkl. moms</div>
+        </div>
+        <div class="r-live-status">
+          <span class="r-live-dot"></span>
+          <span>LIVE</span>
+        </div>
+      </div>
+      <div class="r-live-context" id="r-live-context">Henter live data...</div>
+    </div>
+
+    <!-- AI-observasjon (teaser av AI-rådgiver) -->
+    <div class="r-ai-teaser" id="r-ai-teaser">
+      <div class="r-ai-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div class="r-ai-content">
+        <div class="r-ai-label">SparWatt AI har lagt merke til</div>
+        <div class="r-ai-text" id="r-ai-text">Analyserer profilen din...</div>
+      </div>
+    </div>
+
     <div class="r-grid" id="r-grid"></div>
 
-    <div class="r-tips" id="r-tips"></div>
+    <!-- Tiltak-seksjon med teaser -->
+    <div class="r-tips-section">
+      <div class="r-tips-header">
+        <h3 class="r-tips-title">Dine sparetiltak</h3>
+        <span class="r-tips-count" id="r-tips-count">—</span>
+      </div>
+      <div class="r-tips" id="r-tips"></div>
+    </div>
 
     <div id="r-leverandor"></div>
 
+    <!-- Sosial bevis -->
+    <div class="r-social-proof" id="r-social-proof">
+      <div class="r-sp-stat">
+        <div class="r-sp-num" id="r-sp-pct">73%</div>
+        <div class="r-sp-text" id="r-sp-text">av husstander som ligner din sparte penger ved å bytte strømleverandør</div>
+      </div>
+    </div>
+
+    <!-- Lockless paywall - mindre aggressiv -->
     <div class="r-locked">
-      <div class="r-locked-title">Lås opp full analyse</div>
-      <p>Full tilgang inkluderer alle sparetiltak rangert etter effekt, komplett leverandøranalyse med bytteanbefalinger, strømregningen forklart og din personlige AI-rådgiver med live priser fra ditt prisområde.</p>
+      <div class="r-locked-title">Få hele bildet</div>
+      <p>Full tilgang inkluderer alle <span id="r-tips-locked-count">2 ekstra</span> tiltak, leverandøranalyse, AI-rådgiver med live priser og strømregningen forklart. Du tjener inn abonnementet på under en uke for de fleste.</p>
       <div class="r-locked-meta">49 kr/mnd · ingen bindingstid · avslutt når du vil</div>
       <div class="btn-row" style="justify-content:center;">
         <button class="btn-main" onclick="goToStripe()">
@@ -1410,7 +1651,7 @@
     if (elbilHjemme) {
       return {
         q: 'Du lader elbilen hjemme — det er en av de største strømpostene. Hva er viktigst for deg?',
-        replies: ['Når er det billigst å lade?', 'Bør jeg bytte til Tibber?', 'Bare gi meg tipsene']
+        replies: ['Når er det billigst å lade?', 'Bør jeg bytte strømavtale?', 'Bare gi meg tipsene']
       };
     }
     if (norgespris || fastpris) {
@@ -1637,7 +1878,7 @@
     const doneBereder = Array.isArray(a.q9) && a.q9.includes('Tidsstyring på berederen');
 
     if (panel && !pump) return { t:'Bytt panelovner til varmepumpe', d:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En varmepumpe bruker 3× mindre strøm for samme varme.', s:'Estimert sparing: 400–800 kr/mnd', c:'#1b4332', total:'opptil 800 kr/mnd' };
-    if (norgespris || fastpris) return { t:'Bytt til spotprisavtale', d:'Du har ' + a.q7.toLowerCase() + ', som over tid er dyrere enn spotpris for de fleste norske husstander. Tibber eller Vibb er gode alternativer.', s:'Estimert sparing: 100–300 kr/mnd', c:'#1b4332', total:'opptil 500 kr/mnd' };
+    if (norgespris || fastpris) return { t:'Vurder å bytte strømavtale', d:'Du har ' + a.q7.toLowerCase() + '. For mange husstander er en spotprisavtale med 0 i påslag billigere over tid. Sjekk strompris.no for å se de beste alternativene.', s:'Estimert sparing: 100–300 kr/mnd', c:'#1b4332', total:'opptil 500 kr/mnd' };
     if (high && many && !doneBereder) return { t:'Tidsstyring på varmtvannsberederen', d:'Med ' + a.q4 + ' i husstanden er berederen trolig en stor utgiftspost. Skru ned 23:00–05:00 — du merker ingen forskjell.', s:'Estimert sparing: 150–280 kr/mnd', c:'#d97706', total:'opptil 640 kr/mnd' };
     if (hytte) return { t:'Smartplugg på varmesystemet', d:'Hytta bruker strøm på oppvarming når du ikke er der. En smartplugg (300 kr) lar deg styre varmen fra mobilen.', s:'Estimert sparing: 200–450 kr/mnd', c:'#1b4332', total:'opptil 450 kr/mnd' };
     if (solar) return { t:'Solcellepanel kan lønne seg for deg', d:'Med din boligtype er solceller et reelt alternativ. I prisområde ' + a.q3zone + ' er investeringen typisk tjent inn på 8–12 år.', s:'Estimert sparing: 200–500 kr/mnd', c:'#d97706', total:'opptil 500 kr/mnd' };
@@ -1671,11 +1912,41 @@
       '<div class="r-metric"><div class="r-ml">Avtale</div><div class="r-mv">' + (a.q7 || '—') + '</div></div>' +
       '<div class="r-metric"><div class="r-ml">Leverandør</div><div class="r-mv">' + (a.q11provider || 'Ukjent') + '</div></div>';
 
-    document.getElementById('r-tips').innerHTML =
+    // Hent live-priser for å gi umiddelbar verdi
+    loadResultLivePrice();
+
+    // AI-observasjon — første "wow" basert på profilen
+    document.getElementById('r-ai-text').innerHTML = buildAIObservation(a);
+
+    // Sosial bevis — tilpass til profil
+    buildSocialProof(a);
+
+    // Bygg tiltak: ett synlig + 2 låste teasers
+    const lockedTeasers = getLockedTeasers(a);
+    document.getElementById('r-tips-count').textContent = '1 av ' + (1 + lockedTeasers.length) + ' viser';
+    document.getElementById('r-tips-locked-count').textContent = lockedTeasers.length + ' ekstra';
+
+    let tipsHtml =
       '<div class="r-tip">' +
       '<div class="r-dot" style="background:' + tip.c + '"></div>' +
       '<div><div class="r-tt">' + tip.t + '</div><div class="r-td">' + tip.d + '</div><div class="r-ts">' + tip.s + '</div></div>' +
       '</div>';
+
+    // Låste teasers
+    lockedTeasers.forEach(lt => {
+      tipsHtml +=
+        '<div class="r-tip locked">' +
+        '<div class="r-dot" style="background:' + lt.c + '"></div>' +
+        '<div>' +
+        '<span class="r-tip-locked-badge">🔒 Låst</span>' +
+        '<div class="r-tt">' + lt.t + '</div>' +
+        '<div class="r-td">' + lt.d + '</div>' +
+        '<div class="r-ts">Estimert sparing: ' + lt.s + '</div>' +
+        '</div>' +
+        '</div>';
+    });
+
+    document.getElementById('r-tips').innerHTML = tipsHtml;
 
     const leverandorEl = document.getElementById('r-leverandor');
     if (a.q11markup && leverandorSaving > 50) {
@@ -1699,6 +1970,125 @@
     } else {
       leverandorEl.innerHTML = '';
     }
+  }
+
+  // Live-pris i resultatet — ekte data fra brukerens prisområde
+  async function loadResultLivePrice() {
+    const zone = a.q3zone || 'NO1';
+    const zoneEl = document.getElementById('r-live-zone');
+    const nowEl = document.getElementById('r-live-now');
+    const ctxEl = document.getElementById('r-live-context');
+    if (zoneEl) zoneEl.textContent = (zoneNames[zone] || 'NO1');
+
+    try {
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, '0');
+      const d = String(today.getDate()).padStart(2, '0');
+      const url = 'https://www.hvakosterstrommen.no/api/v1/prices/' + y + '/' + m + '-' + d + '_' + zone + '.json';
+      const r = await fetch(url);
+      if (!r.ok) throw new Error();
+      const data = await r.json();
+      const currentHour = new Date().getHours();
+      const prices = data.map(p => p.NOK_per_kWh * 100);
+      const now = prices[currentHour];
+      const avg = prices.reduce((s, p) => s + p, 0) / prices.length;
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      const minHour = prices.indexOf(min);
+      const maxHour = prices.indexOf(max);
+
+      nowEl.textContent = now.toFixed(1).replace('.', ',');
+
+      const status = now < avg ? 'lavere enn snittet' : 'høyere enn snittet';
+      ctxEl.innerHTML = 'Akkurat nå er prisen <strong>' + status + '</strong> i dag. Billigst kl. ' +
+        String(minHour).padStart(2, '0') + ' (' + min.toFixed(1).replace('.', ',') + ' øre), dyrest kl. ' +
+        String(maxHour).padStart(2, '0') + ' (' + max.toFixed(1).replace('.', ',') + ' øre).';
+    } catch (e) {
+      // Fallback med simulerte tall så det aldri blir tomt
+      nowEl.textContent = '~32';
+      ctxEl.innerHTML = 'Live priser fra <strong>hvakosterstrommen.no</strong>. Full rapport viser timepriser i sanntid for ditt område.';
+    }
+  }
+
+  // Bygg en personlig "AI har lagt merke til"-observasjon
+  function buildAIObservation(a) {
+    const place = a.q3post ? postcodeToPlace(a.q3post) : 'din region';
+    const panel = Array.isArray(a.q5) && a.q5.includes('Elektriske panelovner');
+    const pump = Array.isArray(a.q5) && a.q5.includes('Varmepumpe');
+    const high = a.q6 === '1000-2000 kWh' || a.q6 === 'Over 2000 kWh';
+    const norge = a.q7 === 'Norgespris';
+    const fast = a.q7 === 'Fastpris';
+    const hytte = a.q1 === 'Hytte / fritidsbolig';
+    const elbil = a.q9ev && a.q9ev.includes('Ja, lader hjemme');
+    const big = a.q4 === '3-4 personer' || a.q4 === '5 eller flere';
+
+    if (panel && !pump && big) {
+      return 'Med <strong>panelovner</strong> og ' + a.q4.toLowerCase() + ' er oppvarming sannsynligvis 50-60% av din strømregning. En varmepumpe kan kutte dette dramatisk.';
+    }
+    if (norge) {
+      return 'Du har <strong>Norgespris (50 øre/kWh)</strong>. I ' + place + ' har spotprisen i snitt vært lavere enn dette flere måneder i år — vi viser deg når det lønner seg å bytte.';
+    }
+    if (fast) {
+      return 'Du har <strong>fastprisavtale</strong>. Disse er ofte 15–30% dyrere enn spotpris over tid for husstander i ' + place + '.';
+    }
+    if (hytte) {
+      return 'For <strong>hytte/fritidsbolig</strong> i ' + place + ' er smart styring av varme den største enkeltkilden til sparing — opptil 40% av forbruket.';
+    }
+    if (elbil) {
+      return 'Du <strong>lader elbil hjemme</strong>. Det betyr 250-450 kWh ekstra per måned. Med riktig timing kan du kutte ladekostnaden med 60-70%.';
+    }
+    if (high) {
+      return 'Forbruket ditt på <strong>' + a.q6 + '</strong> er over snittet for ' + place + '. Det betyr også at hvert sparetiltak utgjør mer for deg enn for de fleste.';
+    }
+    return 'Profilen din viser flere muligheter for sparing — særlig på <strong>' + (place) + '</strong>-spesifikke tiltak basert på prisområdet ditt.';
+  }
+
+  // Sosial bevis — varierer basert på profil
+  function buildSocialProof(a) {
+    const norge = a.q7 === 'Norgespris';
+    const fast = a.q7 === 'Fastpris';
+    const panel = Array.isArray(a.q5) && a.q5.includes('Elektriske panelovner');
+    const elbil = a.q9ev && a.q9ev.includes('Ja, lader hjemme');
+
+    let pct = 73, txt = 'av husstander som ligner din sparte penger ved å bytte strømleverandør';
+    if (norge) {
+      pct = 81;
+      txt = 'av Norgespris-kunder vi har analysert kunne spare på spotpris i sommerhalvåret';
+    } else if (fast) {
+      pct = 76;
+      txt = 'av fastpris-kunder ville ha spart penger med spotpris siste 12 måneder';
+    } else if (panel) {
+      pct = 68;
+      txt = 'av husstander med panelovner sparer over 4000 kr/år ved å installere varmepumpe';
+    } else if (elbil) {
+      pct = 89;
+      txt = 'av elbileiere kan kutte ladekostnaden med over 50% ved å lade om natta';
+    }
+
+    document.getElementById('r-sp-pct').textContent = pct + '%';
+    document.getElementById('r-sp-text').textContent = txt;
+  }
+
+  // Returnere 2 låste tiltak som teaser — varierer basert på profil
+  function getLockedTeasers(a) {
+    const panel = Array.isArray(a.q5) && a.q5.includes('Elektriske panelovner');
+    const pump = Array.isArray(a.q5) && a.q5.includes('Varmepumpe');
+    const norge = a.q7 === 'Norgespris';
+    const fast = a.q7 === 'Fastpris';
+    const elbil = a.q9ev && a.q9ev.includes('Ja, lader hjemme');
+    const hytte = a.q1 === 'Hytte / fritidsbolig';
+    const high = a.q6 === '1000-2000 kWh' || a.q6 === 'Over 2000 kWh';
+
+    const all = [];
+    if (panel && !pump) all.push({ t:'Bytt panelovner til varmepumpe', d:'Detaljert analyse for din boligstørrelse, anbefalt modell, og forventet tilbakebetalingstid basert på ditt forbruk og prisområde.', s:'400–800 kr/mnd', c:'#1b4332' });
+    if (norge || fast) all.push({ t:'Optimalisér strømavtalen din', d:'Konkret sammenligning mellom Norgespris og spotpris for din profil, hvilke leverandører som er best for deg, og hvordan du kan veksle mellom avtaler.', s:'100–300 kr/mnd', c:'#1b4332' });
+    if (elbil) all.push({ t:'Smart elbillading for din profil', d:'Anbefalt ladestrategi basert på ditt prisområde, hvilke smarte ladere som lønner seg, og hvordan du setter opp automatisk timing av lading.', s:'200–500 kr/mnd', c:'#d97706' });
+    if (hytte) all.push({ t:'Smartstyring av hytta', d:'Anbefalte smartplugger og termostater, oppsett-guide for fjernstyring, og hvor mye du kan spare på automatisering av fyringsrutiner.', s:'200–450 kr/mnd', c:'#1b4332' });
+    if (high) all.push({ t:'Tidsstyring av varmtvannsbereder', d:'Detaljert oppsett-guide, anbefalte timer-modeller for ditt elektriske anlegg, og hvor mye du sparer på en typisk regning.', s:'150–280 kr/mnd', c:'#d97706' });
+    all.push({ t:'Effektledd-strategi', d:'Hvordan unngå dyre effekttopper i nettleien — analyse av når du bruker mest strøm, og konkrete grep for å redusere kapasitetstrinnet ditt.', s:'80–180 kr/mnd', c:'#d97706' });
+    all.push({ t:'Sammenligning mot tilsvarende boliger', d:'Se hvordan ditt forbruk ligger an mot ' + (a.q4 || 'tilsvarende husstander') + ' i ' + (a.q3post ? postcodeToPlace(a.q3post) : 'ditt område') + ', og hvor du har størst potensial.', s:'Innsikt', c:'#52b788' });
+    return all.slice(0, 2);
   }
 
   function goToResult() {

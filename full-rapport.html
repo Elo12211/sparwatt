@@ -350,6 +350,12 @@
     width: 6px; height: 6px;
     background: var(--green-glow);
     border-radius: 50%;
+    animation: live-pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 0 0 rgba(82, 183, 136, 0.5);
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(82, 183, 136, 0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(82, 183, 136, 0); }
   }
   .price-now {
     font-family: var(--serif);
@@ -1147,6 +1153,221 @@
     background: var(--green-deep);
   }
 
+  /* ===== SAMMENLIGN TAB ===== */
+  .cmp-disclosure {
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 24px;
+  }
+  .cmp-disclosure-icon {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .cmp-disclosure strong {
+    color: var(--ink);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .cmp-input-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .cmp-input-title {
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .cmp-input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .cmp-input-grid > div {
+    display: flex;
+    flex-direction: column;
+  }
+  .cmp-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .cmp-current {
+    background: linear-gradient(135deg, var(--ink), #2a2a2a);
+    color: white;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 22px;
+    text-align: center;
+    animation: cmp-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes cmp-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .cmp-current-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .cmp-current-amount {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .cmp-current-context {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .cmp-list-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .cmp-list-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+
+  .cmp-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .cmp-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--green-deep);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+  }
+  .cmp-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    border-color: var(--green-glow);
+  }
+  .cmp-card:hover::before {
+    transform: scaleY(1);
+  }
+  .cmp-card-1::before { background: var(--green-deep); }
+  .cmp-card-2::before { background: var(--green-mid); }
+  .cmp-card-3::before { background: var(--green-glow); }
+
+  .cmp-rank {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: var(--green-light);
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    flex-shrink: 0;
+    border: 1px solid rgba(45, 106, 79, 0.15);
+  }
+  .cmp-card-body { flex: 1; min-width: 0; }
+  .cmp-card-name {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    line-height: 1.25;
+  }
+  .cmp-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .cmp-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: var(--bg-warm);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .cmp-card-price {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--green-deep);
+    letter-spacing: -0.01em;
+  }
+  .cmp-card-saving {
+    font-size: 13px;
+    color: var(--green-mid);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .cmp-card-saving.zero {
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+
+  .cmp-footer {
+    background: var(--bg-warm);
+    border-radius: 16px;
+    padding: 22px;
+    margin-top: 24px;
+    text-align: center;
+  }
+  .cmp-footer p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
   /* ===== INFO BOX (Norgespris etc.) ===== */
   .info-box {
     background: var(--green-light);
@@ -1243,6 +1464,12 @@
     .stat-value { font-size: 19px; }
     .price-now { font-size: 38px; }
     .lev-input-row { grid-template-columns: 1fr; }
+    .cmp-input-grid { grid-template-columns: 1fr; }
+    .cmp-current-amount { font-size: 32px; }
+    .cmp-card { padding: 16px; gap: 12px; }
+    .cmp-card-name { font-size: 17px; }
+    .cmp-card-price { font-size: 19px; }
+    .cmp-rank { width: 32px; height: 32px; font-size: 15px; }
     .chat-msgs { height: 420px; }
     .msg-bubble { max-width: 88%; }
     .tab { padding: 12px 14px; font-size: 13px; }
@@ -1288,6 +1515,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
     Tiltak
   </button>
+  <button class="tab" data-tab="compare" onclick="switchTab('compare')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+    Sammenlign
+  </button>
   <button class="tab" data-tab="chat" onclick="switchTab('chat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     AI-rådgiver
@@ -1303,16 +1534,16 @@
     <div class="hero-banner">
       <div class="hero-banner-row">
         <div>
-          <div class="hero-banner-label">Estimert månedssparing</div>
+          <div class="hero-banner-label">Estimert månedlig sparing</div>
           <div class="hero-banner-value" id="banner-saving">— kr</div>
         </div>
         <div>
-          <div class="hero-banner-label">På årsbasis</div>
+          <div class="hero-banner-label">Estimert årlig sparing</div>
           <div class="hero-banner-value" id="banner-yearly">— kr</div>
         </div>
       </div>
       <div class="hero-banner-context" id="banner-context">
-        Basert på din boligsituasjon og analyserte tiltak.
+        Estimat basert på din bolig og hvilke tiltak du kan ta. Faktisk sparing avhenger av forbruk og hvor mange tiltak du gjennomfører.
       </div>
     </div>
 
@@ -1374,20 +1605,20 @@
     <!-- Live priser -->
     <div class="section">
       <h2 class="sec-title">Live <em>strømpriser</em></h2>
-      <p class="sec-sub">Oppdateres automatisk fra ditt prisområde</p>
+      <p class="sec-sub">Time for time fra ditt prisområde — oppdateres kontinuerlig</p>
       <div class="price-card">
         <div class="price-card-header">
           <span class="price-card-title" id="price-title">Strømpris akkurat nå</span>
           <span class="price-card-live"><span class="dot"></span>Live</span>
         </div>
         <div class="price-now" id="price-now">—</div>
-        <div class="price-now-unit">øre/kWh inkl. moms · gjennomsnitt time</div>
+        <div class="price-now-unit">øre/kWh inkl. mva · snitt for inneværende time</div>
         <div class="price-bars" id="price-bars"></div>
         <div class="price-hours">
           <span>00</span><span>06</span><span>12</span><span>18</span><span>23</span>
         </div>
         <div class="price-insight" id="price-insight">
-          Laster prisanalyse...
+          Henter dagens priser...
         </div>
       </div>
     </div>
@@ -1395,7 +1626,7 @@
     <!-- I morgen-prognose -->
     <div class="section" id="tomorrow-section" style="display:none;">
       <h2 class="sec-title">Prisene <em>i morgen</em></h2>
-      <p class="sec-sub">Publiseres typisk kl. 13 samme dag · planlegg vask, lading og oppvask</p>
+      <p class="sec-sub">Publiseres rundt kl. 13 hver dag — planlegg vask, lading og oppvask basert på de billigste timene</p>
       <div class="price-card">
         <div class="price-card-header">
           <span class="price-card-title" id="tomorrow-title">Prognose i morgen</span>
@@ -1429,22 +1660,22 @@
     <!-- Leverandør-analyse -->
     <div class="section">
       <h2 class="sec-title">Din <em>strømavtale</em></h2>
-      <p class="sec-sub">Sjekk om du kan spare ved å bytte</p>
+      <p class="sec-sub">Skriv inn hva du betaler — så viser vi om du kan spare ved å bytte</p>
       <div class="lev-card">
         <div class="lev-input-row">
           <div>
             <label class="lev-label">Påslag (øre/kWh)</label>
-            <input type="text" id="lev-markup" placeholder="F.eks. 3.9" oninput="calcLev()" />
+            <input type="text" id="lev-markup" placeholder="F.eks. 3,9" oninput="calcLev()" />
           </div>
           <div>
-            <label class="lev-label">Månedsgebyr (kr)</label>
+            <label class="lev-label">Månedsbeløp (kr)</label>
             <input type="text" id="lev-fee" placeholder="F.eks. 49" oninput="calcLev()" />
           </div>
         </div>
         <div class="lev-result" id="lev-result"></div>
         <div class="btn-row">
-          <a href="https://tibber.com/no" target="_blank" rel="noopener" class="btn btn-primary">Bytt til Tibber →</a>
-          <a href="https://vibb.no" target="_blank" rel="noopener" class="btn btn-secondary">Sjekk Vibb</a>
+          <a href="https://www.strompris.no" target="_blank" rel="noopener" class="btn btn-primary">Sammenlign avtaler på strompris.no →</a>
+          <a href="https://elhub.no" target="_blank" rel="noopener" class="btn btn-secondary">Bestill Norgespris</a>
         </div>
       </div>
     </div>
@@ -1452,48 +1683,48 @@
     <!-- Strømregningen forklart -->
     <div class="section">
       <h2 class="sec-title">Strømregningen <em>forklart</em></h2>
-      <p class="sec-sub">Slik er en typisk norsk strømregning fordelt</p>
+      <p class="sec-sub">Slik er regningen din satt sammen — og hvor du faktisk kan kutte kostnader</p>
       <div class="bill-list">
         <div class="bill-row">
           <div class="bill-row-top">
-            <span class="bill-name">Spotpris</span>
-            <span class="bill-pct">~35%</span>
+            <span class="bill-name">Strømpris (spotpris)</span>
+            <span class="bill-pct">~35 %</span>
           </div>
           <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.35"></div></div>
-          <div class="bill-desc">Prisen fra kraftmarkedet — varierer time for time. Høyest 17–21 og kalde vinterdager. <strong style="color:var(--green-deep)">Tips:</strong> flytt forbruk til 22–06.</div>
+          <div class="bill-desc">Det du betaler for selve strømmen. Settes av kraftmarkedet og endrer seg time for time. Er typisk høyest mellom kl. 17 og 21 — billigst om natta. <strong style="color:var(--green-deep)">Slik sparer du:</strong> flytt vask, oppvask og lading til kveld og natt.</div>
         </div>
         <div class="bill-row">
           <div class="bill-row-top">
             <span class="bill-name">Nettleie</span>
-            <span class="bill-pct">~40%</span>
+            <span class="bill-pct">~40 %</span>
           </div>
           <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.40"></div></div>
-          <div class="bill-desc">Betaling for transport av strøm — fast uansett leverandør. Reduseres ved å unngå effekttopper. <strong style="color:var(--green-deep)">Tips:</strong> ikke bruk ovn og vaskemaskin samtidig.</div>
+          <div class="bill-desc">Det du betaler for å transportere strømmen hjem til deg. Settes av nettselskapet ditt — kan ikke byttes bort. <strong style="color:var(--green-deep)">Slik sparer du:</strong> unngå å bruke flere store apparater samtidig (f.eks. ovn + vaskemaskin).</div>
         </div>
         <div class="bill-row">
           <div class="bill-row-top">
             <span class="bill-name">Avgifter og moms</span>
-            <span class="bill-pct">~20%</span>
+            <span class="bill-pct">~20 %</span>
           </div>
           <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.20"></div></div>
-          <div class="bill-desc">Lovpålagte og kan ikke påvirkes. Strømstøtten dekker deler av dette når prisen er høy.</div>
+          <div class="bill-desc">Forbruksavgift, mva. og andre statlige avgifter. Strømstøtten dekker 90 % av prisen over 96,25 øre/kWh — trekkes fra automatisk på nettleien.</div>
         </div>
         <div class="bill-row">
           <div class="bill-row-top">
-            <span class="bill-name">Påslag og gebyr</span>
-            <span class="bill-pct">~5%</span>
+            <span class="bill-name">Påslag og månedsbeløp</span>
+            <span class="bill-pct">~5 %</span>
           </div>
           <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.05"></div></div>
-          <div class="bill-desc">Det leverandøren tar i fortjeneste. Over 2 øre/kWh er dyrt. Sjekk på <a href="https://www.strompris.no" target="_blank" rel="noopener">strompris.no</a>.</div>
+          <div class="bill-desc">Det leverandøren tar i fortjeneste — ofte 2–6 øre/kWh + 30–50 kr i månedsbeløp. <strong style="color:var(--green-deep)">Slik sparer du:</strong> de billigste avtalene har 0 i påslag eller minus-påslag. Sammenlign på <a href="https://www.strompris.no" target="_blank" rel="noopener">strompris.no</a>.</div>
         </div>
       </div>
     </div>
 
     <!-- Norgespris info -->
     <div class="info-box">
-      <div class="info-box-title">Norgespris — nytt fra oktober 2025</div>
+      <div class="info-box-title">Norgespris — slik fungerer det</div>
       <div class="info-box-text">
-        Norgespris gir deg en fast pris på 50 øre/kWh ut 2026. Har vært lønnsomt i Sør- og Midt-Norge denne vinteren. Kan bestilles på <a href="https://www.elhub.no" target="_blank" rel="noopener">elhub.no</a>. Er du usikker — spør AI-rådgiveren din.
+        Med Norgespris betaler du 50 øre/kWh for selve strømmen (40 øre + mva). Per februar 2026 har 60–74 % av husstandene i Sør- og Vest-Norge valgt det. I januar sparte de gjennomsnittlig 900–1000 kr på avtalen. Husk: nettleie og påslag kommer i tillegg. Du må aktivt bestille det på <a href="https://elhub.no" target="_blank" rel="noopener">elhub.no</a> — fritidsboliger får ikke strømstøtte.
       </div>
     </div>
 
@@ -1506,7 +1737,7 @@
         </svg>
       </div>
       <div class="access-bar-content">
-        <div class="access-bar-label">Din tilgangslenke — bokmerke denne</div>
+        <div class="access-bar-label">Din personlige tilgangslenke — bokmerk denne</div>
         <div class="access-bar-link" id="access-link">https://sparwatt.no/...</div>
       </div>
       <button class="access-bar-btn" onclick="copyLink()" id="copy-btn">Kopier</button>
@@ -1518,16 +1749,126 @@
   <div class="panel" id="panel-tips">
     <div class="section">
       <h2 class="sec-title">Dine <em>sparetiltak</em></h2>
-      <p class="sec-sub">Rangert etter hva som vil utgjøre størst forskjell for deg</p>
+      <p class="sec-sub">Tilpasset din bolig — det viktigste først</p>
       <div class="tips-list" id="tips-list">
-        <div class="loading">Genererer tiltak...</div>
+        <div class="loading">Henter tiltakene dine...</div>
       </div>
     </div>
 
     <div class="section">
       <h2 class="sec-title">Din <em>huskeliste</em></h2>
-      <p class="sec-sub">Huk av etter hvert som du gjennomfører</p>
+      <p class="sec-sub">Huk av når du har gjort det — så ser du fremgangen din på Hjem-sida</p>
       <div class="checklist" id="checklist"></div>
+    </div>
+  </div>
+
+  <!-- ============= SAMMENLIGN TAB ============= -->
+  <div class="panel" id="panel-compare">
+    <div class="section">
+      <h2 class="sec-title">Sammenlign din <em>strømavtale</em></h2>
+      <p class="sec-sub">Se hvor mye du kan spare ved å bytte til en av markedets billigste avtaler</p>
+
+      <!-- Disclosure -->
+      <div class="cmp-disclosure">
+        <div class="cmp-disclosure-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Hvor kommer tallene fra?</strong> Tallene er hentet fra Forbrukerrådets offisielle prisportal og oppdaterte markedsoversikter. SparWatt mottar ingen provisjon, ingen henvisningsbonus, og har ingen avtale med leverandørene under. Du kontakter dem direkte selv.
+        </div>
+      </div>
+
+      <!-- Input din avtale -->
+      <div class="cmp-input-card">
+        <div class="cmp-input-title">Din nåværende avtale</div>
+        <div class="cmp-input-grid">
+          <div>
+            <label class="cmp-label">Leverandør (valgfritt)</label>
+            <input type="text" id="cmp-provider" placeholder="F.eks. Fortum, Lyse..." />
+          </div>
+          <div>
+            <label class="cmp-label">Påslag (øre/kWh)</label>
+            <input type="text" id="cmp-markup" placeholder="F.eks. 4,9" oninput="renderCompare()" />
+          </div>
+          <div>
+            <label class="cmp-label">Månedsbeløp (kr)</label>
+            <input type="text" id="cmp-fee" placeholder="F.eks. 49" oninput="renderCompare()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultat: ditt regnestykke -->
+      <div class="cmp-current" id="cmp-current" style="display:none;">
+        <div class="cmp-current-label">Du betaler i dag</div>
+        <div class="cmp-current-amount" id="cmp-current-amount">— kr/mnd</div>
+        <div class="cmp-current-context" id="cmp-current-context">i påslag og månedsbeløp ved ditt forbruk</div>
+      </div>
+
+      <!-- Top 3 -->
+      <div class="cmp-list" id="cmp-list">
+        <div class="cmp-list-title">Top 3 billigste avtaler i Norge nå</div>
+        <p class="cmp-list-sub">Basert på markedsdata fra april 2026 · alle er spotprisavtaler uten bindingstid</p>
+
+        <div class="cmp-card cmp-card-1">
+          <div class="cmp-rank">1</div>
+          <div class="cmp-card-body">
+            <div class="cmp-card-name">Cheap Energy — Cheap intro 6</div>
+            <div class="cmp-card-meta">
+              <span class="cmp-tag">−0,02 øre/kWh påslag</span>
+              <span class="cmp-tag">0 kr i månedsbeløp</span>
+              <span class="cmp-tag">6 mnd prisgaranti</span>
+            </div>
+            <div class="cmp-card-price" id="cmp-1-price">— kr/mnd</div>
+            <div class="cmp-card-saving" id="cmp-1-saving"></div>
+          </div>
+        </div>
+
+        <div class="cmp-card cmp-card-2">
+          <div class="cmp-rank">2</div>
+          <div class="cmp-card-body">
+            <div class="cmp-card-name">Agva Kraft — Spot12</div>
+            <div class="cmp-card-meta">
+              <span class="cmp-tag">−1,2 øre/kWh påslag</span>
+              <span class="cmp-tag">0 kr i månedsbeløp</span>
+              <span class="cmp-tag">12 mnd prisgaranti</span>
+            </div>
+            <div class="cmp-card-price" id="cmp-2-price">— kr/mnd</div>
+            <div class="cmp-card-saving" id="cmp-2-saving"></div>
+          </div>
+        </div>
+
+        <div class="cmp-card cmp-card-3">
+          <div class="cmp-rank">3</div>
+          <div class="cmp-card-body">
+            <div class="cmp-card-name">Jærkraft — Kun Strøm</div>
+            <div class="cmp-card-meta">
+              <span class="cmp-tag">0 øre/kWh påslag</span>
+              <span class="cmp-tag">19 kr i månedsbeløp</span>
+              <span class="cmp-tag">12 mnd prisgaranti</span>
+            </div>
+            <div class="cmp-card-price" id="cmp-3-price">— kr/mnd</div>
+            <div class="cmp-card-saving" id="cmp-3-saving"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA til offisiell sammenligning -->
+      <div class="cmp-footer">
+        <p>Vil du sammenligne hele markedet? Forbrukerrådet har en offisiell prisportal som viser alle 414 strømavtaler fra 69 leverandører.</p>
+        <a href="https://www.strompris.no" target="_blank" rel="noopener" class="btn btn-primary">
+          Se hele markedet på strompris.no →
+        </a>
+      </div>
+
+      <!-- Sjekk Norgespris -->
+      <div class="info-box" style="margin-top:24px;">
+        <div class="info-box-title">Vurderer du Norgespris?</div>
+        <div class="info-box-text">
+          Norgespris (50 øre/kWh) lønner seg fortsatt for mange husstander i Sør-Norge. Men markedet forventer lavere priser mot sommeren, så regnestykket kan endre seg. Spør AI-rådgiveren din eller bestill direkte på <a href="https://elhub.no" target="_blank" rel="noopener">elhub.no</a>.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1535,7 +1876,7 @@
   <div class="panel" id="panel-chat">
     <div class="section">
       <h2 class="sec-title">Din <em>AI-rådgiver</em></h2>
-      <p class="sec-sub">Kjenner din bolig og ditt prisområde · svarer basert på live priser</p>
+      <p class="sec-sub">Kjenner boligen din og ditt prisområde — svarer basert på live priser</p>
       <div class="chat-wrap">
         <div class="chat-header">
           <div class="chat-icon">
@@ -1552,8 +1893,8 @@
         <div class="chat-msgs" id="chat-msgs"></div>
         <div class="suggestions" id="chat-suggestions">
           <button class="suggestion" onclick="askSuggestion('Når er strømmen billigst i dag?')">Når er strømmen billigst i dag?</button>
-          <button class="suggestion" onclick="askSuggestion('Bør jeg bytte strømleverandør?')">Bør jeg bytte leverandør?</button>
-          <button class="suggestion" onclick="askSuggestion('Lønner solceller seg for meg?')">Lønner solceller seg?</button>
+          <button class="suggestion" onclick="askSuggestion('Hvilken strømavtale bør jeg ha?')">Hvilken avtale bør jeg ha?</button>
+          <button class="suggestion" onclick="askSuggestion('Forklar strømstøtten enkelt')">Forklar strømstøtten</button>
         </div>
         <div class="chat-input-row">
           <input type="text" class="chat-input" id="chat-input" placeholder="Spør om noe..." onkeydown="if(event.key==='Enter')sendChat()" />
@@ -1607,24 +1948,44 @@
   async function validateAccess() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('access');
+
+    // Ingen token = vis låst skjerm
     if (!token) {
       showLocked();
       return false;
     }
+
+    // Master-token: alltid godkjent (for testing/utvikling)
+    if (token === 'd002860aa39ab528f92d823d') {
+      return true;
+    }
+
+    // Lokal testing (file://)
+    if (window.location.protocol === 'file:') {
+      return true;
+    }
+
+    // Forsøk å validere mot API
     try {
       const r = await fetch('/api/validate-token?token=' + encodeURIComponent(token));
+      // Hvis API ikke svarer med JSON (f.eks. 404 = HTML), throw
+      if (!r.ok) throw new Error('API returned ' + r.status);
       const data = await r.json();
-      if (data.valid) {
+      if (data && data.valid === true) {
         return true;
-      } else {
-        showLocked();
-        return false;
       }
+      // API svarte men token er ugyldig
+      showLocked();
+      return false;
     } catch (e) {
-      // Hvis API feiler, sjekk om det er master-token (for testing)
-      if (token === 'd002860aa39ab528f92d823d') return true;
-      // Lokal test fallback
-      return true;
+      // API er ikke deployet eller feiler — slipp tokenet inn hvis det ser gyldig ut
+      // Et gyldig token har 24 hex-tegn (slik Stripe-webhooken genererer)
+      if (token && token.length >= 16 && /^[a-f0-9]+$/i.test(token)) {
+        console.warn('Token-validering feilet (' + e.message + '), godtar token basert på format');
+        return true;
+      }
+      showLocked();
+      return false;
     }
   }
 
@@ -1642,6 +2003,10 @@
     document.getElementById('panel-' + name).classList.add('active');
     if (name === 'chat' && !window.chatInitialized) {
       initChat();
+    }
+    if (name === 'compare' && !window.compareInitialized) {
+      window.compareInitialized = true;
+      renderCompare();
     }
   }
 
@@ -1681,7 +2046,7 @@
     countUp('banner-yearly', avgSaving * 12, ' kr/år', 1400);
     countUp('stat-tips', tips.length, '', 800);
 
-    document.getElementById('banner-context').textContent = 'Basert på din ' + (p.q1 || 'bolig').toLowerCase() + ' i ' + place + ' med ' + (p.q4 || 'din husstand').toLowerCase() + '. Reell sparing kan variere.';
+    document.getElementById('banner-context').textContent = 'Estimat for din ' + (p.q1 || 'bolig').toLowerCase() + ' i ' + place + ' med ' + (p.q4 || 'din husstand').toLowerCase() + '. Faktisk sparing varierer ut fra hvilke tiltak du gjennomfører og ditt strømforbruk.';
 
     // Greeting
     const hour = new Date().getHours();
@@ -1715,12 +2080,14 @@
   // === DAILY INSIGHT (aha-moment) ===
   function setDailyInsight() {
     const insights = [
-      { t:'Strømmen er 3× billigere mellom 02–05 enn 17–20', d:'Hvis du flytter <strong>vaskemaskin og oppvaskmaskin</strong> til natt, kan du kutte 60–150 kr i måneden uten å gjøre noe annet.' },
-      { t:'En varmtvannsbereder bruker 25% av strømmen din', d:'Skru ned berederen 23:00–05:00 — du merker ingen forskjell, men sparer typisk <strong>120–200 kr/mnd</strong>.' },
-      { t:'Effektledd: jo mer du bruker samtidig, jo mer betaler du', d:'Unngå å kjøre <strong>ovn, vaskemaskin og varmepumpe</strong> samtidig. Dette alene kan kutte 80 kr i måneden.' },
-      { t:'2 av 3 nordmenn betaler over 4 øre/kWh i påslag', d:'Det er over <strong>500 kr i året</strong> bare i overprisning. Bytt til en avtale med under 2 øre påslag.' },
-      { t:'Klesvask på 40°C bruker halvparten av 60°C', d:'Med 1–2 vask per uke gir det rundt <strong>40–60 kr/mnd</strong> i sparing — uten dårligere resultat for hverdagsvask.' },
-      { t:'Standby-strøm koster en typisk husholdning 800 kr/år', d:'TV, lader, kaffemaskin og spillkonsoll trekker strøm hele tiden. <strong>Smartplugg eller sluttkontrollert grenuttak</strong> løser problemet.' }
+      { t:'Strømmen er ofte 3–4× billigere om natta enn kl. 17–20', d:'Setter du <strong>vaskemaskinen på timer</strong> til den starter etter midnatt, kan du spare 60–150 kr i måneden uten å gjøre noe mer.' },
+      { t:'Varmtvannsberederen er ofte 20–25 % av strømregningen', d:'En tidsbryter som skrur av berederen mellom 23 og 05 koster lite, men sparer typisk <strong>120–200 kr i måneden</strong>. Du merker ikke noe i hverdagen.' },
+      { t:'Mange apparater på samtidig gir høyere nettleie', d:'Nettleia beregnes etter den timen du bruker mest. Unngå å kjøre <strong>ovn, vaskemaskin og varmepumpe samtidig</strong> — det alene kan kutte 80 kr i måneden.' },
+      { t:'73 % av norske husstander har dårlig strømavtale', d:'De fleste betaler 4–6 øre/kWh i påslag. De billigste avtalene har <strong>0 i påslag</strong> — eller minus-påslag. Det utgjør 500–1000 kr i året.' },
+      { t:'Klesvask på 40 °C bruker halvparten av strømmen som 60 °C', d:'For hverdagsvask trenger du sjelden mer enn 40 °C. Det blir like rent — og du sparer <strong>40–60 kr i måneden</strong>.' },
+      { t:'Apparater i standby koster en husstand 800 kr i året', d:'TV, lader, kaffemaskin og spillkonsoll trekker strøm hele tida. <strong>Smartplugg eller en sluttkontrollert stikkontakt</strong> stenger det effektivt.' },
+      { t:'Norgespris ga 900–1000 kr spart i januar 2026', d:'For husstander i Sør-Norge har Norgespris vært lønnsomt hver måned siden oktober 2025. <strong>Bestill på elhub.no</strong> — det tar fem minutter.' },
+      { t:'Strømstøtten dekker 90 % over 96,25 øre/kWh', d:'Alt over terskelverdien blir trukket fra automatisk på nettleien. Du trenger ikke søke. Gjelder ikke fritidsboliger.' }
     ];
     const day = Math.floor((Date.now() / 86400000)) % insights.length;
     document.getElementById('insight-title').textContent = insights[day].t;
@@ -1856,8 +2223,8 @@
 
   // === LEVERANDØR ===
   function calcLev() {
-    const markup = parseFloat(document.getElementById('lev-markup').value) || 0;
-    const fee = parseFloat(document.getElementById('lev-fee').value) || 0;
+    const markup = parseFloat((document.getElementById('lev-markup').value || '').replace(',', '.')) || 0;
+    const fee = parseFloat((document.getElementById('lev-fee').value || '').replace(',', '.')) || 0;
     const result = document.getElementById('lev-result');
     if (markup === 0 && fee === 0) {
       result.classList.remove('visible');
@@ -1865,16 +2232,75 @@
     }
     const monthlyKwh = profile.q6 === 'Over 2000 kWh' ? 2000 : profile.q6 === '1000-2000 kWh' ? 1500 : profile.q6 === '500-1000 kWh' ? 750 : 400;
     const currentMonthly = ((markup / 100) * monthlyKwh) + fee;
-    const cheapestMonthly = (0.019 * monthlyKwh) + 19; // Tibber-style: ~1.9 øre påslag, 19 kr fastbeløp
+    // Beste tilgjengelige spotprisavtaler i 2026 har 0 påslag og lavt månedsbeløp
+    const cheapestMonthly = (0 * monthlyKwh) + 19;
     const saving = Math.max(0, Math.round(currentMonthly - cheapestMonthly));
     let txt;
     if (saving > 50) {
-      txt = 'Du betaler ca. <strong>' + Math.round(currentMonthly) + ' kr/mnd</strong> i påslag og gebyr. En billigere avtale vil koste rundt <strong>' + Math.round(cheapestMonthly) + ' kr/mnd</strong> — du kan spare <strong>~' + saving + ' kr/mnd</strong> ved å bytte.';
+      txt = 'Du betaler omtrent <strong>' + Math.round(currentMonthly) + ' kr/mnd</strong> i påslag og månedsbeløp. En av de billigste avtalene på markedet (0 i påslag) ville kostet rundt <strong>' + Math.round(cheapestMonthly) + ' kr/mnd</strong>. Det betyr at du kan spare <strong>~' + saving + ' kr i måneden</strong> ved å bytte — det blir <strong>~' + (saving * 12) + ' kr i året</strong>.';
+    } else if (currentMonthly > 0) {
+      txt = 'Du betaler omtrent <strong>' + Math.round(currentMonthly) + ' kr/mnd</strong> i påslag og månedsbeløp. Det er allerede en av de billigere avtalene på markedet — lite å spare ved å bytte.';
     } else {
-      txt = 'Du betaler ca. <strong>' + Math.round(currentMonthly) + ' kr/mnd</strong> i påslag og gebyr. Det er en god avtale — lite å spare på å bytte.';
+      txt = 'Skriv inn både påslag og månedsbeløp så regner vi ut hva du kan spare.';
     }
     result.innerHTML = txt;
     result.classList.add('visible');
+  }
+
+  // === SAMMENLIGN ===
+  // Top 3 billigste avtaler (april 2026, kilde: Forbrukerrådets prisportal via bytt.no/stromsjefen.no)
+  const cmpProviders = [
+    { name: 'Cheap intro 6', markup: -0.02, fee: 0 },
+    { name: 'Spot12', markup: -1.2, fee: 0 },
+    { name: 'Kun Strøm', markup: 0, fee: 19 }
+  ];
+
+  function renderCompare() {
+    const markup = parseFloat((document.getElementById('cmp-markup').value || '').replace(',', '.')) || 0;
+    const fee = parseFloat((document.getElementById('cmp-fee').value || '').replace(',', '.')) || 0;
+
+    // Forbruk: bruk profil eller anta 1500 kWh/mnd som norsk gjennomsnitt
+    const monthlyKwh = profile.q6 === 'Over 2000 kWh' ? 2000 : profile.q6 === '1000-2000 kWh' ? 1500 : profile.q6 === '500-1000 kWh' ? 750 : 1500;
+
+    // Vis "Du betaler"-kort hvis bruker har skrevet inn noe
+    const currentEl = document.getElementById('cmp-current');
+    if (markup === 0 && fee === 0) {
+      currentEl.style.display = 'none';
+    } else {
+      currentEl.style.display = 'block';
+      const currentMonthly = (markup * monthlyKwh / 100) + fee; // markup er i øre, deler på 100 for kr
+      document.getElementById('cmp-current-amount').textContent = Math.round(currentMonthly) + ' kr/mnd';
+      document.getElementById('cmp-current-context').textContent =
+        'i påslag og månedsbeløp ved ' + monthlyKwh + ' kWh/mnd' +
+        (profile.q6 ? '' : ' (norsk snitt)');
+    }
+
+    // Beregn for hver av top 3
+    cmpProviders.forEach((p, i) => {
+      const idx = i + 1;
+      const theirMonthly = (p.markup * monthlyKwh / 100) + p.fee;
+      const theirMonthlyDisplay = Math.max(0, Math.round(theirMonthly));
+      document.getElementById('cmp-' + idx + '-price').textContent = theirMonthlyDisplay + ' kr/mnd';
+
+      const savingEl = document.getElementById('cmp-' + idx + '-saving');
+      if (markup === 0 && fee === 0) {
+        savingEl.textContent = 'Skriv inn din avtale for å se sparing';
+        savingEl.classList.add('zero');
+      } else {
+        const currentMonthly = (markup * monthlyKwh / 100) + fee;
+        const saving = Math.round(currentMonthly - theirMonthly);
+        if (saving > 5) {
+          savingEl.innerHTML = '↓ Sparer ' + saving + ' kr/mnd · ' + (saving * 12).toLocaleString('no-NO') + ' kr/år';
+          savingEl.classList.remove('zero');
+        } else if (saving > 0) {
+          savingEl.textContent = 'Litt billigere — ca. ' + saving + ' kr/mnd';
+          savingEl.classList.remove('zero');
+        } else {
+          savingEl.textContent = 'Du har allerede en god avtale';
+          savingEl.classList.add('zero');
+        }
+      }
+    });
   }
 
   // === TIPS ===
@@ -1892,15 +2318,20 @@
     const doneBereder = (a.q9 || '').includes('Tidsstyring på berederen');
 
     const tips = [];
-    if (panel && !pump) tips.push({title:'Vurder varmepumpe i stedet for panelovner', desc:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En luft-til-luft varmepumpe bruker 3× mindre strøm for samme varme. Investeringen er typisk tjent inn på 2–3 år.', tags:['Stor sparing','Boligforbedring'], minMonthly:400, maxMonthly:800, prio:'høy'});
-    if (norge || fast) tips.push({title:'Bytt til spotprisavtale', desc:'Du har ' + (a.q7 || '').toLowerCase() + '. Spotpris er over tid billigere for de fleste husstander, og du får full kontroll over når du bruker strøm. Tibber eller Vibb er gode alternativer.', tags:['Bytte leverandør','Stor sparing'], minMonthly:100, maxMonthly:300, prio:'høy'});
-    if (high && !doneBereder) tips.push({title:'Tidsstyring på varmtvannsberederen', desc:'Berederen er typisk 25–30% av strømforbruket. Sett en tidsbryter eller smartplugg som skrur den av 23:00–05:00 — du merker ingen forskjell.', tags:['Lett å gjøre','Engangsinvestering'], minMonthly:120, maxMonthly:280, prio:'høy'});
-    if (hytte) tips.push({title:'Smartplugg på hytta', desc:'Hytta bruker strøm på oppvarming også når du ikke er der. En smartplugg (300–500 kr) lar deg styre varmen fra mobilen — varm opp dagen før du kommer.', tags:['Engangsinvestering'], minMonthly:200, maxMonthly:450, prio:'høy'});
-    if (elbil) tips.push({title:'Lad elbilen om natta', desc:'Sett laderen til å starte etter 23:00 og stoppe før 06:00 — strømmen er typisk 3× billigere. Tibber-app, Easee og smarte ladere gjør dette automatisk.', tags:['Lett å gjøre'], minMonthly:200, maxMonthly:500, prio:'høy'});
-    if (solar) tips.push({title:'Solceller — vurder grundig', desc:'I prisområde ' + (a.q3zone || 'NO1') + ' tar et typisk solcelleanlegg (8–12 kWp) seg inn på 8–12 år. Best lønnsomhet i Sør-Norge. Sjekk taket ditt på solsjekk.no.', tags:['Stor investering'], minMonthly:200, maxMonthly:500, prio:'medium'});
-    if (!doneNight) tips.push({title:'Flytt vask og oppvask til natt', desc:'I ditt prisområde er strømmen 2–4× dyrere mellom 17–21 enn om natta. Sett vaskemaskin og oppvaskmaskin på timer.', tags:['Gratis å gjøre'], minMonthly:60, maxMonthly:150, prio:'lav'});
-    tips.push({title:'Reduser effekttopper i nettleien', desc:'Nettleien beregnes etter høyeste samtidige effektbruk. Unngå å kjøre flere store apparater samtidig (vaskemaskin + tørketrommel + ovn).', tags:['Gratis å gjøre'], minMonthly:50, maxMonthly:120, prio:'lav'});
-    if (ved) tips.push({title:'Bruk vedovnen i kuldeperioder', desc:'Når strømprisen er høy (kl. 17–21 og kalde dager) er vedfyring ofte billigere enn elektrisk varme. Lat veden gjøre jobben i topplastperioder.', tags:['Gratis å gjøre'], minMonthly:80, maxMonthly:200, prio:'medium'});
+    if (panel && !pump) tips.push({title:'Bytt panelovner med varmepumpe', desc:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En luft-til-luft varmepumpe gir samme varme på en tredjedel av strømmen. Investeringen er typisk tjent inn på 2–3 år for en gjennomsnittlig bolig.', tags:['Stor sparing','Boligforbedring'], minMonthly:400, maxMonthly:800, prio:'høy'});
+
+    // Norgespris-tilpasset råd
+    if (norge) tips.push({title:'Sjekk om Norgespris fortsatt lønner seg', desc:'Norgespris (50 øre/kWh) har vært lønnsomt for de fleste i Sør-Norge i vinter. Når sommeren kommer kan spotpris være billigere — vi følger med og varsler deg når du bør vurdere å bytte.', tags:['Smart valg','Gratis å sjekke'], minMonthly:80, maxMonthly:250, prio:'høy'});
+    else if (fast) tips.push({title:'Vurder å bytte fra fastpris', desc:'Du har fastprisavtale. I 2026 er Norgespris (50 øre/kWh) eller spotpris med strømstøtte oftest billigere alternativ for husstander i Sør-Norge. Bestilling av Norgespris gjøres på elhub.no.', tags:['Bytte avtale','Stor sparing'], minMonthly:150, maxMonthly:350, prio:'høy'});
+    else if (a.q7 === 'Spotpris' && (a.q3zone === 'NO1' || a.q3zone === 'NO2' || a.q3zone === 'NO5')) tips.push({title:'Vurder Norgespris for vintermånedene', desc:'I ditt prisområde har Norgespris vært lønnsomt for over 60 % av husstandene siden oktober 2025. I januar 2026 sparte gjennomsnittsfamilien 900–1000 kr. Bestill på elhub.no — det tar fem minutter.', tags:['Smart valg','Stor sparing'], minMonthly:150, maxMonthly:300, prio:'høy'});
+
+    if (high && !doneBereder) tips.push({title:'Sett tidsbryter på varmtvannsberederen', desc:'Varmtvannsberederen står for 20–25 % av strømforbruket. En tidsbryter (300–500 kr) som skrur den av mellom kl. 23 og 05 sparer typisk 120–280 kr i måneden. Du merker ingen forskjell på vannet om morgenen.', tags:['Lett å gjøre','Engangsinvestering'], minMonthly:120, maxMonthly:280, prio:'høy'});
+    if (hytte) tips.push({title:'Smartplugg eller smart termostat på hytta', desc:'Hytter trekker ofte strøm til oppvarming også når ingen er der. En smartplugg (300–500 kr) eller smart termostat lar deg styre varmen fra mobilen og fyre opp dagen før du kommer. Husk: fritidsboliger får ikke strømstøtte.', tags:['Engangsinvestering','Stor sparing'], minMonthly:200, maxMonthly:450, prio:'høy'});
+    if (elbil) tips.push({title:'Sett elbilen til å lade om natta', desc:'Strømmen er typisk 3–4× billigere mellom kl. 23 og 06. Mange smarte ladere kan starte ladingen automatisk når prisen er lavest. For en familie som lader 1500 kWh/år gir det 200–500 kr i månedlig sparing.', tags:['Lett å gjøre','Stor sparing'], minMonthly:200, maxMonthly:500, prio:'høy'});
+    if (solar) tips.push({title:'Solceller — slik vet du om det lønner seg', desc:'Et typisk anlegg på 8–12 kWp koster 150 000–250 000 kr og betaler seg ned på 8–12 år i Sør-Norge. Best lønnsomhet på sørvendt tak uten skygge. Sjekk taket ditt gratis på solsjekk.no før du henter tilbud.', tags:['Stor investering'], minMonthly:200, maxMonthly:500, prio:'medium'});
+    if (!doneNight) tips.push({title:'Flytt vask og oppvask til kvelden eller natta', desc:'Strømmen er 2–4× dyrere mellom kl. 17 og 21 enn om natta. Sett vaskemaskin og oppvaskmaskin på timer slik at de starter etter kl. 22. Det er gratis å gjøre — og kutter regningen umiddelbart.', tags:['Gratis å gjøre'], minMonthly:60, maxMonthly:150, prio:'lav'});
+    tips.push({title:'Unngå å bruke flere store apparater samtidig', desc:'Nettleia beregnes etter den timen i måneden du bruker mest strøm samtidig. Hvis du kjører ovn, vaskemaskin, tørketrommel og varmepumpe på én gang, hopper du opp et trinn — som koster 50–120 kr ekstra hver måned.', tags:['Gratis å gjøre'], minMonthly:50, maxMonthly:120, prio:'lav'});
+    if (ved) tips.push({title:'Bruk vedovnen i de dyreste timene', desc:'På kalde vinterdager mellom kl. 17 og 21 er strømprisen ofte 4× høyere enn natta. Tenn vedovnen i disse timene og spar elektrisk varme — særlig lønnsomt for store boliger.', tags:['Gratis å gjøre'], minMonthly:80, maxMonthly:200, prio:'medium'});
 
     // Sesongbaserte tiltak
     const month = new Date().getMonth(); // 0=jan, 11=des
@@ -1910,16 +2341,16 @@
     const autumn = month >= 8 && month <= 9; // sep-okt
 
     if (winter) {
-      tips.push({title:'Vinter-tips: Skru ned 1 grad om natta', desc:'1 grad lavere temperatur kutter typisk 5% av varmekostnaden. På en typisk januar-regning utgjør det 80–150 kr alene. Ingen merker forskjellen mellom 20 og 19 grader om natta.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:80, maxMonthly:150, prio:'medium'});
+      tips.push({title:'Vinter: Skru ned innetemperaturen 1 grad om natta', desc:'Hver grad lavere innetemperatur kutter rundt 5 % av varmekostnaden. På en januar-regning utgjør det 80–150 kr alene. De fleste merker ikke forskjellen mellom 20 og 19 grader når de sover.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:80, maxMonthly:150, prio:'medium'});
     }
     if (spring) {
-      tips.push({title:'Vår-tips: Sjekk vifteinnstillinger på varmepumpe', desc:'Renslighet på varmepumpens filter kan utgjøre 10–15% i effektivitet. Ta fram støvsugeren — det tar 5 minutter og påvirker resten av året.', tags:['Sesongtiltak','Lett å gjøre'], minMonthly:40, maxMonthly:90, prio:'lav'});
+      tips.push({title:'Vår: Rens filteret på varmepumpen', desc:'Et tett filter får varmepumpen til å bruke 10–15 % mer strøm. Ta fram støvsugeren — det tar fem minutter og merkes på regningen resten av året.', tags:['Sesongtiltak','Lett å gjøre'], minMonthly:40, maxMonthly:90, prio:'lav'});
     }
     if (summer) {
-      tips.push({title:'Sommer-tips: Skru av varmtvannsberederen i ferien', desc:'Hvis du reiser bort i 1+ uke — skru av berederen helt eller still den til 40°C. Når du kommer hjem, varm den opp natten før — du sparer 100–200 kr på en uke.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:60, maxMonthly:140, prio:'medium'});
+      tips.push({title:'Sommer: Skru av berederen før ferien', desc:'Skal du bort i en uke eller mer? Skru av varmtvannsberederen helt, eller still den ned til 40 °C. Skru den på dagen før du kommer hjem — du sparer 100–200 kr på én uke.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:60, maxMonthly:140, prio:'medium'});
     }
     if (autumn) {
-      tips.push({title:'Høst-tips: Forbered boligen før vinter', desc:'Tett luftlekkasjer rundt vinduer og dører før det blir kaldt. En typisk leilighet har 3–5 lekkasjer som koster 50–100 kr/mnd i vinter. Tetningslist fra Biltema koster 50 kr og varer i mange år.', tags:['Sesongtiltak','Engangsinvestering'], minMonthly:50, maxMonthly:120, prio:'medium'});
+      tips.push({title:'Høst: Tett luftlekkasjer før kulda kommer', desc:'En typisk bolig har 3–5 utettheter rundt vinduer og dører som koster 50–100 kr i måneden gjennom vinteren. Tetningslist fra Biltema koster 50 kr og varer mange år.', tags:['Sesongtiltak','Engangsinvestering'], minMonthly:50, maxMonthly:120, prio:'medium'});
     }
 
     return tips;
@@ -1949,12 +2380,12 @@
 
   function renderChecklist() {
     const items = [
-      'Sjekk strømleverandøren din',
-      'Sett vaskemaskin på timer (etter 22:00)',
-      'Tidsstyr varmtvannsberederen',
-      'Sjekk effekttopper i appen til netteier',
-      'Vurder smartplugg på utstyr som står i standby',
-      'Les opp på Norgespris-avtalen'
+      'Sjekket strømavtalen min på strompris.no',
+      'Satt vaskemaskinen på timer til etter kl. 22',
+      'Satt tidsbryter på varmtvannsberederen',
+      'Bestilt Norgespris på elhub.no (om relevant)',
+      'Kjøpt smartplugg til TV/lader/elektronikk',
+      'Sjekket effekttoppene i appen til nettselskapet'
     ];
     const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
     const list = document.getElementById('checklist');
@@ -1992,17 +2423,17 @@
 
     // Tilbakemelding basert på fremgang
     if (done === 0) {
-      titleEl.textContent = 'Du er i gang!';
-      textEl.textContent = 'Huk av tiltak du har gjennomført på Tiltak-tab — så ser du fremgangen din her.';
+      titleEl.textContent = 'Klar til å starte';
+      textEl.textContent = 'Huk av tiltakene etter hvert som du gjør dem. Da kan du følge med på din egen fremgang her.';
     } else if (done < 3) {
-      titleEl.textContent = 'Bra startet!';
-      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Hver eneste sak gjør en forskjell på regningen.';
+      titleEl.textContent = 'Bra start';
+      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Selv små grep gjør en merkbar forskjell på regningen.';
     } else if (done < total) {
-      titleEl.textContent = 'På god vei!';
-      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Bare ' + (total - done) + ' igjen — du sparer allerede mer enn de fleste.';
+      titleEl.textContent = 'Du er godt i gang';
+      textEl.innerHTML = 'Du har gjort <strong style="color:var(--green-deep)">' + done + ' av ' + total + ' tiltak</strong>. Bare ' + (total - done) + ' igjen — og du sparer allerede mer enn de fleste norske husstander.';
     } else {
-      titleEl.textContent = 'Fullført — sterkt jobbet!';
-      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">alle ' + total + ' tiltakene</strong>. Du er nå i den øverste 5% av strømsmarte husholdninger.';
+      titleEl.textContent = 'Alle tiltak gjort';
+      textEl.innerHTML = 'Du har gjennomført <strong style="color:var(--green-deep)">alle ' + total + ' tiltakene</strong>. Få norske husstander tar disse grepene — du er en av de som virkelig sparer på strøm.';
     }
   }
 
@@ -2028,7 +2459,7 @@
     if (window.chatInitialized) return;
     window.chatInitialized = true;
     const place = profile.q3post ? postcodeToPlace(profile.q3post) : 'din region';
-    const intro = 'Hei! Jeg er din personlige strømrådgiver. Jeg vet at du bor i ' + (profile.q1 || 'bolig').toLowerCase() + ' i ' + place + ' med ' + (profile.q4 || 'din husstand').toLowerCase() + '. Hva lurer du på?';
+    const intro = 'Hei! Jeg er din personlige strømrådgiver. Jeg ser at du bor i ' + (profile.q1 || 'bolig').toLowerCase() + ' i ' + place + ' med ' + (profile.q4 || 'din husstand').toLowerCase() + '. Spør meg om alt fra hvilken avtale du bør ha til når på døgnet du bør lade elbilen.';
     addBotMsg(intro);
     buildSmartSuggestions();
   }
@@ -2046,17 +2477,17 @@
 
     sug.push('Når er strømmen billigst i dag?');
 
-    if (norge) sug.push('Bør jeg gå bort fra Norgespris?');
-    else if (fast) sug.push('Lønner det seg å bytte fra fastpris?');
-    else sug.push('Bør jeg bytte strømleverandør?');
+    if (norge) sug.push('Lønner Norgespris seg fortsatt for meg?');
+    else if (fast) sug.push('Bør jeg gå over til Norgespris eller spotpris?');
+    else sug.push('Hvilken strømavtale bør jeg ha?');
 
-    if (panel && !pump) sug.push('Lønner varmepumpe seg for meg?');
-    else if (elbil) sug.push('Hvordan lader jeg elbil billigst?');
-    else if (solar) sug.push('Lønner solceller seg for meg?');
-    else if (hytte) sug.push('Hvordan kutter jeg strøm på hytta?');
-    else sug.push('Hvor mye kan jeg spare på smartplugg?');
+    if (panel && !pump) sug.push('Lønner det seg å bytte til varmepumpe?');
+    else if (elbil) sug.push('Når på døgnet bør jeg lade elbilen?');
+    else if (solar) sug.push('Hva koster solceller for min bolig?');
+    else if (hytte) sug.push('Hvordan sparer jeg strøm på hytta?');
+    else sug.push('Hva er det viktigste tiltaket for meg?');
 
-    sug.push('Hva er Norgespris?');
+    sug.push('Forklar strømstøtten enkelt');
 
     const container = document.getElementById('chat-suggestions');
     container.innerHTML = sug.slice(0, 4).map(s =>
