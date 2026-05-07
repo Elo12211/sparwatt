@@ -1544,6 +1544,239 @@
     transform: translateX(2px);
   }
 
+  /* ===== BILL BREAKDOWN (NY INTERAKTIV) ===== */
+  .bill-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 24px;
+    overflow: hidden;
+  }
+
+  /* Slider-rad */
+  .bill-slider-row {
+    margin-bottom: 24px;
+  }
+  .bill-slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .bill-slider-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .bill-slider-value {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .bill-slider-value span {
+    font-variant-numeric: tabular-nums;
+  }
+  .bill-slider-total { text-align: right; }
+  .bill-slider-amount {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--green-deep);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .bill-slider-amount span {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Slider input — custom styling */
+  .bill-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--bg-warm);
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    margin: 8px 0;
+  }
+  .bill-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--green-deep);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.25);
+    border: 3px solid white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .bill-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 16px rgba(27, 67, 50, 0.35);
+  }
+  .bill-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: var(--green-deep);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.25);
+  }
+  .bill-slider-hints {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  /* Stacked bar — visualisere fordelingen */
+  .bill-breakdown {
+    display: flex;
+    height: 14px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  .bill-breakdown-seg {
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .bill-breakdown-seg:not(:last-child) {
+    border-right: 2px solid white;
+  }
+
+  /* Lærings-seksjon med utvidbare rader */
+  .bill-learn-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+  .bill-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bill-rows .bill-row {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    /* override gammel bill-row-styling */
+    margin: 0;
+    padding: 0;
+  }
+  .bill-rows .bill-row:hover {
+    border-color: rgba(82, 183, 136, 0.3);
+  }
+  .bill-rows .bill-row.open {
+    background: white;
+    border-color: rgba(82, 183, 136, 0.4);
+  }
+  .bill-row-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    gap: 12px;
+  }
+  .bill-row-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  .bill-row-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .bill-rows .bill-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .bill-row-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bill-row-amount {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .bill-row-arrow {
+    color: var(--ink-muted);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bill-row.open .bill-row-arrow {
+    transform: rotate(180deg);
+    color: var(--green-deep);
+  }
+  .bill-row-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+    padding: 0 18px;
+  }
+  .bill-row.open .bill-row-body {
+    max-height: 300px;
+    padding: 0 18px 16px;
+    border-top: 1px solid var(--line);
+    margin-top: -1px;
+  }
+  .bill-row-body p {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 12px 0 10px;
+  }
+  .bill-row-tips {
+    background: var(--green-light);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .bill-row-tips strong {
+    color: var(--green-deep);
+    font-weight: 700;
+  }
+
+  @media (max-width: 600px) {
+    .bill-card { padding: 18px; }
+    .bill-slider-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .bill-slider-total { text-align: left; }
+    .bill-slider-value { font-size: 24px; }
+    .bill-slider-amount { font-size: 26px; }
+    .bill-row-amount { font-size: 15px; }
+  }
+
   /* ===== BILL BREAKDOWN ===== */
   .bill-donut-card {
     background: white;
@@ -2199,6 +2432,70 @@
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
+  }
+
+  /* SMART SAMMENLIGNING: Nå vs billigste time */
+  .calc-compare {
+    margin-top: 12px;
+    padding: 0;
+    background: linear-gradient(135deg, var(--green-light), white);
+    border: 1px solid rgba(82, 183, 136, 0.25);
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+  }
+  .calc-compare.visible {
+    max-height: 200px;
+    opacity: 1;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+  .calc-compare-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .calc-compare-side {
+    flex: 1;
+    text-align: center;
+  }
+  .calc-compare-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .calc-compare-value {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-compare-now { color: var(--ink); }
+  .calc-compare-cheap { color: var(--green-deep); }
+  .calc-compare-arrow {
+    color: var(--ink-muted);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .calc-compare-saving {
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--green-deep);
+    line-height: 1.4;
+    padding-top: 8px;
+    border-top: 1px solid rgba(82, 183, 136, 0.2);
+  }
+  .calc-compare-saving strong {
+    font-weight: 700;
   }
 
   /* Custom-mode på kalkulator */
@@ -3238,6 +3535,9 @@
           <div class="calc-detail-value" id="calc-kwh">— kWh</div>
         </div>
 
+        <!-- Smart sammenligning: Nå vs billigste time -->
+        <div class="calc-compare" id="calc-compare"></div>
+
         <!-- Custom-mode: regn ut din egen aktivitet -->
         <div class="calc-custom">
           <div class="calc-custom-toggle" onclick="toggleCalcCustom()">
@@ -3443,97 +3743,115 @@
       <div class="checklist" id="checklist"></div>
     </div>
 
-    <!-- Strømregningen forklart — passer her hvor man lærer -->
+    <!-- Strømregningen forklart — INTERAKTIV med ditt forbruk -->
     <div class="section">
-      <h2 class="sec-title">Strømregningen <em>forklart</em></h2>
-      <p class="sec-sub">Slik er regningen din satt sammen — og hvor du faktisk kan kutte kostnader</p>
+      <h2 class="sec-title">Din <em>strømregning</em>, brutt ned</h2>
+      <p class="sec-sub">Juster forbruket ditt — se hvor pengene faktisk går</p>
 
-      <div class="bill-donut-card">
-        <div class="bill-donut-wrap">
-          <svg class="bill-donut" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-warm)" stroke-width="14"/>
-            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--green-deep)" stroke-width="14"
-              stroke-dasharray="87.96 251.33" stroke-dashoffset="0"
-              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
-            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--green-mid)" stroke-width="14"
-              stroke-dasharray="100.53 251.33" stroke-dashoffset="-87.96"
-              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
-            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--green-glow)" stroke-width="14"
-              stroke-dasharray="50.27 251.33" stroke-dashoffset="-188.50"
-              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
-            <circle class="bill-donut-seg" cx="50" cy="50" r="40" fill="none" stroke="var(--gold)" stroke-width="14"
-              stroke-dasharray="12.57 251.33" stroke-dashoffset="-238.76"
-              transform="rotate(-90 50 50)" stroke-linecap="butt"/>
-          </svg>
-          <div class="bill-donut-center">
-            <div class="bill-donut-label">Av regningen</div>
-            <div class="bill-donut-value">100<span>%</span></div>
+      <div class="bill-card">
+        <!-- Slider for forbruk -->
+        <div class="bill-slider-row">
+          <div class="bill-slider-header">
+            <div>
+              <div class="bill-slider-label">Ditt månedsforbruk</div>
+              <div class="bill-slider-value"><span id="bill-kwh-display">1500</span> kWh</div>
+            </div>
+            <div class="bill-slider-total">
+              <div class="bill-slider-label">Estimert månedsregning</div>
+              <div class="bill-slider-amount"><span id="bill-total-kr">—</span> kr</div>
+            </div>
+          </div>
+          <input type="range" min="200" max="3500" step="50" value="1500" id="bill-slider" class="bill-slider" oninput="updateBillBreakdown(this.value)" />
+          <div class="bill-slider-hints">
+            <span>Liten leilighet</span>
+            <span>Snitt familie</span>
+            <span>Stor enebolig</span>
           </div>
         </div>
-        <div class="bill-donut-legend">
-          <div class="bill-legend-item">
-            <span class="bill-legend-dot" style="background:var(--green-deep)"></span>
-            <div>
-              <div class="bill-legend-name">Strømpris</div>
-              <div class="bill-legend-pct">~35 %</div>
-            </div>
-          </div>
-          <div class="bill-legend-item">
-            <span class="bill-legend-dot" style="background:var(--green-mid)"></span>
-            <div>
-              <div class="bill-legend-name">Nettleie</div>
-              <div class="bill-legend-pct">~40 %</div>
-            </div>
-          </div>
-          <div class="bill-legend-item">
-            <span class="bill-legend-dot" style="background:var(--green-glow)"></span>
-            <div>
-              <div class="bill-legend-name">Avgifter</div>
-              <div class="bill-legend-pct">~20 %</div>
-            </div>
-          </div>
-          <div class="bill-legend-item">
-            <span class="bill-legend-dot" style="background:var(--gold)"></span>
-            <div>
-              <div class="bill-legend-name">Påslag</div>
-              <div class="bill-legend-pct">~5 %</div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="bill-list">
-        <div class="bill-row">
-          <div class="bill-row-top">
-            <span class="bill-name">Strømpris (spotpris)</span>
-            <span class="bill-pct">~35 %</span>
+        <!-- Brutt ned i bestanddeler -->
+        <div class="bill-breakdown" id="bill-breakdown"></div>
+
+        <!-- Lærings-seksjon: klikk for å lære mer om hver del -->
+        <div class="bill-learn">
+          <div class="bill-learn-title">Klikk for å lære hvordan du kan kutte hver del</div>
+          <div class="bill-rows">
+            <div class="bill-row" onclick="toggleBillRow(this)">
+              <div class="bill-row-head">
+                <div class="bill-row-left">
+                  <span class="bill-row-color" style="background:var(--green-deep)"></span>
+                  <span class="bill-name">Strømpris (spotpris)</span>
+                </div>
+                <div class="bill-row-right">
+                  <span class="bill-row-amount" id="bill-r-spot">—</span>
+                  <svg class="bill-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="bill-row-body">
+                <p>Det du betaler for selve strømmen. Settes av kraftmarkedet og endrer seg time for time — typisk dyrest mellom kl. 17 og 21, billigst om natta.</p>
+                <div class="bill-row-tips">
+                  <strong>Slik kutter du:</strong> Flytt vask, oppvask og lading til kvelden eller natta. En typisk vask koster 6 kr på dagen — under 2 kr om natta.
+                </div>
+              </div>
+            </div>
+
+            <div class="bill-row" onclick="toggleBillRow(this)">
+              <div class="bill-row-head">
+                <div class="bill-row-left">
+                  <span class="bill-row-color" style="background:var(--green-mid)"></span>
+                  <span class="bill-name">Nettleie</span>
+                </div>
+                <div class="bill-row-right">
+                  <span class="bill-row-amount" id="bill-r-net">—</span>
+                  <svg class="bill-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="bill-row-body">
+                <p>Det du betaler for å transportere strømmen hjem. Settes av nettselskapet — kan ikke byttes bort. Men du kan påvirke <strong>kapasitetstrinnet</strong> ditt.</p>
+                <div class="bill-row-tips">
+                  <strong>Slik kutter du:</strong> Aldri kjør ovn + vaskemaskin + tørketrommel samtidig. Det løfter deg ett trinn opp på nettleien — koster 50–120 kr ekstra hver måned.
+                </div>
+              </div>
+            </div>
+
+            <div class="bill-row" onclick="toggleBillRow(this)">
+              <div class="bill-row-head">
+                <div class="bill-row-left">
+                  <span class="bill-row-color" style="background:var(--green-glow)"></span>
+                  <span class="bill-name">Avgifter og moms</span>
+                </div>
+                <div class="bill-row-right">
+                  <span class="bill-row-amount" id="bill-r-tax">—</span>
+                  <svg class="bill-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="bill-row-body">
+                <p>Forbruksavgift, mva. og andre statlige avgifter. Strømstøtten dekker 90 % av prisen som overstiger 96,25 øre/kWh — trekkes automatisk fra på nettleien.</p>
+                <div class="bill-row-tips">
+                  <strong>Slik kutter du:</strong> Reduser totalforbruket. Hver kWh du sparer kutter også avgiftene proporsjonalt.
+                </div>
+              </div>
+            </div>
+
+            <div class="bill-row" onclick="toggleBillRow(this)">
+              <div class="bill-row-head">
+                <div class="bill-row-left">
+                  <span class="bill-row-color" style="background:var(--gold)"></span>
+                  <span class="bill-name">Påslag og månedsbeløp</span>
+                </div>
+                <div class="bill-row-right">
+                  <span class="bill-row-amount" id="bill-r-mark">—</span>
+                  <svg class="bill-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="bill-row-body">
+                <p>Det leverandøren tar i fortjeneste — ofte 2–6 øre/kWh + 30–50 kr i månedsbeløp. Dette er den eneste delen av regningen som er ren konkurranse.</p>
+                <div class="bill-row-tips">
+                  <strong>Slik kutter du:</strong> De billigste avtalene har 0 i påslag eller minus-påslag. Sjekk Sammenlign-tabben for å se hva du kan spare ved å bytte.
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.35"></div></div>
-          <div class="bill-desc">Det du betaler for selve strømmen. Settes av kraftmarkedet og endrer seg time for time. Er typisk høyest mellom kl. 17 og 21 — billigst om natta. <strong style="color:var(--green-deep)">Slik sparer du:</strong> flytt vask, oppvask og lading til kveld og natt.</div>
-        </div>
-        <div class="bill-row">
-          <div class="bill-row-top">
-            <span class="bill-name">Nettleie</span>
-            <span class="bill-pct">~40 %</span>
-          </div>
-          <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.40"></div></div>
-          <div class="bill-desc">Det du betaler for å transportere strømmen hjem til deg. Settes av nettselskapet ditt — kan ikke byttes bort. <strong style="color:var(--green-deep)">Slik sparer du:</strong> unngå å bruke flere store apparater samtidig (f.eks. ovn + vaskemaskin).</div>
-        </div>
-        <div class="bill-row">
-          <div class="bill-row-top">
-            <span class="bill-name">Avgifter og moms</span>
-            <span class="bill-pct">~20 %</span>
-          </div>
-          <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.20"></div></div>
-          <div class="bill-desc">Forbruksavgift, mva. og andre statlige avgifter. Strømstøtten dekker 90 % av prisen over 96,25 øre/kWh — trekkes fra automatisk på nettleien.</div>
-        </div>
-        <div class="bill-row">
-          <div class="bill-row-top">
-            <span class="bill-name">Påslag og månedsbeløp</span>
-            <span class="bill-pct">~5 %</span>
-          </div>
-          <div class="bill-bar"><div class="bill-bar-fill" style="--w:0.05"></div></div>
-          <div class="bill-desc">Det leverandøren tar i fortjeneste — ofte 2–6 øre/kWh + 30–50 kr i månedsbeløp. <strong style="color:var(--green-deep)">Slik sparer du:</strong> de billigste avtalene har 0 i påslag eller minus-påslag. Sammenlign på <a href="https://www.strompris.no" target="_blank" rel="noopener">strompris.no</a>.</div>
         </div>
       </div>
     </div>
@@ -4106,11 +4424,84 @@
       ? 'Strømprisen akkurat nå er ' + window.lastPriceData.now.toFixed(1) + ' øre/kWh (snitt i dag: ' + window.lastPriceData.avg.toFixed(1) + ').'
       : '';
 
-    const userMessage = 'Generer EN kort, personlig innsikt for meg om strøm akkurat nå. ' +
-      'Innsikten skal være konkret, handlingsrettet og overrasende. ' +
-      'Format: Først en KORT TITTEL (8-12 ord, fanger oppmerksomhet). ' +
-      'Så TO LINJER beskrivelse (1-2 setninger med konkrete tall, bruk **fet** rundt nøkkeltall). ' +
-      'Skriv på norsk. Ikke gjenta generelle ting, vær spesifikk for min profil.';
+    // RADIKALT FORSKJELLIGE TEMAER — hver med distinkt kategori
+    // Vi bytter TEMA, ikke bare formulering
+    const topics = [
+      {
+        category: 'standby-skjult-forbruk',
+        focus: 'Skjult standby-forbruk',
+        prompt: 'Avslør et SPESIFIKT apparat som koster mer i standby enn folk tror. Eksempler: kaffemaskin med varm-plate, ruter, dekoder, gaming-PC. Vær eksakt med watt og kr/år.'
+      },
+      {
+        category: 'time-strategi',
+        focus: 'Hvilken time du bør gjøre hva',
+        prompt: 'Gi konkret time-strategi. Format: "Den dyreste timen i dag var kl X (Y øre). Den billigste var kl Z (W øre). Hvis du flytter [aktivitet] fra X til Z, sparer du Q kr i året."'
+      },
+      {
+        category: 'oppvarming-teknikk',
+        focus: 'Oppvarming og varmetap',
+        prompt: 'Forklar EN teknikk for oppvarming som folk ikke vet om. Eksempler: gardiner som isolerer 15%, tetting rundt vinduer, dør-list, ventilasjon som tar varme. Konkret kr-effekt.'
+      },
+      {
+        category: 'avtale-felle',
+        focus: 'Strømavtaler og fellene',
+        prompt: 'Avslør en konkret felle i strømavtaler. Eksempler: "garantert lavest"-avtaler som ikke er det, justerbare påslag, månedsbeløp som vokser stille. Bruk eksempel med kr.'
+      },
+      {
+        category: 'apparat-sammenligning',
+        focus: 'Sammenlign to apparater',
+        prompt: 'Sammenlign forbruket til to vanlige apparater og hvilken vinner. Eksempel: "Tørketrommel vs tørkestativ", "Stekeovn vs airfryer", "Varmtvannsbereder vs gjennomstrømsvarmer". Konkret kWh og kr.'
+      },
+      {
+        category: 'sesong-spesifikk',
+        focus: 'Sesongstrategi for ' + new Date().toLocaleDateString('no-NO', { month: 'long' }),
+        prompt: 'Gi RÅD som er spesifikk for ' + new Date().toLocaleDateString('no-NO', { month: 'long' }) + '. Hva er typisk for denne måneden? Hvor lønner det seg mest å fokusere?'
+      },
+      {
+        category: 'omrade-fordel',
+        focus: 'Strømområde ' + (p.q3zone || 'NO1'),
+        prompt: 'Gi innsikt knyttet til prisområdet ' + (p.q3zone || 'NO1') + '. Hva er typisk her? Spotsvinger? Når er det billigst? Hva er smarteste strategi for ' + (p.q3zone || 'NO1') + '?'
+      },
+      {
+        category: 'mikro-vane',
+        focus: 'Mikro-vane med stor effekt',
+        prompt: 'Foreslå en MIKRO-vane (under 1 minutt å gjøre) med årlig effekt over 200 kr. Eksempler: skru av varm plate på kaffe, lukk gardiner om natten, slå av PC istedenfor sleep.'
+      },
+      {
+        category: 'misforstaelse',
+        focus: 'Vanlig misforståelse',
+        prompt: 'Avslør EN misforståelse som koster nordmenn penger. Eksempler: "Skru av lyset"-myten, "varmepumpen taper i kulde"-myten, "fastpris er trygg"-myten. Vis ekte tall.'
+      },
+      {
+        category: 'enova-tilskudd',
+        focus: 'Enova-tilskudd',
+        prompt: 'Forklar ETT konkret Enova-tilskudd folk ikke vet om eller misforstår. Eksempler: solceller (32 500 kr), væske-til-vann varmepumpe (25 000 kr), batteri til solceller (5 000 kr). Hvem kvalifiserer.'
+      }
+    ];
+
+    // Track FORRIGE tema-kategori (ikke bare titler) — så AI BYTTER topic
+    const usedTopics = JSON.parse(sessionStorage.getItem('sw_insight_topics') || '[]');
+    const recentlyUsedCategories = usedTopics.slice(-4); // siste 4 kategorier forbudt
+    const availableTopics = topics.filter(t => !recentlyUsedCategories.includes(t.category));
+    const chosenTopic = availableTopics.length > 0
+      ? availableTopics[Math.floor(Math.random() * availableTopics.length)]
+      : topics[Math.floor(Math.random() * topics.length)];
+
+    usedTopics.push(chosenTopic.category);
+    sessionStorage.setItem('sw_insight_topics', JSON.stringify(usedTopics.slice(-8)));
+
+    // Hent forbudt-historie: hva vi nettopp har sagt
+    const previousInsights = JSON.parse(sessionStorage.getItem('sw_previous_insights') || '[]');
+    const forbiddenContext = previousInsights.length > 0
+      ? '\n\nDU HAR ALLEREDE GITT DISSE INNSIKTENE — IKKE REPETER ELLER OMFORMULER:\n' + previousInsights.map((p, i) => (i+1) + '. ' + p).join('\n') + '\n\nDETTE SKAL HANDLE OM HELT ANNET TEMA: ' + chosenTopic.focus + '.'
+      : '';
+
+    const userMessage =
+      'TEMA-KATEGORI: ' + chosenTopic.category + '\n' +
+      'FOKUS: ' + chosenTopic.focus + '\n\n' +
+      chosenTopic.prompt +
+      '\n\nFORMAT (streng):\nLinje 1: Kort tittel (8-12 ord, fengende, ikke generisk)\nLinje 2: tom\nLinje 3-4: 1-2 konkrete setninger med **fet** rundt nøkkeltall (kroner, prosent, watt, kWh).\n\nMaks 60 ord totalt. Ingen emoji. Ingen "Hei". Direkte, konkret, med tall.' +
+      forbiddenContext;
 
     try {
       const response = await fetch('/api/chat', {
@@ -4120,11 +4511,9 @@
           message: userMessage,
           profile: p,
           context: 'rapport',
-          systemHint: 'Du genererer en "Dagens innsikt"-kort. Format STRENGT: ' +
-            'Linje 1: kort fengende tittel (max 12 ord). ' +
-            'Linje 2: blank. ' +
-            'Linje 3-4: 1-2 konkrete setninger, bruk **fet** rundt 1-2 nøkkeltall. ' +
-            'Maks 50 ord totalt. Brukeren har gjort ' + checklistDone + ' tiltak. ' + priceContext
+          systemHint: 'Du genererer en "Dagens innsikt"-kort om TEMA: "' + chosenTopic.focus + '". ' +
+            'Brukeren har gjort ' + checklistDone + ' tiltak. ' + priceContext + ' ' +
+            'KRITISK: Innsikten MÅ handle om ' + chosenTopic.focus + ' og INGENTING ANNET. Hvis forrige tema var "vask om natta", får du IKKE skrive om vask igjen. Hold deg til det utvalgte temaet.'
         })
       });
 
@@ -4137,6 +4526,10 @@
       const lines = reply.split('\n').filter(l => l.trim());
       const title = lines[0].replace(/^[#\-*]+\s*/, '').replace(/\*\*/g, '');
       const desc = lines.slice(1).join(' ').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').trim();
+
+      // Lagre siste innsikt så AI-en ikke repeterer
+      previousInsights.push(title);
+      sessionStorage.setItem('sw_previous_insights', JSON.stringify(previousInsights.slice(-5)));
 
       renderInsight({
         label: 'Fersk innsikt',
@@ -4192,33 +4585,46 @@
     if (!act) return;
 
     // Live-pris i kr/kWh (lastPriceData er i øre)
-    let pricePerKwh = 1.0; // fallback hvis vi ikke har data
+    let pricePerKwh = 1.0; // fallback
+    let cheapPricePerKwh = pricePerKwh;
+    let cheapHour = null;
     let priceContext = '';
+    let savingHint = '';
+
     if (window.lastPriceData && window.lastPriceData.now) {
-      pricePerKwh = window.lastPriceData.now / 100; // konvertere fra øre til kr
+      pricePerKwh = window.lastPriceData.now / 100;
       const ratio = window.lastPriceData.now / window.lastPriceData.avg;
+
+      if (window.lastPriceData.min) {
+        cheapPricePerKwh = window.lastPriceData.min / 100;
+        cheapHour = window.lastPriceData.cheapHour;
+      }
+
       if (ratio < 0.85) priceContext = '<strong>Strømmen er billigere enn vanlig nå</strong> — godt tidspunkt for dette.';
-      else if (ratio > 1.2) priceContext = '<strong>Strømmen er dyrere enn vanlig nå</strong> — vurder å vente til etter kl. 22.';
+      else if (ratio > 1.2) priceContext = '<strong>Strømmen er dyrere enn vanlig nå</strong> — vurder å vente.';
     }
 
-    // Total kostnad: forbruk × strømpris + estimert nettleie/avgifter (~50 øre/kWh ekstra)
+    // Total kostnad: forbruk × strømpris + estimert nettleie/avgifter (~50 øre/kWh)
     const totalCostPerKwh = pricePerKwh + 0.50;
+    const cheapTotalCostPerKwh = cheapPricePerKwh + 0.50;
     const cost = act.kwh * totalCostPerKwh;
+    const cheapCost = act.kwh * cheapTotalCostPerKwh;
+    const saving = cost - cheapCost;
 
     // Format
-    const costStr = cost < 10
-      ? cost.toFixed(2).replace('.', ',')
-      : cost.toFixed(1).replace('.', ',');
+    const fmt = c => c < 10 ? c.toFixed(2).replace('.', ',') : c.toFixed(1).replace('.', ',');
+    const costStr = fmt(cost);
+    const cheapCostStr = fmt(cheapCost);
 
     document.getElementById('calc-act-name').textContent = act.name + ' koster';
 
-    // Trigger re-animasjon ved å fjerne og legge til klassen
+    // Trigger re-animasjon
     const amountEl = document.getElementById('calc-amount');
     amountEl.style.animation = 'none';
-    amountEl.offsetHeight; // force reflow
+    amountEl.offsetHeight;
     amountEl.style.animation = 'amount-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-
     amountEl.innerHTML = '<span class="currency">kr</span> ' + costStr;
+
     document.getElementById('calc-context').innerHTML = act.context + (priceContext ? ' ' + priceContext : '');
     document.getElementById('calc-kwh').textContent = act.kwh + ' kWh';
 
@@ -4229,6 +4635,35 @@
         priceEl.textContent = window.lastPriceData.now.toFixed(1).replace('.', ',') + ' øre/kWh';
       } else {
         priceEl.textContent = 'Henter...';
+      }
+    }
+
+    // SMART SAMMENLIGNING: hvor mye sparer du ved å vente til billigste time?
+    const compareEl = document.getElementById('calc-compare');
+    if (compareEl) {
+      if (saving > 0.5 && cheapHour !== null) {
+        const cheapTime = String(cheapHour).padStart(2, '0') + ':00';
+        const yearlyIfDaily = Math.round(saving * 365);
+        compareEl.innerHTML =
+          '<div class="calc-compare-row">' +
+            '<div class="calc-compare-side">' +
+              '<div class="calc-compare-label">Nå</div>' +
+              '<div class="calc-compare-value calc-compare-now">kr ' + costStr + '</div>' +
+            '</div>' +
+            '<div class="calc-compare-arrow">→</div>' +
+            '<div class="calc-compare-side">' +
+              '<div class="calc-compare-label">Kl. ' + cheapTime + ' (billigste time)</div>' +
+              '<div class="calc-compare-value calc-compare-cheap">kr ' + cheapCostStr + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="calc-compare-saving">' +
+            '<strong>Spar ' + fmt(saving) + ' kr</strong> ved å vente til kl. ' + cheapTime +
+            (yearlyIfDaily > 50 ? ' · <strong>' + yearlyIfDaily + ' kr/år</strong> hvis daglig' : '') +
+          '</div>';
+        compareEl.classList.add('visible');
+      } else {
+        compareEl.classList.remove('visible');
+        compareEl.innerHTML = '';
       }
     }
   }
@@ -4338,6 +4773,87 @@
 
     // Sortér: relevante først
     return all.sort((a, b) => (b.relevant ? 1 : 0) - (a.relevant ? 1 : 0));
+  }
+
+  // === STRØMREGNING-BREAKDOWN (interaktiv) ===
+  function updateBillBreakdown(kwhValue) {
+    const kwh = parseInt(kwhValue) || 1500;
+
+    // Vis kWh-tall
+    document.getElementById('bill-kwh-display').textContent = kwh.toLocaleString('no-NO');
+
+    // Bruk live-priser hvis tilgjengelig, ellers fallback
+    let spotPriceOre = 60; // gjennomsnittlig
+    if (window.lastPriceData && window.lastPriceData.avg) {
+      spotPriceOre = window.lastPriceData.avg;
+    }
+
+    // Strømstøtte: 90% over 96.25 øre dekkes
+    const supportThreshold = 96.25;
+    const effectiveSpotOre = spotPriceOre > supportThreshold
+      ? supportThreshold + (spotPriceOre - supportThreshold) * 0.10
+      : spotPriceOre;
+
+    // Beregn delene basert på faktisk struktur
+    // Spotpris: effektive øre/kWh × kWh / 100 = kr
+    const spotKr = (effectiveSpotOre * kwh) / 100;
+    // Nettleie: ca 50 øre/kWh + fast del
+    const netKr = (50 * kwh) / 100 + 80;
+    // Avgifter: forbruksavgift (15.84 øre/kWh) + mva (25%)
+    const taxKr = (15.84 * kwh) / 100;
+    // Påslag: 3-5 øre/kWh + 30-50 kr
+    const markKr = (4 * kwh) / 100 + 40;
+    // Mva på alt
+    const subtotal = spotKr + netKr + taxKr + markKr;
+    const mvaKr = subtotal * 0.25;
+    const taxTotal = taxKr + mvaKr;
+
+    const total = Math.round(spotKr + netKr + taxTotal + markKr);
+
+    // Oppdater hovedtall
+    document.getElementById('bill-total-kr').textContent = total.toLocaleString('no-NO');
+
+    // Oppdater individuelle rader
+    document.getElementById('bill-r-spot').textContent = Math.round(spotKr).toLocaleString('no-NO') + ' kr';
+    document.getElementById('bill-r-net').textContent = Math.round(netKr).toLocaleString('no-NO') + ' kr';
+    document.getElementById('bill-r-tax').textContent = Math.round(taxTotal).toLocaleString('no-NO') + ' kr';
+    document.getElementById('bill-r-mark').textContent = Math.round(markKr).toLocaleString('no-NO') + ' kr';
+
+    // Oppdater stacked bar
+    const breakdown = document.getElementById('bill-breakdown');
+    if (breakdown) {
+      const totalAll = spotKr + netKr + taxTotal + markKr;
+      const segments = [
+        { color: 'var(--green-deep)', value: spotKr, name: 'Spotpris' },
+        { color: 'var(--green-mid)', value: netKr, name: 'Nettleie' },
+        { color: 'var(--green-glow)', value: taxTotal, name: 'Avgifter' },
+        { color: 'var(--gold)', value: markKr, name: 'Påslag' }
+      ];
+      breakdown.innerHTML = segments.map(s => {
+        const pct = (s.value / totalAll * 100).toFixed(1);
+        return '<div class="bill-breakdown-seg" style="background:' + s.color + ';width:' + pct + '%" title="' + s.name + ': ' + Math.round(s.value) + ' kr (' + pct + '%)"></div>';
+      }).join('');
+    }
+  }
+
+  function toggleBillRow(el) {
+    el.classList.toggle('open');
+  }
+
+  // Initialisere bill-breakdown med forbruk fra profil
+  function initBillBreakdown() {
+    let initialKwh = 1500;
+    if (profile.q6) {
+      if (profile.q6 === 'Under 500 kWh') initialKwh = 350;
+      else if (profile.q6 === '500-1000 kWh') initialKwh = 750;
+      else if (profile.q6 === '1000-2000 kWh') initialKwh = 1500;
+      else if (profile.q6 === 'Over 2000 kWh') initialKwh = 2500;
+    }
+    const slider = document.getElementById('bill-slider');
+    if (slider) {
+      slider.value = initialKwh;
+      updateBillBreakdown(initialKwh);
+    }
   }
 
   function renderEnova() {
@@ -4561,11 +5077,11 @@
       bars.appendChild(bar);
     });
     nowEl.textContent = nowPrice.toFixed(1).replace('.', ',');
-    // Lagre for bruk av tips-context
-    window.lastPriceData = { now: nowPrice, avg: avg, min: min, max: max };
-    // Insight basert på prisen nå vs snitt
+    // Lagre for bruk av tips-context og kalkulator
     const cheapHour = prices.indexOf(min);
     const expHour = prices.indexOf(max);
+    window.lastPriceData = { now: nowPrice, avg: avg, min: min, max: max, cheapHour: cheapHour, expHour: expHour, all: prices };
+    // Insight basert på prisen nå vs snitt
     const status = nowPrice < avg ? 'lavere' : 'høyere';
     insightEl.innerHTML = 'Prisen nå er <strong>' + status + ' enn dagens snitt</strong> (' + avg.toFixed(1).replace('.', ',') + ' øre/kWh). Billigst i dag er kl. ' + String(cheapHour).padStart(2,'0') + ' (' + min.toFixed(1).replace('.',',') + ' øre), dyrest kl. ' + String(expHour).padStart(2,'0') + ' (' + max.toFixed(1).replace('.',',') + ' øre).';
   }
@@ -5294,11 +5810,20 @@
   function recordShownTips(titles) {
     const shown = getRecentlyShown();
     const now = Date.now();
-    titles.forEach(t => { shown[t] = now; });
+    // Lagre med rang: topp tiltak (idx 0) får høyere "weight" så det dempes mer
+    titles.forEach((t, idx) => {
+      shown[t] = {
+        ts: now,
+        rank: idx,        // 0 = først vist (mest dempet), høyere = mindre dempet
+        showCount: ((shown[t] && shown[t].showCount) || 0) + 1
+      };
+    });
     // Rens ut tips eldre enn 24 timer
     const cutoff = now - 24 * 60 * 60 * 1000;
     Object.keys(shown).forEach(k => {
-      if (shown[k] < cutoff) delete shown[k];
+      const entry = shown[k];
+      const ts = entry && entry.ts ? entry.ts : entry; // bakoverkompatibel
+      if (ts < cutoff) delete shown[k];
     });
     localStorage.setItem('sw_tips_shown', JSON.stringify(shown));
   }
@@ -5327,10 +5852,10 @@
       else if (t.prio === 'medium') score += 100;
       else score += 40;
 
-      // STERKERE tilfeldig spread — opptil 80 poeng
-      // Bruker refresh-count som seed for å få ulike resultater hver refresh
-      const seed = (idx * 7 + refreshCount * 13) % 100;
-      score += seed * 0.8;
+      // STERKERE tilfeldig spread — gir merkbart annerledes rangering hver refresh
+      // Bruker "primtall-mix" for jevn fordeling
+      const seed = ((idx * 17) ^ (refreshCount * 31)) % 200;
+      score += seed * 0.6;
 
       // Kontekst-boost
       const titleLower = t.title.toLowerCase();
@@ -5412,13 +5937,32 @@
       });
 
       // POOL-ROTASJON: tips som er vist nylig får mye lavere score
-      const lastShown = recentlyShown[t.title];
-      if (lastShown) {
-        const hoursSinceShown = (now - lastShown) / (60 * 60 * 1000);
-        if (hoursSinceShown < 1) score -= 200;       // Nettopp vist — gjem helt
-        else if (hoursSinceShown < 4) score -= 120;  // Vist for kort siden
-        else if (hoursSinceShown < 12) score -= 60;  // Vist tidligere i dag
-        else if (hoursSinceShown < 24) score -= 30;  // Vist for litt siden
+      // Den øverste vises ALDRI to ganger på rad
+      const lastShownEntry = recentlyShown[t.title];
+      if (lastShownEntry) {
+        // Bakoverkompatibel: kan være tall (gammelt format) eller objekt (nytt)
+        const lastTs = (typeof lastShownEntry === 'object') ? lastShownEntry.ts : lastShownEntry;
+        const lastRank = (typeof lastShownEntry === 'object') ? (lastShownEntry.rank || 0) : 0;
+        const showCount = (typeof lastShownEntry === 'object') ? (lastShownEntry.showCount || 1) : 1;
+
+        const minutesSinceShown = (now - lastTs) / (60 * 1000);
+
+        // Sterkere dempning hvis nettopp vist — særlig hvis det var topp-tipset
+        if (minutesSinceShown < 5) {
+          score -= 500;  // Helt fjernet — kommer aldri tilbake innen 5 min
+        } else if (minutesSinceShown < 30) {
+          score -= 250 - lastRank * 20;  // Topp-tips dempes mest, bunn-tips mindre
+        } else if (minutesSinceShown < 120) {
+          score -= 150 - lastRank * 15;
+        } else if (minutesSinceShown < 360) {
+          score -= 80 - lastRank * 10;
+        } else if (minutesSinceShown < 1440) {
+          score -= 40;
+        }
+
+        // Ekstra dempning hvis tipset er vist mange ganger
+        if (showCount >= 3) score -= 50;
+        if (showCount >= 5) score -= 100;
       }
 
       t._score = score;
@@ -5436,9 +5980,51 @@
     const ctx = buildTipsContext();
     allTips = rankTipsByContext(allTips, ctx);
 
-    // POOL-SYSTEM: vis bare topp 7 tiltak, slik at refresh viser nye
-    // Tilgjengelighet beror på pool-rotasjon i rankTipsByContext
-    const tips = allTips.slice(0, 7);
+    // POOL-SYSTEM: Smartere utvalg som GARANTERER rotasjon
+    // 1. Topp-tipset (alltid det høyest rangerte) - 1 stk
+    // 2. Maks 1-2 tiltak per kategori for variasjon
+    // 3. Minst 3 av tiltakene må være forskjellige fra forrige refresh
+
+    const lastShownSet = new Set(Object.keys(getRecentlyShown()));
+    const refreshNum = getRefreshCount();
+
+    // Velg tiltak smart: maks 2 per kategori for å sikre variasjon
+    const tips = [];
+    const usedCategories = {};
+    const maxPerCategory = 2;
+
+    // Førstevalg: alle høyest rangerte, men maks 2 per kategori
+    for (const t of allTips) {
+      const cat = t.category || 'vane';
+      if ((usedCategories[cat] || 0) < maxPerCategory && tips.length < 7) {
+        tips.push(t);
+        usedCategories[cat] = (usedCategories[cat] || 0) + 1;
+      }
+      if (tips.length >= 7) break;
+    }
+
+    // På manuell refresh: tving inn minst 2 tiltak som ikke ble vist forrige gang
+    if (refreshNum > 0 && lastShownSet.size > 0) {
+      const newOnes = allTips.filter(t => !lastShownSet.has(t.title)).slice(0, 3);
+      // Bytt ut de 3 nederste tiltakene med "ikke-vist før"
+      if (newOnes.length > 0) {
+        const finalTips = tips.slice(0, 4); // behold topp 4
+        for (const fresh of newOnes) {
+          if (!finalTips.find(t => t.title === fresh.title) && finalTips.length < 7) {
+            finalTips.push(fresh);
+          }
+        }
+        // Fyll med høyt rangerte hvis vi har for få
+        for (const t of tips) {
+          if (finalTips.length >= 7) break;
+          if (!finalTips.find(f => f.title === t.title)) {
+            finalTips.push(t);
+          }
+        }
+        tips.length = 0;
+        tips.push(...finalTips.slice(0, 7));
+      }
+    }
 
     // Spor hvilke vi viser nå (for pool-rotasjon)
     recordShownTips(tips.map(t => t.title));
@@ -6015,6 +6601,7 @@
     renderEnova();
     renderMilestones();
     initCalc();
+    initBillBreakdown();
     setAccessLink();
     showEditedBanner();
     // Liten delay så ringen animerer fra 0 til riktig verdi

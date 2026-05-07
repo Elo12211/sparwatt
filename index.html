@@ -927,65 +927,255 @@
     margin-bottom: 14px;
   }
 
-  /* ===== FOUNDER SECTION ===== */
+  /* ===== FOUNDER SECTION (helt redesignet) ===== */
   .founder {
-    background: linear-gradient(180deg, var(--bg), var(--bg-warm));
+    background: var(--bg-warm);
     border-top: 1px solid var(--line);
-  }
-  .founder-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 60px;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .founder-text p {
-    font-size: 17px;
-    line-height: 1.65;
-    color: var(--ink-soft);
-    margin-bottom: 16px;
-  }
-  .founder-text p strong { color: var(--ink); font-weight: 600; }
-  .founder-signature {
-    margin-top: 22px !important;
-    font-style: italic;
-    color: var(--green-deep) !important;
-    font-weight: 600;
-  }
-  .founder-quote {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 24px;
-    padding: 36px 32px 28px;
+    border-bottom: 1px solid var(--line);
     position: relative;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.04);
+    overflow: hidden;
   }
-  .founder-quote-mark {
-    font-family: var(--serif);
-    font-size: 110px;
-    line-height: 0.8;
-    color: var(--green-glow);
+  .founder::before {
+    content: '';
     position: absolute;
-    top: 18px;
-    left: 22px;
-    opacity: 0.4;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(82, 183, 136, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(27, 67, 50, 0.03) 0%, transparent 40%);
+    pointer-events: none;
   }
-  .founder-quote p {
-    font-family: var(--serif);
-    font-size: 22px;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.45;
-    margin: 0;
+  .founder-wrap {
+    max-width: 980px;
+    margin: 0 auto;
     position: relative;
     z-index: 1;
   }
+
+  /* Eyebrow med linje */
+  .founder-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .founder-eyebrow-line {
+    width: 36px;
+    height: 2px;
+    background: var(--green-deep);
+    border-radius: 2px;
+  }
+  .founder-eyebrow span:last-child {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* Tittel */
+  .founder-title {
+    font-family: var(--serif);
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 50px;
+    max-width: 700px;
+  }
+  .founder-title em {
+    color: var(--green-deep);
+    font-style: italic;
+  }
+
+  /* Layout-grid */
+  .founder-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 60px;
+  }
+
+  /* Hovedtekst */
+  .founder-main {
+    position: relative;
+  }
+  .founder-lead {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--ink);
+    font-weight: 400;
+    margin: 0 0 28px;
+  }
+  .founder-lead strong {
+    color: var(--ink);
+    font-weight: 600;
+    background: linear-gradient(180deg, transparent 60%, rgba(82, 183, 136, 0.25) 60%);
+    padding: 0 2px;
+  }
+  .founder-divider {
+    margin: 28px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .founder-divider::before,
+  .founder-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line), transparent);
+  }
+  .founder-divider-mark {
+    width: 8px;
+    height: 8px;
+    background: var(--green-deep);
+    border-radius: 50%;
+    position: relative;
+  }
+  .founder-divider-mark::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px;
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--green-glow);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+  .founder-body {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .founder-body strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Pillars (høyre side) */
+  .founder-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 6px;
+  }
+  .founder-pillar {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .founder-pillar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 24px;
+    background: var(--green-deep);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .founder-pillar:hover {
+    border-color: rgba(82, 183, 136, 0.4);
+    transform: translateX(2px);
+  }
+  .founder-pillar:hover::before {
+    opacity: 1;
+  }
+  .founder-pillar-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--green-light), white);
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(82, 183, 136, 0.2);
+  }
+  .founder-pillar > div:last-child {
+    flex: 1;
+    min-width: 0;
+  }
+  .founder-pillar strong {
+    display: block;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .founder-pillar span {
+    display: block;
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.45;
+  }
+
+  /* Signatur-rad */
+  .founder-signature-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px 16px 18px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .founder-sig-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .founder-sig-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .founder-sig-text strong {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .founder-sig-text span {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+
+  /* Mobile */
   @media (max-width: 768px) {
-    .founder-grid { grid-template-columns: 1fr; gap: 32px; }
-    .founder-quote { padding: 32px 24px 24px; }
-    .founder-quote p { font-size: 19px; }
-    .founder-quote-mark { font-size: 80px; top: 12px; left: 18px; }
+    .founder-title { font-size: 38px; margin-bottom: 36px; }
+    .founder-content { grid-template-columns: 1fr; gap: 36px; }
+    .founder-lead { font-size: 17px; }
+    .founder-body { font-size: 15.5px; }
+    .founder-pillars { flex-direction: column; }
+    .founder-eyebrow span:last-child { font-size: 11px; }
+  }
+  @media (max-width: 480px) {
+    .founder-title { font-size: 30px; }
+    .founder-pillar { padding: 14px 16px; }
   }
 
   /* ===== RISK REDUCERS (under pricing) ===== */
@@ -1716,17 +1906,64 @@
 <!-- HVORFOR SPARWATT FINNES -->
 <section class="founder">
   <div class="container">
-    <div class="founder-grid reveal">
-      <div class="founder-text">
-        <div class="section-eyebrow">Hvorfor SparWatt finnes</div>
-        <h2 class="section-title">Strømmarkedet er rotete <em>med vilje</em></h2>
-        <p>Uklare avtaler. Fagord ingen forstår. Gebyrer som dukker opp av ingenting. Og <strong>"spar strøm"-tjenester</strong> som tjener provisjon på å sende deg til en bestemt leverandør.</p>
-        <p>SparWatt er motsatsen. En uavhengig analysetjeneste som svarer kun til deg — <strong>ikke til strømselskapene</strong>. Vi tjener ikke en krone på hva du gjør med rådene våre, og vi har ingen partnere som styrer hva vi anbefaler.</p>
-        <p class="founder-signature">— Ole, gründer av SparWatt</p>
+    <div class="founder-wrap reveal">
+      <div class="founder-eyebrow">
+        <span class="founder-eyebrow-line"></span>
+        <span>Hvorfor SparWatt finnes</span>
       </div>
-      <div class="founder-quote">
-        <div class="founder-quote-mark">"</div>
-        <p>Du fortjener å vite hva du faktisk betaler for. Ikke noe mer, ikke noe mindre.</p>
+
+      <h2 class="founder-title">Strømmarkedet er rotete <em>med vilje</em>.</h2>
+
+      <div class="founder-content">
+        <div class="founder-main">
+          <p class="founder-lead">Uklare avtaler. Fagord ingen forstår. Gebyrer som dukker opp av ingenting. Og <strong>"spar strøm"-tjenester</strong> som tjener provisjon på å sende deg til en bestemt leverandør.</p>
+
+          <div class="founder-divider">
+            <span class="founder-divider-mark"></span>
+          </div>
+
+          <p class="founder-body">SparWatt er motsatsen. En uavhengig analysetjeneste som svarer kun til deg — <strong>ikke til strømselskapene</strong>. Vi tjener ikke en krone på hva du gjør med rådene våre, og vi har ingen partnere som styrer hva vi anbefaler.</p>
+        </div>
+
+        <aside class="founder-pillars">
+          <div class="founder-pillar">
+            <div class="founder-pillar-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+            </div>
+            <div>
+              <strong>Ingen partnere</strong>
+              <span>Vi har null avtaler med strømleverandører</span>
+            </div>
+          </div>
+          <div class="founder-pillar">
+            <div class="founder-pillar-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <div>
+              <strong>Null provisjon</strong>
+              <span>Ingen kickback uansett hva du velger</span>
+            </div>
+          </div>
+          <div class="founder-pillar">
+            <div class="founder-pillar-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <strong>Norsk og uavhengig</strong>
+              <span>Bygd for nordmenn, av en nordmann</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="founder-signature-row">
+        <div class="founder-sig-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5l3 14M14 19l3-7M17 12l4-2M3 9l5-5M5 4l3 14"/></svg>
+        </div>
+        <div class="founder-sig-text">
+          <strong>Ole</strong>
+          <span>Gründer av SparWatt</span>
+        </div>
       </div>
     </div>
   </div>
