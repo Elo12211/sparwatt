@@ -1039,6 +1039,321 @@
     font-size: 10px;
   }
 
+  /* ===== NEW TIP CARD STYLE (utvidbare med detaljer) ===== */
+  .tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Gruppe per kategori */
+  .tip-group {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .tip-group-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--bg-warm), white);
+    border-bottom: 1px solid var(--line);
+  }
+  .tip-group-icon {
+    font-size: 22px;
+    line-height: 1;
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tip-group-text { flex: 1; min-width: 0; }
+  .tip-group-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .tip-group-desc {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+  .tip-group-saving {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--green-deep);
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .tip-group-items { padding: 6px; }
+
+  /* Individuelt tip-kort */
+  .tip-card {
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    margin: 4px 0;
+  }
+  .tip-card:hover {
+    background: var(--bg-warm);
+  }
+  .tip-card.open {
+    background: var(--bg-warm);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .tip-card-head {
+    display: flex;
+    gap: 14px;
+    padding: 14px 14px;
+    cursor: pointer;
+    align-items: flex-start;
+  }
+  .tip-card-main { flex: 1; min-width: 0; }
+  .tip-card-title {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .tip-card-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .tip-card-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .tip-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    background: var(--bg-warm);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .tip-card.open .tip-pill {
+    background: white;
+  }
+  .tip-pill-saving {
+    background: rgba(82, 183, 136, 0.15);
+    color: var(--green-deep);
+    border-color: rgba(82, 183, 136, 0.25);
+    font-weight: 700;
+  }
+  .tip-pill-now {
+    background: var(--green-deep);
+    color: white;
+    border-color: var(--green-deep);
+    font-weight: 600;
+    animation: now-flash 1.8s ease-in-out infinite;
+  }
+  @keyframes now-flash {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(27, 67, 50, 0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(27, 67, 50, 0); }
+  }
+  .tip-effort {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 11px;
+  }
+  .effort-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--ink-muted);
+    opacity: 0.3;
+  }
+  .effort-dot.filled { opacity: 1; background: var(--green-deep); }
+  .tip-effort-label {
+    margin-left: 3px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .tip-card-arrow {
+    color: var(--ink-muted);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tip-card.open .tip-card-arrow {
+    transform: rotate(180deg);
+    color: var(--green-deep);
+  }
+
+  /* Body — vises når kortet er åpent */
+  .tip-card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0 14px;
+  }
+  .tip-card.open .tip-card-body {
+    max-height: 800px;
+    padding-top: 4px;
+    padding-bottom: 16px;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .tip-why {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    background: white;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    margin: 12px 0;
+  }
+  .tip-why strong {
+    color: var(--green-deep);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .tip-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .tip-stat {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .tip-stat-label {
+    display: block;
+    font-size: 10px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .tip-stat-value {
+    display: block;
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .tip-steps {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+  }
+  .tip-steps-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--green-deep);
+    margin-bottom: 8px;
+  }
+  .tip-steps ol {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .tip-steps li {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 4px;
+  }
+  .tip-steps li::marker {
+    color: var(--green-deep);
+    font-weight: 700;
+  }
+  .tip-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .tip-action-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: var(--sans);
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--ink);
+  }
+  .tip-action-btn:hover {
+    border-color: var(--green-glow);
+    transform: translateY(-1px);
+  }
+  .tip-action-btn.primary {
+    background: var(--green-deep);
+    color: white;
+    border-color: var(--green-deep);
+  }
+  .tip-action-btn.primary:hover {
+    background: var(--green-mid);
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
+  }
+
+  /* Quick toast (vises når noe markeres som gjort) */
+  .quick-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    animation: toast-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes toast-up {
+    from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+  .quick-toast.fade-out {
+    animation: toast-down 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  @keyframes toast-down {
+    to { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  }
+
   /* ===== CHECKLIST ===== */
   .checklist {
     display: flex;
@@ -2652,6 +2967,16 @@
     .qs-icon { width: 40px; height: 40px; }
     .qs-title { font-size: 17px; }
     .calc-options { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .tip-stats { grid-template-columns: 1fr; gap: 6px; }
+    .tip-stat { display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 8px 12px; }
+    .tip-stat-label { margin-bottom: 0; }
+    .tip-actions { flex-direction: column; }
+    .tip-action-btn { min-width: 0; }
+    .tip-group-saving { font-size: 14px; }
+    .tip-group-header { padding: 12px 14px; gap: 10px; }
+    .tip-group-icon { width: 36px; height: 36px; font-size: 18px; }
+    .tip-group-title { font-size: 16px; }
+    .tip-card-head { padding: 12px; gap: 10px; }
     .streak-stripe { padding: 12px; gap: 6px; }
     .streak-item { gap: 6px; }
     .streak-icon { width: 28px; height: 28px; font-size: 13px; }
@@ -4421,6 +4746,7 @@
     const pump = (a.q5 || '').includes('Varmepumpe');
     const ved = (a.q5 || '').includes('Vedovn');
     const high = a.q6 === '1000-2000 kWh' || a.q6 === 'Over 2000 kWh';
+    const veryHigh = a.q6 === 'Over 2000 kWh';
     const hytte = a.q1 === 'Hytte / fritidsbolig';
     const norge = a.q7 === 'Norgespris';
     const fast = a.q7 === 'Fastpris';
@@ -4428,41 +4754,463 @@
     const solar = a.q8 === 'Nei, men vurderer det';
     const doneNight = (a.q9 || '').includes('Vasker klær om natta');
     const doneBereder = (a.q9 || '').includes('Tidsstyring på berederen');
+    const enebolig = a.q1 === 'Enebolig' || a.q1 === 'Rekkehus / tomannsbolig';
 
     const tips = [];
-    if (panel && !pump) tips.push({title:'Bytt panelovner med varmepumpe', desc:'Elektriske panelovner er den dyreste oppvarmingen som finnes. En luft-til-luft varmepumpe gir samme varme på en tredjedel av strømmen. Investeringen er typisk tjent inn på 2–3 år for en gjennomsnittlig bolig.', tags:['Stor sparing','Boligforbedring'], minMonthly:400, maxMonthly:800, prio:'høy'});
 
-    // Norgespris-tilpasset råd
-    if (norge) tips.push({title:'Sjekk om Norgespris fortsatt lønner seg', desc:'Norgespris (50 øre/kWh) har vært lønnsomt for de fleste i Sør-Norge i vinter. Når sommeren kommer kan spotpris være billigere — vi følger med og varsler deg når du bør vurdere å bytte.', tags:['Smart valg','Gratis å sjekke'], minMonthly:80, maxMonthly:250, prio:'høy'});
-    else if (fast) tips.push({title:'Vurder å bytte fra fastpris', desc:'Du har fastprisavtale. I 2026 er Norgespris (50 øre/kWh) eller spotpris med strømstøtte oftest billigere alternativ for husstander i Sør-Norge. Bestilling av Norgespris gjøres på elhub.no.', tags:['Bytte avtale','Stor sparing'], minMonthly:150, maxMonthly:350, prio:'høy'});
-    else if (a.q7 === 'Spotpris' && (a.q3zone === 'NO1' || a.q3zone === 'NO2' || a.q3zone === 'NO5')) tips.push({title:'Vurder Norgespris for vintermånedene', desc:'I ditt prisområde har Norgespris vært lønnsomt for over 60 % av husstandene siden oktober 2025. I januar 2026 sparte gjennomsnittsfamilien 900–1000 kr. Bestill på elhub.no — det tar fem minutter.', tags:['Smart valg','Stor sparing'], minMonthly:150, maxMonthly:300, prio:'høy'});
+    // ===== KATEGORI 1: QUICK WINS (gratis, < 10 min) =====
+    if (!doneNight) {
+      tips.push({
+        title: 'Flytt vask og oppvask til kvelden eller natta',
+        desc: 'Strømmen er 2–4× dyrere mellom kl. 17 og 21 enn om natta.',
+        why: 'Spotprisen i ditt prisområde svinger med 3–4× gjennom døgnet. En vask som koster 6 kr på dagen koster ofte under 2 kr om natta — over et år blir det betydelig.',
+        steps: [
+          'Sett vaskemaskin og oppvaskmaskin til "utsatt start"',
+          'Tidsinnstilling: start kl. 22 eller senere',
+          'Sjekk dagens priser på Hjem-tabben for å finne billigste timer'
+        ],
+        category: 'quick-win',
+        effort: 1,
+        time: '2 min hver gang',
+        cost: '0 kr',
+        payback: 'Umiddelbart',
+        minMonthly: 60, maxMonthly: 150,
+        prio: 'høy'
+      });
+    }
 
-    if (high && !doneBereder) tips.push({title:'Sett tidsbryter på varmtvannsberederen', desc:'Varmtvannsberederen står for 20–25 % av strømforbruket. En tidsbryter (300–500 kr) som skrur den av mellom kl. 23 og 05 sparer typisk 120–280 kr i måneden. Du merker ingen forskjell på vannet om morgenen.', tags:['Lett å gjøre','Engangsinvestering'], minMonthly:120, maxMonthly:280, prio:'høy'});
-    if (hytte) tips.push({title:'Smartplugg eller smart termostat på hytta', desc:'Hytter trekker ofte strøm til oppvarming også når ingen er der. En smartplugg (300–500 kr) eller smart termostat lar deg styre varmen fra mobilen og fyre opp dagen før du kommer. Husk: fritidsboliger får ikke strømstøtte.', tags:['Engangsinvestering','Stor sparing'], minMonthly:200, maxMonthly:450, prio:'høy'});
-    if (elbil) tips.push({title:'Sett elbilen til å lade om natta', desc:'Strømmen er typisk 3–4× billigere mellom kl. 23 og 06. Mange smarte ladere kan starte ladingen automatisk når prisen er lavest. For en familie som lader 1500 kWh/år gir det 200–500 kr i månedlig sparing.', tags:['Lett å gjøre','Stor sparing'], minMonthly:200, maxMonthly:500, prio:'høy'});
-    if (solar) tips.push({title:'Solceller — slik vet du om det lønner seg', desc:'Et typisk anlegg på 8–12 kWp koster 150 000–250 000 kr og betaler seg ned på 8–12 år i Sør-Norge. Best lønnsomhet på sørvendt tak uten skygge. Sjekk taket ditt gratis på solsjekk.no før du henter tilbud.', tags:['Stor investering'], minMonthly:200, maxMonthly:500, prio:'medium'});
-    if (!doneNight) tips.push({title:'Flytt vask og oppvask til kvelden eller natta', desc:'Strømmen er 2–4× dyrere mellom kl. 17 og 21 enn om natta. Sett vaskemaskin og oppvaskmaskin på timer slik at de starter etter kl. 22. Det er gratis å gjøre — og kutter regningen umiddelbart.', tags:['Gratis å gjøre'], minMonthly:60, maxMonthly:150, prio:'lav'});
-    tips.push({title:'Unngå å bruke flere store apparater samtidig', desc:'Nettleia beregnes etter den timen i måneden du bruker mest strøm samtidig. Hvis du kjører ovn, vaskemaskin, tørketrommel og varmepumpe på én gang, hopper du opp et trinn — som koster 50–120 kr ekstra hver måned.', tags:['Gratis å gjøre'], minMonthly:50, maxMonthly:120, prio:'lav'});
-    if (ved) tips.push({title:'Bruk vedovnen i de dyreste timene', desc:'På kalde vinterdager mellom kl. 17 og 21 er strømprisen ofte 4× høyere enn natta. Tenn vedovnen i disse timene og spar elektrisk varme — særlig lønnsomt for store boliger.', tags:['Gratis å gjøre'], minMonthly:80, maxMonthly:200, prio:'medium'});
+    tips.push({
+      title: 'Unngå å bruke flere store apparater samtidig',
+      desc: 'Kapasitetstrinnet på nettleia avgjøres av timen du bruker mest.',
+      why: 'Nettselskapet plasserer deg i et trinn basert på hvor mye strøm du bruker i din toppbelastningstime. Ovn (2000W) + vaskemaskin (2200W) + tørketrommel (2500W) på én gang kan løfte deg ett trinn opp — som koster 50–120 kr ekstra hver eneste måned.',
+      steps: [
+        'Lag en regel: aldri ovn + vaskemaskin samtidig',
+        'Last ned appen til nettselskapet — der ser du dine effekttopper',
+        'Spre forbruket over flere timer'
+      ],
+      category: 'quick-win',
+      effort: 1,
+      time: 'Endre vane',
+      cost: '0 kr',
+      payback: 'Etter første måned',
+      minMonthly: 50, maxMonthly: 120,
+      prio: 'medium'
+    });
 
-    // Sesongbaserte tiltak
-    const month = new Date().getMonth(); // 0=jan, 11=des
-    const winter = month >= 10 || month <= 2; // nov-feb
-    const spring = month >= 3 && month <= 4; // apr-mai
-    const summer = month >= 5 && month <= 7; // jun-aug
-    const autumn = month >= 8 && month <= 9; // sep-okt
+    if (ved) {
+      tips.push({
+        title: 'Bruk vedovnen i de dyreste timene',
+        desc: 'På kalde vinterdager kl. 17–21 er strømprisen ofte 4× høyere enn natta.',
+        why: 'Når strømprisen passerer 1 kr/kWh er vedfyring som regel billigere — selv om du regner med vedforbruk. På en kald uke kan du flytte 30–50 kWh varme fra strøm til ved.',
+        steps: [
+          'Tenn opp i ovnen kl. 16–17',
+          'Skru ned varmepumpe/panelovner samtidig',
+          'Hold ved-varmen til kl. 21'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: '15 min hver gang',
+        cost: '0 kr (du har veden)',
+        payback: 'Umiddelbart',
+        minMonthly: 80, maxMonthly: 200,
+        prio: 'medium'
+      });
+    }
+
+    // ===== KATEGORI 2: VANER (endre måten du gjør ting) =====
+    if (elbil) {
+      tips.push({
+        title: 'Sett elbilen til å lade om natta',
+        desc: 'Strømmen er typisk 3–4× billigere mellom kl. 23 og 06.',
+        why: 'En elbil bruker 250–450 kWh i måneden. Lader du på dagen til 80 øre/kWh i stedet for natta til 25 øre, betaler du 200–500 kr ekstra i måneden — for samme lading.',
+        steps: [
+          'Gå inn i bilens app (eller laderens app)',
+          'Sett "Avgrenset lading" eller "Smart lading"',
+          'Tidspunkt: 23:00 til 06:00'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: '5 min å sette opp',
+        cost: '0 kr',
+        payback: 'Etter første lading',
+        minMonthly: 200, maxMonthly: 500,
+        prio: 'høy'
+      });
+    }
+
+    // ===== KATEGORI 3: SMARTERE STRØMAVTALE =====
+    if (norge) {
+      tips.push({
+        title: 'Sjekk om Norgespris fortsatt lønner seg',
+        desc: 'Norgespris (50 øre/kWh) har vært best for de fleste i vinter — men det endrer seg.',
+        why: 'I januar 2026 var spotprisen i NO1 i snitt 78 øre/kWh — du sparte rundt 1000 kr på Norgespris. Når sommeren kommer faller spotprisen typisk til 30 øre, og da blir spotpris billigst igjen.',
+        steps: [
+          'Sjekk dagens snitt-spotpris i ditt område (Hjem-tabben)',
+          'Hvis spotpris under 50 øre → vurder å bytte tilbake',
+          'Bytte gjøres på elhub.no — tar 5 minutter'
+        ],
+        category: 'avtale',
+        effort: 1,
+        time: '5 min å bytte',
+        cost: '0 kr',
+        payback: 'Umiddelbart',
+        minMonthly: 80, maxMonthly: 250,
+        prio: 'høy'
+      });
+    } else if (fast) {
+      tips.push({
+        title: 'Bytt fra fastpris',
+        desc: 'Forbrukerrådet anbefaler ikke fastpris — det er nesten alltid dyrere over tid.',
+        why: 'Fastpris-avtaler hadde 1,5 milliarder kr i overprisning som måtte tilbakebetales i 2024. I 2026 er Norgespris (50 øre/kWh fast) eller spotpris med strømstøtte begge billigere alternativ for husstander i Sør-Norge.',
+        steps: [
+          'Sjekk om du har bindingstid på din nåværende avtale',
+          'Norgespris bestilles på elhub.no — gjelder fra neste måned',
+          'Spotpris-avtaler bestilles direkte hos en leverandør (se Sammenlign-tabben)'
+        ],
+        category: 'avtale',
+        effort: 1,
+        time: '15 min',
+        cost: '0 kr (men sjekk bindingstid)',
+        payback: 'Innen 1 måned',
+        minMonthly: 150, maxMonthly: 350,
+        prio: 'høy'
+      });
+    } else if (a.q7 === 'Spotpris' && (a.q3zone === 'NO1' || a.q3zone === 'NO2' || a.q3zone === 'NO5')) {
+      tips.push({
+        title: 'Vurder Norgespris for vintermånedene',
+        desc: 'I ditt prisområde har Norgespris vært lønnsomt siden oktober 2025.',
+        why: 'I NO1, NO2 og NO5 har snittprisen ligget over 60 øre/kWh hele vinteren. Med Norgespris-50 øre/kWh sparer du rundt 10–25 øre per kWh. For en husstand som bruker 1500 kWh/mnd blir det 150–300 kr i månedlig sparing.',
+        steps: [
+          'Bestill på elhub.no — tar 5 minutter',
+          'Avtalen starter fra 1. i måneden',
+          'Du kan bytte tilbake gratis hver måned hvis det blir billigere'
+        ],
+        category: 'avtale',
+        effort: 1,
+        time: '5 min',
+        cost: '0 kr',
+        payback: 'Etter første måned',
+        minMonthly: 150, maxMonthly: 300,
+        prio: 'høy'
+      });
+    }
+
+    // ===== KATEGORI 4: ENGANGSINVESTERINGER (300-1000 kr) =====
+    if (high && !doneBereder) {
+      tips.push({
+        title: 'Sett tidsbryter på varmtvannsberederen',
+        desc: 'Berederen er 20–25 % av strømforbruket — du betaler for å holde vann varmt mens du sover.',
+        why: 'En typisk 200-liters bereder bruker 8–12 kWh i døgnet. 30–40 % av det går til å erstatte varmetap mellom 23 og 05 — vann du ikke bruker. En tidsbryter (300–500 kr) skrur den av i denne perioden uten at du merker noe i hverdagen.',
+        steps: [
+          'Kjøp en mekanisk tidsbryter (Biltema, Clas Ohlson, Elektroimportøren) for 300–500 kr',
+          'Stille inn: "av" kl. 23, "på" kl. 05',
+          'Plugg den inn på berederen'
+        ],
+        category: 'investering',
+        effort: 2,
+        time: '30 min installasjon',
+        cost: '300–500 kr',
+        payback: '2–4 måneder',
+        minMonthly: 120, maxMonthly: 280,
+        prio: 'høy'
+      });
+    }
+
+    if (hytte) {
+      tips.push({
+        title: 'Smart styring av hytta',
+        desc: 'Hytter trekker strøm til oppvarming også når ingen er der.',
+        why: 'En typisk hytte holder 10–15°C hele vinteren mens den står tom. Hvis du senker til 5–8°C når du er borte og fyrer opp dagen før du kommer, kan du kutte 30–40 % av oppvarmingen. Husk: hytter får IKKE strømstøtte, så hver kWh teller dobbelt.',
+        steps: [
+          'Kjøp smart termostat (300–800 kr) eller smartplugg (200–400 kr)',
+          'Sett "borte"-temperatur på 5–8 grader',
+          'Aktiver "hjem"-temperatur fra mobilen dagen før du kommer'
+        ],
+        category: 'investering',
+        effort: 2,
+        time: '1 time installasjon',
+        cost: '200–800 kr',
+        payback: '1–2 måneder i fyringssesongen',
+        minMonthly: 200, maxMonthly: 450,
+        prio: 'høy'
+      });
+    }
+
+    // ===== KATEGORI 5: STORE INVESTERINGER (10 000+ kr) =====
+    if (panel && !pump && enebolig) {
+      tips.push({
+        title: 'Bytt panelovner med varmepumpe',
+        desc: 'Den største enkeltsparingen for boliger med panelovner — kan være tjent inn på 2–3 år.',
+        why: 'En luft-til-luft varmepumpe gir 3 kWh varme per kWh strøm (COP 3). Panelovner gir 1 kWh varme per kWh strøm. Bruker du 8000 kWh i året på oppvarming, kutter en varmepumpe det til ca. 2700 kWh — det er 5300 kWh × ca. 1 kr = 5300 kr/år.',
+        steps: [
+          'Hent tilbud fra 3 leverandører (Mitsubishi, Panasonic, Daikin er ofte best)',
+          'Søk Enova-støtte før kjøp — opptil 10 000 kr på luft-til-vann',
+          'Sjekk Sammenlign-tab og ENOVA-seksjonen for detaljer'
+        ],
+        category: 'stor-investering',
+        effort: 3,
+        time: 'Hent tilbud først',
+        cost: '20 000–35 000 kr',
+        payback: '2–3 år',
+        minMonthly: 400, maxMonthly: 800,
+        prio: 'høy'
+      });
+    }
+
+    if (solar && enebolig) {
+      tips.push({
+        title: 'Solceller — slik vet du om det lønner seg',
+        desc: 'Et typisk anlegg på 8–12 kWp betaler seg ned på 8–12 år i Sør-Norge.',
+        why: 'I NO1, NO2 og NO5 produserer 1 kWp ca. 900 kWh per år. Et 10 kWp-anlegg gir altså 9000 kWh — som dekker mesteparten av årsforbruket for en husstand. Med strømpris på 1 kr/kWh sparer du 9000 kr i året, og Enova gir opptil 32 500 kr i støtte.',
+        steps: [
+          'Sjekk taket ditt gratis på solsjekk.no',
+          'Hent tilbud fra 2–3 leverandører',
+          'Søk Enova-støtte før kjøp (opptil 32 500 kr)'
+        ],
+        category: 'stor-investering',
+        effort: 3,
+        time: 'Flere måneder å installere',
+        cost: '150 000–250 000 kr',
+        payback: '8–12 år',
+        minMonthly: 200, maxMonthly: 500,
+        prio: 'medium'
+      });
+    }
+
+    // ===== TIDS-BASERTE TILTAK (kun synlig i visse timer/situasjoner) =====
+    const hour = new Date().getHours();
+    const dayOfWeek = new Date().getDay(); // 0=søn, 1=man
+
+    // Kveldstiltak (kl 16-22): tids-spesifikke
+    if (hour >= 16 && hour <= 22) {
+      tips.push({
+        title: 'Sjekk kveldsprisen før du lager middag',
+        desc: 'Strømprisen kan være 2-3× høyere mellom 17 og 19 enn andre tider på dagen.',
+        why: 'Ovnsbruk på toppen av topplasten kan koste deg 5-10 kr ekstra per måltid. Ved å sjekke prisen før du lager middag, kan du flytte enkelte måltider — eller bruke vedovn/induksjon i stedet.',
+        steps: [
+          'Sjekk dagens prisgraf på Hjem-tabben',
+          'Hvis prisen er høy nå: vurder kjølig middag (salat, brødmat)',
+          'Eller: bruk induksjonstopp (mer effektiv enn ovn)'
+        ],
+        category: 'quick-win',
+        effort: 1,
+        time: '30 sek',
+        cost: '0 kr',
+        payback: 'Hver eneste kveld',
+        minMonthly: 30, maxMonthly: 80,
+        prio: 'medium'
+      });
+    }
+
+    // Tiltak som kun vises på mandager (mandag-motivasjon)
+    if (dayOfWeek === 1) {
+      tips.push({
+        title: 'Mandag: Sett opp ukens vaskeplan',
+        desc: 'Plan for når du skal vaske de neste 7 dagene basert på kommende strømpriser.',
+        why: 'Strømprisene varierer mest mellom dagene. Søndag er ofte 30-40% billigere enn torsdag. Ved å planlegge vask til de billigste dagene, sparer du uten å gjøre noe ekstra.',
+        steps: [
+          'Sjekk i morgen-prognosen hvilken dag som er billigst',
+          'Planlegg storvask til den dagen',
+          'Sett vaskemaskin på timer kvelden før'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: '5 min planlegging',
+        cost: '0 kr',
+        payback: 'Hver uke',
+        minMonthly: 40, maxMonthly: 100,
+        prio: 'medium'
+      });
+    }
+
+    // Helg-tiltak (lørdag/søndag)
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      tips.push({
+        title: 'Helg: Spar på topplastfritt forbruk',
+        desc: 'Helger har generelt lavere strømpris — godt tidspunkt for storvask, dyptørking og andre energi-intensive aktiviteter.',
+        why: 'Industrien står i ro i helger, så etterspørselen etter strøm er typisk 20-30% lavere enn ukedager. Spotprisen følger ofte denne trenden — særlig på søndager.',
+        steps: [
+          'Storvask, vask av sengetøy og store ting',
+          'Tørketrommel kan brukes mer fritt',
+          'Lad batterier (verktøy, sykkel) i helga'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: 'Ingen ekstra tid',
+        cost: '0 kr',
+        payback: 'Hver helg',
+        minMonthly: 30, maxMonthly: 70,
+        prio: 'lav'
+      });
+    }
+
+    // Bake-tiltak (vises kveldstid eller helg)
+    if (hour >= 16 || dayOfWeek === 0 || dayOfWeek === 6) {
+      tips.push({
+        title: 'Bak flere ting samtidig',
+        desc: 'Stekeovnen er en av de største strømtyvene — bruk den effektivt når du først skrur den på.',
+        why: 'En stekeovn på 200°C bruker 2-2,5 kWh i timen. Hvis du baker brød alene, betaler du for hele varmen til ett produkt. Ved å steke 2-3 ting samtidig (brød + ovnsmiddag), reduserer du kostnaden per måltid med 50-66%.',
+        steps: [
+          'Planlegg å bake/steke flere ting samme dag',
+          'Bruk hele ovnsplassen — bruk begge ristene',
+          'Slå av ovnen 5 min før — varmen henger i'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: 'Ingen ekstra tid',
+        cost: '0 kr',
+        payback: 'Hver gang du baker',
+        minMonthly: 25, maxMonthly: 60,
+        prio: 'lav'
+      });
+    }
+
+    // Standby-tiltak (vises før noen har gjort smartplugg-tiltaket)
+    const doneSmartplug = (a.q9 || '').includes('Smartplugg');
+    if (!doneSmartplug) {
+      tips.push({
+        title: 'Stopp standby-strøm med smartplugg',
+        desc: 'TV, lader, kaffemaskin og småelektronikk trekker strøm hele døgnet — også når du tror de er av.',
+        why: 'En typisk husholdning har 10-15 apparater i standby som hver bruker 2-10W kontinuerlig. På et år blir det 220 kWh = ca. 800 kr. En smartplugg (200-400 kr) skrur av strømmen helt når apparatet ikke er i bruk.',
+        steps: [
+          'Identifiser apparater som står på alltid (TV, lader, spillkonsoll)',
+          'Kjøp 2-3 smartplugger (Clas Ohlson, Elektroimportøren)',
+          'Sett dem opp med tidsplan eller stemmeassistent'
+        ],
+        category: 'investering',
+        effort: 2,
+        time: '15 min installasjon',
+        cost: '200-400 kr',
+        payback: '3-5 måneder',
+        minMonthly: 50, maxMonthly: 100,
+        prio: 'medium'
+      });
+    }
+
+    // Tørketrommel-tiltak (alltid)
+    tips.push({
+      title: 'Tørk klær naturlig når mulig',
+      desc: 'Tørketrommelen er et av de mest energi-intensive hvitevarene i hjemmet.',
+      why: 'En full tørketrommel-syklus bruker 3-4 kWh — det er rundt 4-5 kr per syklus med dagens priser. Hvis du tørker 4 ganger i uka, blir det 80 kr i måneden bare på ett apparat. Tørkestativ koster ingenting og gir samme resultat — bare litt lengre tid.',
+      steps: [
+        'Sett opp tørkestativ i et godt ventilert rom',
+        'Bruk tørketrommel kun til store ting eller når det haster',
+        'Sentrifuger på 1400 rpm før tørking — 30% kortere tørketid'
+      ],
+      category: 'vane',
+      effort: 1,
+      time: 'Litt mer planlegging',
+      cost: '0-300 kr (tørkestativ)',
+      payback: 'Innen 1 måned',
+      minMonthly: 50, maxMonthly: 120,
+      prio: 'lav'
+    });
+
+    // Kaffe-tiltak
+    tips.push({
+      title: 'Hold kaffekannen på termos i stedet for varm plate',
+      desc: 'Den varme platen på kaffetrakteren bruker 70-100W kontinuerlig — bare for å holde kaffen lunken.',
+      why: 'En varm plate som står på 6 timer om dagen bruker 0,5 kWh — ca. 18 kr i måneden. Termos holder kaffen varm gratis. På et år sparer du 200 kr — for å gjøre absolutt ingenting.',
+      steps: [
+        'Brygg kaffe som vanlig',
+        'Hell over på termos umiddelbart',
+        'Skru av varm plate'
+      ],
+      category: 'quick-win',
+      effort: 1,
+      time: '20 sek',
+      cost: '0-300 kr (termos)',
+      payback: 'Innen 2 måneder',
+      minMonthly: 15, maxMonthly: 30,
+      prio: 'lav'
+    });
+
+    // ===== SESONGBASERTE TILTAK =====
+    const month = new Date().getMonth();
+    const winter = month >= 10 || month <= 2;
+    const spring = month >= 3 && month <= 4;
+    const summer = month >= 5 && month <= 7;
+    const autumn = month >= 8 && month <= 9;
 
     if (winter) {
-      tips.push({title:'Vinter: Skru ned innetemperaturen 1 grad om natta', desc:'Hver grad lavere innetemperatur kutter rundt 5 % av varmekostnaden. På en januar-regning utgjør det 80–150 kr alene. De fleste merker ikke forskjellen mellom 20 og 19 grader når de sover.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:80, maxMonthly:150, prio:'medium'});
+      tips.push({
+        title: 'Vinter: Skru ned innetemperaturen 1 grad om natta',
+        desc: 'Hver grad lavere innetemperatur kutter rundt 5 % av varmekostnaden.',
+        why: 'I januar er oppvarming 60–70 % av strømregningen i en typisk norsk bolig. 5 % av det utgjør 80–150 kr/mnd. De fleste sover faktisk bedre i 18–19 grader enn 21.',
+        steps: [
+          'Senk termostaten med 1 grad fra kl. 23',
+          'Sett den tilbake kl. 06–07',
+          'Smart termostat gjør dette automatisk'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: '2 min å sette opp',
+        cost: '0 kr',
+        payback: 'Umiddelbart',
+        minMonthly: 80, maxMonthly: 150,
+        prio: 'medium'
+      });
     }
-    if (spring) {
-      tips.push({title:'Vår: Rens filteret på varmepumpen', desc:'Et tett filter får varmepumpen til å bruke 10–15 % mer strøm. Ta fram støvsugeren — det tar fem minutter og merkes på regningen resten av året.', tags:['Sesongtiltak','Lett å gjøre'], minMonthly:40, maxMonthly:90, prio:'lav'});
+
+    if (spring && pump) {
+      tips.push({
+        title: 'Vår: Rens filteret på varmepumpen',
+        desc: 'Et tett filter får varmepumpen til å bruke 10–15 % mer strøm.',
+        why: 'Etter en hel vinter er filteret typisk fullt av støv. Det reduserer luftgjennomstrømningen og tvinger pumpen til å jobbe hardere. Rensing tar 5 minutter — gjør det hver vår og høst.',
+        steps: [
+          'Skru av varmepumpen',
+          'Ta ut filterene (sitter bak frontdekselet)',
+          'Støvsug og skyll med lunkent vann',
+          'Tørk og sett tilbake'
+        ],
+        category: 'vane',
+        effort: 1,
+        time: '5 min',
+        cost: '0 kr',
+        payback: 'Umiddelbart',
+        minMonthly: 40, maxMonthly: 90,
+        prio: 'lav'
+      });
     }
+
     if (summer) {
-      tips.push({title:'Sommer: Skru av berederen før ferien', desc:'Skal du bort i en uke eller mer? Skru av varmtvannsberederen helt, eller still den ned til 40 °C. Skru den på dagen før du kommer hjem — du sparer 100–200 kr på én uke.', tags:['Sesongtiltak','Gratis å gjøre'], minMonthly:60, maxMonthly:140, prio:'medium'});
+      tips.push({
+        title: 'Sommer: Skru av berederen før ferien',
+        desc: 'Skal du bort i en uke eller mer? Du betaler 8 kWh hver dag for å holde vann varmt du ikke bruker.',
+        why: 'En 200-liters bereder bruker 8 kWh i døgnet bare for å erstatte varmetap. På en uke = 56 kWh = 80–150 kr borte. Skru av — kald vann blir varmt på 4–6 timer når du kommer hjem.',
+        steps: [
+          'Finn berederbryteren i sikringsskapet',
+          'Skru av før du drar',
+          'Skru på dagen før du kommer hjem'
+        ],
+        category: 'quick-win',
+        effort: 1,
+        time: '1 min',
+        cost: '0 kr',
+        payback: 'Umiddelbart',
+        minMonthly: 60, maxMonthly: 140,
+        prio: 'medium'
+      });
     }
+
     if (autumn) {
-      tips.push({title:'Høst: Tett luftlekkasjer før kulda kommer', desc:'En typisk bolig har 3–5 utettheter rundt vinduer og dører som koster 50–100 kr i måneden gjennom vinteren. Tetningslist fra Biltema koster 50 kr og varer mange år.', tags:['Sesongtiltak','Engangsinvestering'], minMonthly:50, maxMonthly:120, prio:'medium'});
+      tips.push({
+        title: 'Høst: Tett luftlekkasjer før kulda kommer',
+        desc: 'En typisk bolig har 3–5 utettheter rundt vinduer og dører.',
+        why: 'Selv små glipper koster — kald luft trekkes inn og varm luft ut. Hold en stearinlys ved vinduet: hvis flammen flagrer, lekker det. Rundt 5 % av varmen forsvinner gjennom utettheter i en gjennomsnittlig bolig.',
+        steps: [
+          'Tjen stearinlys/røkelse ved hver vindusramme',
+          'Marker hvor det lekker',
+          'Bytt eller suppler tetningslist (50–100 kr fra Biltema)'
+        ],
+        category: 'investering',
+        effort: 2,
+        time: 'Halv dag',
+        cost: '50–200 kr',
+        payback: 'Innen 2 måneder',
+        minMonthly: 50, maxMonthly: 120,
+        prio: 'medium'
+      });
     }
 
     return tips;
@@ -4535,81 +5283,143 @@
   }
 
   // Smart rangering: tar hensyn til kontekst og brukerens fremgang
+  // Pool-system: hold styr på hvilke tips som har vært vist nylig
+  // Vises 5-7 tiltak om gangen, og nylig viste tiltak gjemmes i 3-7 refreshes
+  function getRecentlyShown() {
+    try {
+      return JSON.parse(localStorage.getItem('sw_tips_shown') || '{}');
+    } catch (e) { return {}; }
+  }
+
+  function recordShownTips(titles) {
+    const shown = getRecentlyShown();
+    const now = Date.now();
+    titles.forEach(t => { shown[t] = now; });
+    // Rens ut tips eldre enn 24 timer
+    const cutoff = now - 24 * 60 * 60 * 1000;
+    Object.keys(shown).forEach(k => {
+      if (shown[k] < cutoff) delete shown[k];
+    });
+    localStorage.setItem('sw_tips_shown', JSON.stringify(shown));
+  }
+
+  // Get refresh count — hvor mange ganger har brukeren oppdatert nå
+  function getRefreshCount() {
+    return parseInt(localStorage.getItem('sw_refresh_count') || '0');
+  }
+  function incrementRefreshCount() {
+    const n = getRefreshCount() + 1;
+    localStorage.setItem('sw_refresh_count', String(n));
+    return n;
+  }
+
   function rankTipsByContext(tips, ctx) {
     const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
+    const recentlyShown = getRecentlyShown();
+    const now = Date.now();
+    const refreshCount = getRefreshCount();
 
-    return tips.map(t => {
+    return tips.map((t, idx) => {
       let score = 0;
 
-      // Prio-vekting
-      if (t.prio === 'høy') score += 100;
-      else if (t.prio === 'medium') score += 50;
-      else score += 20;
+      // Prio-vekting (større range — opptil 200 i stedet for 100)
+      if (t.prio === 'høy') score += 200;
+      else if (t.prio === 'medium') score += 100;
+      else score += 40;
 
-      // Tilfeldig spread for å unngå at samme tip alltid er først
-      score += Math.random() * 5;
+      // STERKERE tilfeldig spread — opptil 80 poeng
+      // Bruker refresh-count som seed for å få ulike resultater hver refresh
+      const seed = (idx * 7 + refreshCount * 13) % 100;
+      score += seed * 0.8;
 
       // Kontekst-boost
       const titleLower = t.title.toLowerCase();
-      const isNow = false; // markeres senere
 
-      // Topplast (17-21): prioriter tidsstyring
+      // Topplast (17-21): prioriter tidsstyring HØYT
       if (ctx.timeOfDay === 'topplast') {
         if (titleLower.includes('vask') || titleLower.includes('lade') ||
             titleLower.includes('tidsbryter') || titleLower.includes('flytt') ||
             titleLower.includes('samtidig')) {
-          score += 60;
+          score += 120; // doblet
           t._nowRelevant = true;
         }
       }
 
       // Natt: prioriter tiltak som drar nytte av billig strøm
       if (ctx.timeOfDay === 'natt') {
-        if (titleLower.includes('vask') || titleLower.includes('lade')) {
-          score += 50;
+        if (titleLower.includes('vask') || titleLower.includes('lade') ||
+            titleLower.includes('oppvask')) {
+          score += 100;
           t._nowRelevant = true;
         }
       }
 
-      // Høy pris: prioriter tiltak med stor sparing
-      if (ctx.priceLevel === 'svært høy' || ctx.priceLevel === 'høy') {
-        if (t.minMonthly > 100) score += 30;
-        if (titleLower.includes('flytt') || titleLower.includes('samtidig') || titleLower.includes('vedovn')) {
+      // Morgen (06-09): tidsbryter-tiltak
+      if (ctx.timeOfDay === 'morgen') {
+        if (titleLower.includes('bereder') || titleLower.includes('temperatur')) {
+          score += 60;
+        }
+      }
+
+      // Dag (10-16): rolig periode — investering-tiltak
+      if (ctx.timeOfDay === 'dag') {
+        if (t.category === 'investering' || t.category === 'stor-investering') {
           score += 40;
-          t._nowRelevant = true;
         }
       }
 
-      // Vinter: varme-tiltak
+      // Pris-relatert
+      if (ctx.priceLevel === 'svært høy' || ctx.priceLevel === 'høy') {
+        if (t.minMonthly > 100) score += 60;
+        if (titleLower.includes('flytt') || titleLower.includes('samtidig') || titleLower.includes('vedovn')) {
+          score += 80;
+          t._nowRelevant = true;
+        }
+      }
+      if (ctx.priceLevel === 'lav') {
+        // Når strømmen er billig — fokus på vaner
+        if (t.category === 'vane' || t.category === 'quick-win') {
+          score += 50;
+        }
+      }
+
+      // Sesong
       if (ctx.season === 'vinter') {
         if (titleLower.includes('varmepump') || titleLower.includes('temperatur') ||
             titleLower.includes('vedovn') || titleLower.includes('luftlek')) {
-          score += 25;
+          score += 50;
         }
       }
-
-      // Sommer: skru av/ned
       if (ctx.season === 'sommer') {
         if (titleLower.includes('bereder') || titleLower.includes('standby') ||
-            titleLower.includes('ferie')) {
-          score += 25;
+            titleLower.includes('ferie') || titleLower.includes('solcelle')) {
+          score += 50;
         }
       }
 
-      // Sesong-tiltak alltid litt opp
-      if (t.tags.includes('Sesongtiltak')) score += 15;
+      // Sesongtiltak alltid litt opp
+      if (titleLower.includes('vinter:') || titleLower.includes('vår:') ||
+          titleLower.includes('sommer:') || titleLower.includes('høst:')) {
+        score += 30;
+      }
 
-      // Hvis brukeren har gjort noe relatert, dempe det tipset
+      // Sjekkliste-dempning — hvis brukeren har gjort noe relatert
       const checklistKeys = ['avtale', 'vaskemaskin', 'bereder', 'norgespris', 'smartplugg', 'effekt'];
       checklistKeys.forEach((key, i) => {
-        if (saved[i] && titleLower.includes(key.replace('avtale', 'avtale')
-            .replace('bereder', 'bereder')
-            .replace('norgespris', 'norgespris')
-            .replace('smartplugg', 'smartplugg')
-            .replace('effekt', 'effekt'))) {
-          score -= 30; // dempe tiltak som allerede er gjort
+        if (saved[i] && titleLower.includes(key)) {
+          score -= 100; // sterkere dempning
         }
       });
+
+      // POOL-ROTASJON: tips som er vist nylig får mye lavere score
+      const lastShown = recentlyShown[t.title];
+      if (lastShown) {
+        const hoursSinceShown = (now - lastShown) / (60 * 60 * 1000);
+        if (hoursSinceShown < 1) score -= 200;       // Nettopp vist — gjem helt
+        else if (hoursSinceShown < 4) score -= 120;  // Vist for kort siden
+        else if (hoursSinceShown < 12) score -= 60;  // Vist tidligere i dag
+        else if (hoursSinceShown < 24) score -= 30;  // Vist for litt siden
+      }
 
       t._score = score;
       return t;
@@ -4617,40 +5427,134 @@
   }
 
   function renderTips() {
-    let tips = generateTips(profile);
-    if (tips.length === 0) {
+    let allTips = generateTips(profile);
+    if (allTips.length === 0) {
       document.getElementById('tips-list').innerHTML = '<div class="loading">Ingen tiltak funnet — du gjør allerede mye riktig!</div>';
       return;
     }
 
     const ctx = buildTipsContext();
-    tips = rankTipsByContext(tips, ctx);
+    allTips = rankTipsByContext(allTips, ctx);
+
+    // POOL-SYSTEM: vis bare topp 7 tiltak, slik at refresh viser nye
+    // Tilgjengelighet beror på pool-rotasjon i rankTipsByContext
+    const tips = allTips.slice(0, 7);
+
+    // Spor hvilke vi viser nå (for pool-rotasjon)
+    recordShownTips(tips.map(t => t.title));
+
+    // Beregn total potensiell sparing fra ALLE tiltak (ikke bare viste)
+    const totalMin = allTips.reduce((s, t) => s + (t.minMonthly || 0), 0);
+    const totalMax = allTips.reduce((s, t) => s + (t.maxMonthly || 0), 0);
+    const totalAvg = Math.round((totalMin + totalMax) / 2);
+    const visibleAvg = Math.round(tips.reduce((s, t) => s + ((t.minMonthly + t.maxMonthly) / 2), 0));
+    const hiddenCount = allTips.length - tips.length;
 
     // Vis kontekst-banner
     const ctxEl = document.getElementById('tips-context');
     if (ctxEl) {
+      const hiddenNote = hiddenCount > 0
+        ? ' Vi viser de <strong>' + tips.length + ' mest aktuelle</strong> nå — trykk "Oppdater" for å se andre.'
+        : '';
       ctxEl.innerHTML = '<span class="tips-context-icon">' +
         '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>' +
-        '</span><span>' + ctx.message + '</span>';
+        '</span><span>' + ctx.message + ' Total potensiell sparing: <strong>' + totalAvg + ' kr/mnd</strong>.' + hiddenNote + '</span>';
       ctxEl.classList.remove('hidden');
     }
 
-    // Render tiltak
+    // Kategori-info (norsk-vennlige labels)
+    const categoryInfo = {
+      'quick-win':       { label: 'Rask gevinst',       icon: '⚡', desc: 'Gratis å gjøre, tar minutter, virker umiddelbart' },
+      'vane':            { label: 'Endre vane',         icon: '🔄', desc: 'Gratis, krever bare at du endrer noe i hverdagen' },
+      'avtale':          { label: 'Smartere avtale',    icon: '📋', desc: 'Gratis å bytte, gjelder fra neste måned' },
+      'investering':     { label: 'Liten investering',  icon: '🔧', desc: 'Koster noen hundre kroner, betaler seg ned raskt' },
+      'stor-investering':{ label: 'Stor investering',   icon: '🏠', desc: 'Tusentvis i investering, men store besparelser over tid' }
+    };
+
+    // Grupper tiltak etter kategori (men behold rangering innad)
+    const grouped = {};
+    tips.forEach(t => {
+      const cat = t.category || 'vane';
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(t);
+    });
+
+    // Render
+    const catOrder = ['quick-win', 'vane', 'avtale', 'investering', 'stor-investering'];
     const list = document.getElementById('tips-list');
-    list.innerHTML = tips.map((t, i) => {
-      const tagsHtml = t.tags.map(tag => {
-        const cls = tag === 'Sesongtiltak' ? 'tip-tag season' : 'tip-tag';
-        return '<span class="' + cls + '">' + tag + '</span>';
-      }).join('');
-      const nowTag = t._nowRelevant ? '<span class="tip-tag now">Akkurat nå</span>' : '';
-      return '<div class="tip">' +
-        '<div class="tip-num">' + (i+1) + '</div>' +
-        '<div class="tip-body">' +
-        '<div class="tip-title">' + t.title + '</div>' +
-        '<div class="tip-desc">' + t.desc + '</div>' +
-        '<div class="tip-meta">' + nowTag + tagsHtml + '<span class="tip-tag">' + t.minMonthly + '–' + t.maxMonthly + ' kr/mnd</span></div>' +
-        '</div></div>';
-    }).join('');
+    let html = '';
+
+    catOrder.forEach(cat => {
+      if (!grouped[cat] || grouped[cat].length === 0) return;
+      const info = categoryInfo[cat] || categoryInfo['vane'];
+      const catTotal = grouped[cat].reduce((s, t) => s + Math.round((t.minMonthly + t.maxMonthly) / 2), 0);
+
+      html += '<div class="tip-group">' +
+        '<div class="tip-group-header">' +
+          '<div class="tip-group-icon">' + info.icon + '</div>' +
+          '<div class="tip-group-text">' +
+            '<div class="tip-group-title">' + info.label + '</div>' +
+            '<div class="tip-group-desc">' + info.desc + '</div>' +
+          '</div>' +
+          '<div class="tip-group-saving">~' + catTotal + ' kr/mnd</div>' +
+        '</div>' +
+        '<div class="tip-group-items">';
+
+      grouped[cat].forEach((t, i) => {
+        const avgSaving = Math.round(((t.minMonthly || 0) + (t.maxMonthly || 0)) / 2);
+        const nowTag = t._nowRelevant ? '<span class="tip-pill tip-pill-now">⚡ Akkurat nå</span>' : '';
+        const effortDots = '<span class="tip-effort">' +
+          [1,2,3].map(n => '<span class="effort-dot' + (n <= (t.effort || 1) ? ' filled' : '') + '"></span>').join('') +
+          '<span class="tip-effort-label">' +
+            (t.effort === 1 ? 'Lett' : t.effort === 2 ? 'Medium' : 'Krever innsats') +
+          '</span></span>';
+
+        const stepsHtml = (t.steps && t.steps.length > 0)
+          ? '<div class="tip-steps"><div class="tip-steps-title">Slik gjør du det</div><ol>' +
+            t.steps.map(s => '<li>' + s + '</li>').join('') +
+            '</ol></div>'
+          : '';
+
+        const tipId = 'tip-' + cat + '-' + i;
+
+        html += '<div class="tip-card" id="' + tipId + '">' +
+          '<div class="tip-card-head" onclick="toggleTip(\'' + tipId + '\')">' +
+            '<div class="tip-card-main">' +
+              '<div class="tip-card-title">' + t.title + '</div>' +
+              '<div class="tip-card-desc">' + t.desc + '</div>' +
+              '<div class="tip-card-meta">' +
+                nowTag +
+                '<span class="tip-pill tip-pill-saving">~' + avgSaving + ' kr/mnd</span>' +
+                effortDots +
+                (t.payback ? '<span class="tip-pill">Tjent inn: ' + t.payback + '</span>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div class="tip-card-arrow">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
+                '<polyline points="6 9 12 15 18 9"/>' +
+              '</svg>' +
+            '</div>' +
+          '</div>' +
+          '<div class="tip-card-body">' +
+            (t.why ? '<div class="tip-why"><strong>Hvorfor sparer du så mye?</strong> ' + t.why + '</div>' : '') +
+            '<div class="tip-stats">' +
+              (t.cost ? '<div class="tip-stat"><span class="tip-stat-label">Kostnad</span><span class="tip-stat-value">' + t.cost + '</span></div>' : '') +
+              (t.time ? '<div class="tip-stat"><span class="tip-stat-label">Tidsbruk</span><span class="tip-stat-value">' + t.time + '</span></div>' : '') +
+              (t.payback ? '<div class="tip-stat"><span class="tip-stat-label">Tjent inn</span><span class="tip-stat-value">' + t.payback + '</span></div>' : '') +
+            '</div>' +
+            stepsHtml +
+            '<div class="tip-actions">' +
+              '<button class="tip-action-btn primary" onclick="markTipDone(\'' + t.title.replace(/'/g, "\\'") + '\')">Marker som gjort</button>' +
+              '<button class="tip-action-btn" onclick="askAboutTip(\'' + t.title.replace(/'/g, "\\'") + '\')">Spør AI om dette</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      });
+
+      html += '</div></div>';
+    });
+
+    list.innerHTML = html;
 
     // "Sist oppdatert"-tekst
     const updEl = document.getElementById('tips-updated');
@@ -4661,25 +5565,87 @@
     }
   }
 
+  // Klikkbart kort: utvid/lukk detaljer
+  function toggleTip(id) {
+    const card = document.getElementById(id);
+    if (card) card.classList.toggle('open');
+  }
+
+  // "Marker som gjort" — ruter til huskelisten
+  function markTipDone(title) {
+    // Finn matchende huskeliste-item
+    const items = buildChecklistItems();
+    const match = items.find(it => it.text.toLowerCase().includes(title.toLowerCase().slice(0, 15)) ||
+                                    title.toLowerCase().includes(it.text.toLowerCase().slice(0, 15)));
+
+    if (match) {
+      const saved = JSON.parse(localStorage.getItem('sw_checklist') || '{}');
+      saved[match.id] = true;
+      localStorage.setItem('sw_checklist', JSON.stringify(saved));
+      showQuickToast('✓ Markert som gjort — se huskelisten for fremgangen din');
+      renderChecklist();
+      updateWeekProgress();
+      renderMilestones();
+      // Re-render tiltakene så de re-rangeres
+      setTimeout(renderTips, 800);
+    } else {
+      showQuickToast('Tiltaket er ikke i huskelisten — sjekk Hjem for fremgangen din');
+    }
+  }
+
+  // "Spør AI om dette" — bytter til chat og åpner samtale
+  function askAboutTip(title) {
+    switchTab('chat');
+    setTimeout(() => {
+      const input = document.getElementById('chat-input');
+      if (input) {
+        input.value = 'Fortell meg mer om dette tiltaket: ' + title;
+        if (typeof sendMessage === 'function') sendMessage();
+      }
+    }, 300);
+  }
+
+  function showQuickToast(text) {
+    const toast = document.createElement('div');
+    toast.className = 'quick-toast';
+    toast.textContent = text;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 400);
+    }, 2500);
+  }
+
   // Manuell refresh-knapp
+  // Manuell refresh-knapp — gir helt nye tiltak hver gang
   function refreshTips() {
     const btn = document.getElementById('refresh-btn');
     btn.classList.add('spinning');
     btn.disabled = true;
 
+    // Tell opp refresh-count slik at rangeringen får ny seed
+    const refreshNum = incrementRefreshCount();
+
     // Re-fetch live-priser så konteksten er ferskest mulig
     loadPrices().then(() => {
-      // Liten delay for å gi brukeren følelsen av at noe skjer
       setTimeout(() => {
         renderTips();
         btn.classList.remove('spinning');
         btn.disabled = false;
+
+        // Vis liten toast med tilbakemelding
+        if (refreshNum > 1) {
+          showQuickToast('✨ Nye tiltak basert på dagens situasjon');
+        }
       }, 600);
     }).catch(() => {
       setTimeout(() => {
         renderTips();
         btn.classList.remove('spinning');
         btn.disabled = false;
+        if (refreshNum > 1) {
+          showQuickToast('✨ Nye tiltak basert på dagens situasjon');
+        }
       }, 600);
     });
   }
@@ -5053,6 +6019,26 @@
     showEditedBanner();
     // Liten delay så ringen animerer fra 0 til riktig verdi
     setTimeout(updateWeekProgress, 300);
+
+    // Auto-refresh strømpriser hver 15. minutt — i stille bakgrunn
+    setInterval(() => {
+      loadPrices().then(() => {
+        updateCalc();
+        renderContextAlert();
+      });
+    }, 15 * 60 * 1000);
+
+    // Sjekk hver minutt om vi har krysset over til ny time — da kan kontekst endre seg
+    let lastHour = new Date().getHours();
+    setInterval(() => {
+      const newHour = new Date().getHours();
+      if (newHour !== lastHour) {
+        lastHour = newHour;
+        // Ny time — re-render context-relevante seksjoner
+        renderContextAlert();
+        if (window.lastPriceData) updateCalc();
+      }
+    }, 60 * 1000);
   })();
 </script>
 

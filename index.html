@@ -460,42 +460,35 @@
   .trust-strip {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: 22px 0;
+    padding: 22px 24px;
     background: white;
-    overflow: hidden;
     position: relative;
     z-index: 2;
-    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
   }
-  .marquee-track {
+  .trust-content {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
-    width: max-content;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-  }
-  .marquee-group {
-    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px 36px;
     align-items: center;
+  }
+  .trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .trust-item svg {
+    color: var(--green-glow);
     flex-shrink: 0;
   }
-  .marquee-item {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 17px;
-    color: var(--ink-soft);
-    padding: 0 36px;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 36px;
-  }
-  .marquee-item::after {
-    content: '✦';
-    color: var(--green-glow);
-    font-style: normal;
-    font-size: 12px;
+  @media (max-width: 768px) {
+    .trust-content { gap: 12px 18px; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 0 8px; -webkit-overflow-scrolling: touch; }
+    .trust-item { font-size: 13px; white-space: nowrap; }
   }
 
   /* ===== SECTION COMMON ===== */
@@ -578,12 +571,10 @@
     padding: 28px;
     border-radius: 18px;
     border: 1px solid var(--line);
-    transition: all 0.4s ease;
+    transition: border-color 0.3s ease;
   }
   .problem-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.06);
-    border-color: var(--green-glow);
+    border-color: rgba(82, 183, 136, 0.3);
   }
   .problem-stat {
     font-family: var(--serif);
@@ -830,8 +821,7 @@
     transition: transform 0.5s ease;
   }
   .feature-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 50px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
   }
   .feature-card:hover::after {
     transform: translateX(0);
@@ -843,12 +833,10 @@
     color: var(--green-deep);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 18px;
-    transition: all 0.4s ease;
+    transition: background 0.3s ease;
   }
   .feature-card:hover .feature-icon {
-    background: var(--green-deep);
-    color: white;
-    transform: rotate(-5deg) scale(1.05);
+    background: rgba(82, 183, 136, 0.25);
   }
   .feature-card h3 {
     font-family: var(--serif);
@@ -937,6 +925,170 @@
     font-size: 17px;
     line-height: 1.6;
     margin-bottom: 14px;
+  }
+
+  /* ===== FOUNDER SECTION ===== */
+  .founder {
+    background: linear-gradient(180deg, var(--bg), var(--bg-warm));
+    border-top: 1px solid var(--line);
+  }
+  .founder-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .founder-text p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .founder-text p strong { color: var(--ink); font-weight: 600; }
+  .founder-signature {
+    margin-top: 22px !important;
+    font-style: italic;
+    color: var(--green-deep) !important;
+    font-weight: 600;
+  }
+  .founder-quote {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 36px 32px 28px;
+    position: relative;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.04);
+  }
+  .founder-quote-mark {
+    font-family: var(--serif);
+    font-size: 110px;
+    line-height: 0.8;
+    color: var(--green-glow);
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    opacity: 0.4;
+  }
+  .founder-quote p {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.45;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 768px) {
+    .founder-grid { grid-template-columns: 1fr; gap: 32px; }
+    .founder-quote { padding: 32px 24px 24px; }
+    .founder-quote p { font-size: 19px; }
+    .founder-quote-mark { font-size: 80px; top: 12px; left: 18px; }
+  }
+
+  /* ===== RISK REDUCERS (under pricing) ===== */
+  .risk-reducers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    max-width: 900px;
+    margin: 50px auto 0;
+    padding: 28px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+  .risk-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .risk-item svg {
+    color: var(--green-deep);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .risk-item strong {
+    display: block;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .risk-item span {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+  @media (max-width: 768px) {
+    .risk-reducers { grid-template-columns: 1fr 1fr; gap: 16px; padding: 22px; }
+  }
+  @media (max-width: 480px) {
+    .risk-reducers { grid-template-columns: 1fr; }
+  }
+
+  /* ===== FORNØYDHETSGARANTI ===== */
+  .guarantee {
+    max-width: 900px;
+    margin: 24px auto 0;
+    padding: 22px 28px;
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    color: white;
+    border-radius: 18px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    box-shadow: 0 12px 32px rgba(27, 67, 50, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+  .guarantee::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(82, 183, 136, 0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .guarantee-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    z-index: 1;
+  }
+  .guarantee-text {
+    flex: 1;
+    z-index: 1;
+  }
+  .guarantee-text strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .guarantee-text p {
+    margin: 0;
+    color: rgba(255,255,255,0.85);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  @media (max-width: 600px) {
+    .guarantee { flex-direction: column; text-align: center; padding: 22px 20px; }
+    .guarantee-text strong { font-size: 19px; }
+    .guarantee-text p { font-size: 13.5px; }
   }
 
   /* ===== PRICING ===== */
@@ -1243,7 +1395,7 @@
     <span class="logo-mark"></span>
     SparWatt
   </a>
-  <a href="/sparwatt-analyse.html" class="nav-cta">Start gratis →</a>
+  <a href="/sparwatt-analyse.html" class="nav-cta">Sjekk min strøm →</a>
 </nav>
 
 <!-- HERO -->
@@ -1266,7 +1418,7 @@
     </p>
     <div class="hero-cta-row">
       <a href="/sparwatt-analyse.html" class="btn-primary">
-        Prøv gratis
+        Få mitt regnestykke
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M5 12h14M13 6l6 6-6 6"/>
         </svg>
@@ -1318,22 +1470,24 @@
   </div>
 </section>
 
-<!-- TRUST STRIP -->
+<!-- TRUST STRIP — statisk, ikke marquee -->
 <div class="trust-strip">
-  <div class="marquee-track">
-    <div class="marquee-group">
-      <div class="marquee-item">Live priser fra alle fem prisområder</div>
-      <div class="marquee-item">Tilpasset norske strømregler og ordninger</div>
-      <div class="marquee-item">Norgespris og strømstøtte forklart</div>
-      <div class="marquee-item">Ingen binding — avslutt når du vil</div>
-      <div class="marquee-item">Bygd i Norge</div>
+  <div class="trust-content">
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      <span>Bygd i Norge</span>
     </div>
-    <div class="marquee-group" aria-hidden="true">
-      <div class="marquee-item">Live priser fra alle fem prisområder</div>
-      <div class="marquee-item">Tilpasset norske strømregler og ordninger</div>
-      <div class="marquee-item">Norgespris og strømstøtte forklart</div>
-      <div class="marquee-item">Ingen binding — avslutt når du vil</div>
-      <div class="marquee-item">Bygd i Norge</div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      <span>Live priser fra ditt prisområde</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      <span>Ingen binding — avslutt med ett klikk</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      <span>Vi selger ikke strøm — kun ærlige råd</span>
     </div>
   </div>
 </div>
@@ -1559,6 +1713,25 @@
   </div>
 </section>
 
+<!-- HVORFOR SPARWATT FINNES -->
+<section class="founder">
+  <div class="container">
+    <div class="founder-grid reveal">
+      <div class="founder-text">
+        <div class="section-eyebrow">Hvorfor SparWatt finnes</div>
+        <h2 class="section-title">Strømmarkedet er rotete <em>med vilje</em></h2>
+        <p>Uklare avtaler. Fagord ingen forstår. Gebyrer som dukker opp av ingenting. Og <strong>"spar strøm"-tjenester</strong> som tjener provisjon på å sende deg til en bestemt leverandør.</p>
+        <p>SparWatt er motsatsen. En uavhengig analysetjeneste som svarer kun til deg — <strong>ikke til strømselskapene</strong>. Vi tjener ikke en krone på hva du gjør med rådene våre, og vi har ingen partnere som styrer hva vi anbefaler.</p>
+        <p class="founder-signature">— Ole, gründer av SparWatt</p>
+      </div>
+      <div class="founder-quote">
+        <div class="founder-quote-mark">"</div>
+        <p>Du fortjener å vite hva du faktisk betaler for. Ikke noe mer, ikke noe mindre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section>
   <div class="container">
@@ -1584,7 +1757,7 @@
       <div class="price-plan featured reveal">
         <div class="price-plan-label">Full tilgang</div>
         <div class="price-plan-amount">49<sub> kr/mnd</sub></div>
-        <div class="price-plan-tag">Avslutt når du vil — ingen binding</div>
+        <div class="price-plan-tag">Ingen binding · avslutt med ett klikk</div>
         <div class="price-plan-name">Full rapport + AI-rådgiver</div>
         <ul>
           <li>Alle tiltak — rangert etter besparelse</li>
@@ -1595,6 +1768,49 @@
           <li>Norgespris og strømstøtte forklart</li>
         </ul>
         <a href="/sparwatt-analyse.html" class="btn-primary">Prøv gratis først →</a>
+      </div>
+    </div>
+
+    <!-- Risikoreduksjon -->
+    <div class="risk-reducers reveal">
+      <div class="risk-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        <div>
+          <strong>Ingen binding</strong>
+          <span>Avslutt med ett klikk når du vil</span>
+        </div>
+      </div>
+      <div class="risk-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+        <div>
+          <strong>Prøv før du betaler</strong>
+          <span>Få ditt viktigste tiltak helt gratis</span>
+        </div>
+      </div>
+      <div class="risk-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div>
+          <strong>Sikker betaling</strong>
+          <span>Stripe-håndterte transaksjoner</span>
+        </div>
+      </div>
+      <div class="risk-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div>
+          <strong>Ingen skjulte kostnader</strong>
+          <span>49 kr i måneden — det er hele prisen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fornøydhetsgaranti - prominent og menneskelig -->
+    <div class="guarantee reveal">
+      <div class="guarantee-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+      </div>
+      <div class="guarantee-text">
+        <strong>Pengene tilbake hvis du ikke er fornøyd</strong>
+        <p>Hvis du ikke er fornøyd den første måneden — send oss en kort mail, så får du pengene tilbake. Ingen skjema, ingen spørsmål, ingen bortforklaringer.</p>
       </div>
     </div>
   </div>
@@ -1627,7 +1843,10 @@
         <p class="faq-a">Ja. Ingen binding, ingen oppsigelsestid. Avslutt med ett klikk når du vil — du beholder tilgangen ut perioden du har betalt for.</p>
       </details>
       <details class="faq-item"><summary class="faq-q">Hvem står bak SparWatt?</summary>
-        <p class="faq-a">SparWatt er et lite norsk teknologiselskap som ønsker å gjøre strømmarkedet enklere å forstå for vanlige folk. Vi bruker AI for å gi personlig rådgivning som tidligere kun har vært tilgjengelig for de som ansatte energirådgivere.</p>
+        <p class="faq-a">SparWatt er bygd av Ole, gründer av en uavhengig norsk analysetjeneste. Vi har ingen partnere blant strømleverandørene og tjener ikke en krone på hva du gjør med rådene våre — det er hele poenget.</p>
+      </details>
+      <details class="faq-item"><summary class="faq-q">Hva hvis jeg ikke er fornøyd?</summary>
+        <p class="faq-a">Send oss en kort mail i løpet av den første måneden, så får du pengene tilbake. Ingen skjema, ingen spørsmål. Vi vil heller miste kunder som ikke får verdi enn å holde dem mot deres vilje.</p>
       </details>
     </div>
   </div>
@@ -1637,9 +1856,9 @@
 <section class="final-cta">
   <div class="container reveal">
     <h2>Slutt å gjette. <em>Få svaret på 3 minutter.</em></h2>
-    <p>Gratis. Ingen registrering. Ingen kortinformasjon. Bare ærlige svar om din strømsituasjon.</p>
+    <p>Helt gratis å prøve. Ingen registrering. Ingen kortinformasjon. Bare ærlige svar om din strømsituasjon.</p>
     <a href="/sparwatt-analyse.html" class="btn-primary">
-      Start gratis analyse
+      Start gratis — det tar 3 minutter
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M5 12h14M13 6l6 6-6 6"/>
       </svg>
@@ -1680,47 +1899,6 @@
 </div>
 
 <script>
-  // JS-drevet marquee — eksakt hastighet i piksler per sekund (rolig)
-  function initMarquee() {
-    const track = document.querySelector('.marquee-track');
-    if (!track) return;
-    const groups = track.querySelectorAll('.marquee-group');
-    if (groups.length === 0) return;
-
-    // Wait for fonts to load so width measurement is accurate
-    const start = () => {
-      const groupWidth = groups[0].offsetWidth;
-      if (groupWidth === 0) {
-        // Try again after a short delay if layout isn't ready
-        setTimeout(start, 100);
-        return;
-      }
-
-      const speed = 18; // pixels per second — sakte og lesbart
-      let position = 0;
-      let lastTime = performance.now();
-
-      function animate(currentTime) {
-        const delta = (currentTime - lastTime) / 1000;
-        lastTime = currentTime;
-        position -= speed * delta;
-        if (position <= -groupWidth) {
-          position += groupWidth;
-        }
-        track.style.transform = `translate3d(${position}px, 0, 0)`;
-        requestAnimationFrame(animate);
-      }
-      requestAnimationFrame(animate);
-    };
-
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(start);
-    } else {
-      window.addEventListener('load', start);
-    }
-  }
-  initMarquee();
-
   // Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
@@ -1844,7 +2022,7 @@
     }
     document.getElementById('prZone').textContent = z.area + ' · ' + z.zone;
     document.getElementById('prPlace').textContent = z.name;
-    // Try to fetch live price for the zone
+
     try {
       const today = new Date();
       const y = today.getFullYear();
@@ -1856,12 +2034,26 @@
       const currentHour = new Date().getHours();
       const price = data[currentHour].NOK_per_kWh * 100;
       document.getElementById('prPrice').textContent = price.toFixed(1).replace('.', ',');
-      const avg = data.reduce((s, p) => s + p.NOK_per_kWh * 100, 0) / 24;
-      const diff = price < avg ? 'Lavere enn dagens snitt' : 'Høyere enn dagens snitt';
-      document.getElementById('prContext').textContent = diff + ` (${avg.toFixed(1).replace('.', ',')} øre/kWh)`;
+
+      const allPrices = data.map(p => p.NOK_per_kWh * 100);
+      const avg = allPrices.reduce((s, p) => s + p, 0) / 24;
+      const min = Math.min(...allPrices);
+      const max = Math.max(...allPrices);
+      const minHour = allPrices.indexOf(min);
+      const maxHour = allPrices.indexOf(max);
+      const ratio = max / min;
+
+      // Bygg konkret hook
+      let hookText;
+      if (ratio > 3) {
+        hookText = `Strømmen i dag svinger fra <strong>${min.toFixed(1).replace('.',',')}</strong> til <strong>${max.toFixed(1).replace('.',',')}</strong> øre/kWh — kl. ${String(minHour).padStart(2,'0')} er ${Math.round((1 - min/max) * 100)}% billigere enn kl. ${String(maxHour).padStart(2,'0')}. Få full analyse for å se hvordan du kan utnytte dette.`;
+      } else {
+        hookText = `Snittpris i dag: <strong>${avg.toFixed(1).replace('.',',')}</strong> øre/kWh. Få full analyse for å se hva du faktisk sparer ved å justere når du bruker strøm.`;
+      }
+      document.getElementById('prContext').innerHTML = hookText;
     } catch (e) {
       document.getElementById('prPrice').textContent = '~35';
-      document.getElementById('prContext').textContent = 'Live priser oppdateres ved full analyse';
+      document.getElementById('prContext').textContent = 'Få full analyse for å se hvor mye du kan spare i ditt prisområde';
     }
     result.classList.add('has-data');
   }

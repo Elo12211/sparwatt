@@ -2246,6 +2246,11 @@
     if (btnText) btnText.textContent = 'Lagre endringer';
     if (hint) hint.textContent = 'Endringer oppdaterer rapporten din umiddelbart.';
 
+    // Hopp direkte til første spørsmål (over velkomst-skjermen)
+    if (typeof go === 'function') {
+      go(1);
+    }
+
     // Marker valgte alternativer i UI for hver enkelt-spørsmål
     setTimeout(markPreselectedOptions, 100);
   }
@@ -2303,7 +2308,11 @@
     // Tekst-felter
     if (a.q3post) {
       const el = document.getElementById('q3post');
-      if (el) el.value = a.q3post;
+      if (el) {
+        el.value = a.q3post;
+        // Trigger zone-lookup
+        if (typeof lookupPostcode === 'function') lookupPostcode(a.q3post);
+      }
     }
     if (a.q10) {
       const el = document.getElementById('q10');
